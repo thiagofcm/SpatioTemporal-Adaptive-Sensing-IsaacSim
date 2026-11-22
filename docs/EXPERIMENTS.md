@@ -40,7 +40,7 @@ Navigation/
 ├── runs/<ID>/<date>_<run_name>/          one folder per training run:
 │     params/env.yaml, params/agent.yaml    fully resolved Isaac Lab configs
 │     params/config.yaml                    the experiment YAML + --set overrides used
-│     params/run_info.json                  command, git state (this repo and the reference repo), versions
+│     params/run_info.json                  command, git state of this repo, versions
 │     model_*.pt, events.out.tfevents.*     checkpoints and TensorBoard (only listed checkpoints are in git)
 └── eval/<ID>/README.md                   the experiment card (from docs/templates/experiment_card.md)
     eval/<ID>/<protocol>/<run>_<ckpt>/    one folder per evaluated policy: episodes.csv, summary.json, run_config.json,

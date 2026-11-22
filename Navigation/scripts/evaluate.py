@@ -173,7 +173,7 @@ with open(os.path.join(out_dir, "run_config.json"), "w") as f:
                "checkpoint": os.path.relpath(os.path.abspath(args.checkpoint), X.REPO_ROOT),
                "settings": {k: getattr(args, k) for k in ("episodes", "obstacle_seed", "start_seed", "goal", "timeout_s", "seed")},
                "training_run_config": run_cfg_path if run_exp else None, "command": sys.argv,
-               "repo": X.git_state(X.REPO_ROOT), "reference_repo": X.git_state(X.REFERENCE_ROOT)}, f, indent=1)
+               "repo": X.git_state(X.REPO_ROOT)}, f, indent=1)
 rows = []
 for i in range(n):
     oc = OUTCOME_NAMES.get(int(R["outcome"][i]), "running")

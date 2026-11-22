@@ -13,6 +13,7 @@ import argparse
 import json
 import math
 import os
+import sys
 
 from isaaclab.app import AppLauncher
 
@@ -33,7 +34,8 @@ from isaaclab.utils.math import euler_xyz_from_quat  # noqa: E402
 from st_nav.envs.corridor_scene import CorridorScene, CorridorSceneCfg  # noqa: E402
 from st_nav.geometry.analytic2d import raycast_2d, wall_clearance  # noqa: E402
 from st_nav.scenes import corridor_static_random as S  # noqa: E402
-from st_nav.scenes.reference import reference_scene_module  # noqa: E402
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+from tools.reference import reference_scene_module  # noqa: E402  (reference cross-validation only)
 
 os.makedirs(args.out, exist_ok=True)
 dev = args.device

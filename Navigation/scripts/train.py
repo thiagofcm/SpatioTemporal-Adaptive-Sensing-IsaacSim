@@ -8,7 +8,7 @@ then `--set` override them (tools/experiments.py, docs/EXPERIMENTS.md). Output:
     Navigation/runs/<ID>/<date>_<run_name>[_<tag>]/  TensorBoard events, model_*.pt,
         params/env.yaml, params/agent.yaml   fully resolved configs (Isaac Lab dump)
         params/config.yaml                   the experiment YAML + the --set overrides applied
-        params/run_info.json                 command, git state of this repo and of the reference repo, versions
+        params/run_info.json                 command, git state of this repo, versions
 """
 import argparse
 import json
@@ -71,7 +71,6 @@ with open(os.path.join(log_dir, "params", "config.yaml"), "w") as f:
 with open(os.path.join(log_dir, "params", "run_info.json"), "w") as f:
     json.dump({"exp_id": exp_id, "task": task, "run_name": run_name, "command": sys.argv, "host": socket.gethostname(),
                "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"), "repo": X.git_state(X.REPO_ROOT),
-               "reference_repo": X.git_state(X.REFERENCE_ROOT),        # obstacle-size bank is sampled from it
                "versions": {k: version(k) for k in ("rsl-rl-lib", "torch", "isaaclab")}}, f, indent=1)
 print(f"[TRAIN] setup {time.time() - t0:.0f} s; starting {agent.max_iterations} iterations", flush=True)
 t1 = time.time()

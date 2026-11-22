@@ -12,6 +12,7 @@ import argparse
 import json
 import math
 import os
+import sys
 
 from isaaclab.app import AppLauncher
 
@@ -36,7 +37,8 @@ from st_nav.control.diff_drive import CommandModel  # noqa: E402
 from st_nav.geometry.analytic2d import circle_clearance, raycast_2d, wall_clearance, walls_from_specs  # noqa: E402
 from st_nav.scenes.builder import SceneSpec  # noqa: E402
 from st_nav.scenes.harness import make_nav_scene  # noqa: E402
-from st_nav.scenes.reference import reference_scene_module  # noqa: E402
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+from tools.reference import reference_scene_module  # noqa: E402  (reference cross-validation only)
 from st_nav.sensors.lidar2d import TB4_LIDAR_MOUNT, Lidar2DCfg  # noqa: E402
 from st_nav.sensors.noise import DatasheetUniformRangeNoise, DatasheetUniformRangeNoiseCfg  # noqa: E402
 

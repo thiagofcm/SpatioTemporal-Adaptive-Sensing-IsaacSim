@@ -86,3 +86,31 @@ Figure and data: `tests/golden/training_comparison.{png,json}`.
   watchers. This is harmless for headless runs; the disk has 395 GB free.
 * **Not implemented, as agreed:** `sweep.py` (configs carry an empty `sweep:` section and `train.py --set` is the
   hook), scene registry and scene/sensor selection (M6/M7), evaluation library, scaffolding CLI.
+
+## Follow-up: independence from the reference repository
+
+* **Before:** the only run-time access was `st_nav/scenes/corridor_static_random.py:sample_bank`. It imported
+  `adaptive_sensor_policy/envs/scenes/corridor_static_object_random.py:sample_static_obstacles_params` (with
+  `_common.py`) on every environment creation, to build the Z1–Z4 size bank.
+* **Ported into `corridor_static_random.py`:**
+  * `sample_static_obstacles_params`, `_sample_length_pair`, `static_obstacles_params`, `static_obstacle_walls`,
+    `_rect_distance_scalar`;
+  * constants `HARD_PAIR_PROB`, `HARD_BAND`, `MAX_SAMPLING_ATTEMPTS`.
+  * Same random streams and floating-point operations, so the output is bit-identical. All other constants were
+    already ported.
+* **Moved out of the package:** `st_nav/scenes/reference.py` → `tools/reference.py`. It is used only by the
+  historical M2/M3 cross-validation scripts.
+* **Removed:** run records no longer store the reference repo's git state.
+* **Checks:**
+  * new unit test `tests/unit/test_static_obstacle_sampler.py`: bit-identical to the golden reference output for
+    seeds 0–4095 and 3000–3099 (`tests/golden/reference_bank.npz`); bank constraints; a fresh interpreter never
+    touches the reference;
+  * with `tests/sim/no_reference_guard.py` (an audit hook blocking any import, open or listing of
+    `~/adaptive_sensor_policy`):
+    * golden snapshot identical to `pre` (scene generation, observations, bit-identical policy actions);
+    * scene smoke OK;
+    * `ref_static_c10` evaluation 98/100 with the same failing episodes (25, 73);
+    * 5-iteration training through `train.py --config`;
+    * no reference access in any run.
+* **Optional reference cross-checks:** `tests/unit/test_corridor_static_random.py` and `tests/unit/test_analytic2d.py`
+  still compare against the reference when it exists, and skip otherwise.

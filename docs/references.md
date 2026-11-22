@@ -1,10 +1,10 @@
 # External references
 
-Read-only. Nothing in this repository writes to them.
+Read-only. Nothing in this repository writes to them, and training, evaluation and scene generation need none of them (checked with `tests/sim/no_reference_guard.py`).
 
 | Name | Location | Commit | Role |
 |---|---|---|---|
-| Reference simplified environment | `~/adaptive_sensor_policy` (branch `spatiotemporal`) | `d58be3fadb` (2026-11-16) at the time of the reorganization; the working tree had uncommitted changes | Corridor geometry, DR ranges, start poses, goals, evaluation protocol and experiment conventions. **Used at run time:** the Z1–Z4 size bank is sampled with its sampler (`st_nav/scenes/reference.py`, override with `ST_REFERENCE_ROOT`); every training run records its git state in `params/run_info.json`. Also read by `tests/unit/test_analytic2d.py`, `tests/unit/test_corridor_static_random.py` |
+| Reference simplified environment | `~/adaptive_sensor_policy` (branch `spatiotemporal`) | `d58be3fadb` (2026-11-16) | Source of the corridor geometry, DR ranges, start poses, goals, Z1–Z4 sampler, evaluation protocol and experiment conventions, all **ported** into `st_nav` (`scenes/corridor_static_random.py`) and `Navigation/scripts/evaluate.py`. **Not used at run time.** Optional cross-checks only: `tests/unit/test_corridor_static_random.py`, `tests/unit/test_analytic2d.py` (skipped when absent), the M2/M3 validation scripts via `tools/reference.py`, and `tests/golden/make_reference_bank.py` (golden sampler output, `tests/golden/reference_bank.npz`) |
 | RL-Navigation (original OmniIsaacGymEnvs work) | `~/isaac_lab/nav_reference/RL-Navigation` | `01fc8f8` | Phase 2 migration analysis (`docs/history/phase2_analysis`) |
 | Real-robot motion recordings | `~/Sim2Real/Adaptive-Frame-Rate-Control-Sim2Real-TurtleBot/RealRobot/motion_dynamic_charac/runs` | – | M1 actuator calibration (`st_nav/calibration/real_data.py`) |
 | TurtleBot4 description | `references/robot_description/turtlebot4` (git-ignored clone of github.com/turtlebot/turtlebot4) | `7fd29fb` | URDF/meshes for the robot USD (`assets/turtlebot4_standard/README.md`) |

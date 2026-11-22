@@ -1,0 +1,213 @@
+{
+ "env_default": {
+  "viewer": {
+   "eye": [
+    7.5,
+    7.5,
+    7.5
+   ],
+   "lookat": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "cam_prim_path": "/OmniverseKit_Persp",
+   "resolution": [
+    1280,
+    720
+   ],
+   "origin_type": "world",
+   "env_index": 0,
+   "asset_name": null,
+   "body_name": null
+  },
+  "sim": {
+   "physics_prim_path": "/physicsScene",
+   "device": "cuda:0",
+   "dt": 0.01,
+   "render_interval": 20,
+   "gravity": [
+    0.0,
+    0.0,
+    -9.81
+   ],
+   "enable_scene_query_support": false,
+   "use_fabric": true,
+   "physx": {
+    "solver_type": 1,
+    "solve_articulation_contact_last": false,
+    "min_position_iteration_count": 1,
+    "max_position_iteration_count": 255,
+    "min_velocity_iteration_count": 0,
+    "max_velocity_iteration_count": 255,
+    "enable_ccd": false,
+    "enable_stabilization": false,
+    "enable_external_forces_every_iteration": false,
+    "enable_enhanced_determinism": false,
+    "bounce_threshold_velocity": 0.5,
+    "friction_offset_threshold": 0.04,
+    "friction_correlation_distance": 0.025,
+    "gpu_max_rigid_contact_count": 8388608,
+    "gpu_max_rigid_patch_count": 524288,
+    "gpu_found_lost_pairs_capacity": 2097152,
+    "gpu_found_lost_aggregate_pairs_capacity": 33554432,
+    "gpu_total_aggregate_pairs_capacity": 2097152,
+    "gpu_collision_stack_size": 67108864,
+    "gpu_heap_capacity": 67108864,
+    "gpu_temp_buffer_capacity": 16777216,
+    "gpu_max_num_partitions": 8,
+    "gpu_max_soft_body_contacts": 1048576,
+    "gpu_max_particle_contacts": 1048576
+   },
+   "physics_material": {
+    "func": "isaaclab.sim.spawners.materials.physics_materials:spawn_rigid_body_material",
+    "static_friction": 1.0,
+    "dynamic_friction": 1.0,
+    "restitution": 0.0,
+    "friction_combine_mode": "average",
+    "restitution_combine_mode": "average",
+    "compliant_contact_stiffness": 0.0,
+    "compliant_contact_damping": 0.0
+   },
+   "render": {
+    "enable_translucency": null,
+    "enable_reflections": null,
+    "enable_global_illumination": null,
+    "antialiasing_mode": null,
+    "enable_dlssg": null,
+    "enable_dl_denoiser": null,
+    "dlss_mode": null,
+    "enable_direct_lighting": null,
+    "samples_per_pixel": null,
+    "enable_shadows": null,
+    "enable_ambient_occlusion": null,
+    "dome_light_upper_lower_strategy": null,
+    "carb_settings": null,
+    "rendering_mode": null
+   },
+   "create_stage_in_memory": false,
+   "logging_level": "WARNING",
+   "save_logs_to_file": true,
+   "log_dir": null
+  },
+  "ui_window_class_type": "isaaclab.envs.ui.base_env_window:BaseEnvWindow",
+  "seed": null,
+  "decimation": 20,
+  "is_finite_horizon": false,
+  "episode_length_s": 70.0,
+  "scene": {
+   "num_envs": 4096,
+   "env_spacing": 7.0,
+   "lazy_sensor_update": true,
+   "replicate_physics": false,
+   "filter_collisions": true,
+   "clone_in_fabric": false
+  },
+  "events": null,
+  "observation_space": 47,
+  "num_observations": null,
+  "state_space": 0,
+  "num_states": null,
+  "observation_noise_model": null,
+  "action_space": 2,
+  "num_actions": null,
+  "action_noise_model": null,
+  "rerender_on_reset": false,
+  "num_rerenders_on_reset": 0,
+  "wait_for_textures": true,
+  "xr": null,
+  "log_dir": null,
+  "v_max": 0.22,
+  "w_max": 2.0,
+  "lidar_period_s": 0.2,
+  "lidar_noise": true,
+  "goal_distance_norm": 7.0,
+  "goal_tolerance": 0.2,
+  "safety_margin": 0.05,
+  "rewards": {
+   "progress_scale": 10.0,
+   "proximity_scale": 1.0,
+   "proximity_clearance": 0.15,
+   "time_penalty_per_s": 0.1,
+   "goal_reward": 30.0,
+   "collision_penalty": 30.0,
+   "timeout_penalty": 0.0
+  },
+  "start_pose_dr": true,
+  "bank_size": 1024,
+  "privileged_critic": false,
+  "bank_seed": 0,
+  "bank_assignment": "random",
+  "offsets_from_bank": false,
+  "start_poses": null,
+  "goals": null
+ },
+ "agent_default": {
+  "seed": 42,
+  "device": "cuda:0",
+  "num_steps_per_env": 32,
+  "max_iterations": 1500,
+  "empirical_normalization": false,
+  "obs_groups": {
+   "policy": [
+    "policy"
+   ],
+   "critic": [
+    "policy"
+   ]
+  },
+  "clip_actions": 1.0,
+  "check_for_nan": true,
+  "save_interval": 100,
+  "experiment_name": "stnav_tb4_corridor_static",
+  "run_name": "",
+  "logger": "tensorboard",
+  "neptune_project": "isaaclab",
+  "wandb_project": "isaaclab",
+  "resume": false,
+  "load_run": ".*",
+  "load_checkpoint": "model_.*.pt",
+  "class_name": "OnPolicyRunner",
+  "actor": {},
+  "critic": {},
+  "algorithm": {
+   "class_name": "PPO",
+   "num_learning_epochs": 5,
+   "num_mini_batches": 4,
+   "learning_rate": 0.0003,
+   "schedule": "adaptive",
+   "gamma": 0.99,
+   "lam": 0.95,
+   "entropy_coef": 0.005,
+   "desired_kl": 0.01,
+   "max_grad_norm": 1.0,
+   "optimizer": "adam",
+   "value_loss_coef": 1.0,
+   "use_clipped_value_loss": true,
+   "clip_param": 0.2,
+   "normalize_advantage_per_mini_batch": false,
+   "share_cnn_encoders": false,
+   "rnd_cfg": null,
+   "symmetry_cfg": null
+  },
+  "policy": {
+   "class_name": "ActorCritic",
+   "init_noise_std": 1.0,
+   "noise_std_type": "scalar",
+   "state_dependent_std": false,
+   "actor_obs_normalization": true,
+   "critic_obs_normalization": true,
+   "actor_hidden_dims": [
+    256,
+    256,
+    128
+   ],
+   "critic_hidden_dims": [
+    256,
+    256,
+    128
+   ],
+   "activation": "elu"
+  }
+ }
+}

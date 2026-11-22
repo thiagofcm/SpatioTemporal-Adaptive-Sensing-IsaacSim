@@ -1,5 +1,7 @@
 """Read-only access to the reference simplified environment's scene tables (adaptive_sensor_policy/envs/scenes).
 
+For cross-validation scripts only (infrastructure/M2, M3); the simulation package never imports the reference.
+
 Imported without writing bytecode into the reference repository. Only plain data (wall tuples, obstacle specs, DR
 ranges) is used; the reference code is not executed beyond module import.
 """

@@ -11,7 +11,7 @@ research-line-specific code (training loops, experiment paths).
 | `control/diff_drive.py` | command model: delay, lag, gains, wheel saturation (GPU-batched) | actuator variants |
 | `sensors/` | `lidar2d.py` (MultiMeshRayCaster), `noise.py`, `patterns.py`, `base.py` (`SensorOutput`) | **M7:** `mirrorcle3d.py` (same `SensorOutput`), programmable scan patterns, acquisition timing |
 | `geometry/analytic2d.py` | analytic clearance / ray oracle (ground truth for rewards, terminations, validation) | – |
-| `scenes/` | one file per scene: geometry, DR ranges, samplers (`corridor_static_random.py`); `reference.py` (read-only access to the reference); spawners | **M6:** `corridor_dynamic_*.py` + a small scene registry |
+| `scenes/` | one file per scene: geometry, DR ranges, samplers (`corridor_static_random.py`, incl. the Z1–Z4 sampler ported from the reference); spawners | **M6:** `corridor_dynamic_*.py` + a small scene registry |
 | `envs/corridor_scene.py` | scene runtime: builds the vectorized scene, GPU resets (layout, start, goal, robot, actuator), sensor binding, ground-truth queries | **M6:** moving obstacles; scene and sensor chosen by the env config |
 | `tasks/nav2d/` | navigation DirectRLEnv (`STNav-TB4-Corridor-Static-v0`), its config and the RSL-RL agent config | new navigation tasks/variants |
 | `tasks/sensing/` (future) | adaptive-sensing envs wrapping navigation with a frozen policy | AdaptiveSensing |

@@ -31,7 +31,6 @@ from pathlib import Path
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-REFERENCE_ROOT = Path.home() / "adaptive_sensor_policy"      # reference simplified environment (read-only)
 LINES = {"NAV": ("Navigation", None), "TMP": ("AdaptiveSensing", "temporal"), "SPA": ("AdaptiveSensing", "spatial"),
          "STS": ("AdaptiveSensing", "spatiotemporal")}
 EXP_ID_RE = re.compile(r"^(NAV|TMP|SPA|STS)\d{2}_[a-z0-9][a-z0-9.-]*(_[a-z0-9][a-z0-9.-]*)*$")
