@@ -11,19 +11,27 @@ __pycache__/
 .vscode/
 .idea/
 
-# --- third_party: nested git clones (pinned commits: turtlebot4 7fd29fb, create3_sim 6c30584) and the xacro venv ---
-third_party/turtlebot4/
-third_party/create3_sim/
-third_party/.venv_xacro/
+# --- robot description sources: nested git clones (pinned in docs/references.md) and the xacro venv ---
+references/robot_description/turtlebot4/
+references/robot_description/create3_sim/
+references/robot_description/.venv_xacro/
 
-# --- training outputs ---
+# --- training outputs (Navigation/ and AdaptiveSensing/) ---
 # TensorBoard event files (kept on disk, not versioned)
 **/events.out.tfevents.*
-# 3-iteration smoke-test runs
-results/m5/runs/*_smoke/
-# intermediate checkpoints: only the evaluated checkpoint is versioned
-results/m5/runs/**/model_*.pt
-!results/m5/runs/**/model_200.pt
+# checkpoints: only explicitly listed (evaluated / promoted) checkpoints are versioned
+Navigation/runs/**/model_*.pt
+AdaptiveSensing/runs/**/model_*.pt
+!Navigation/runs/NAV01_static_initial/2026-11-22_00-44-09_m5_initial_4096/model_200.pt
+# sweep launcher configs and logs
+Navigation/sweeps/
+AdaptiveSensing/sweeps/
 
-# --- regenerable robot-visualization exports (scripts/viz/export_robot_geometry.py) ---
-results/viz/*.glb
+# --- regression-check outputs (regenerated on every run) ---
+tests/sim/results/
+
+# --- infrastructure history ---
+# 3-iteration smoke-test runs
+infrastructure/M5_initial_navigation/results/runs/*_smoke/
+# regenerable robot-visualization exports (infrastructure/robot_viz/scripts/export_robot_geometry.py)
+infrastructure/robot_viz/results/*.glb

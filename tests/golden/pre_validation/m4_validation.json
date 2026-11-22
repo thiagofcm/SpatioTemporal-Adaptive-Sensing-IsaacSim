@@ -1,0 +1,317 @@
+{
+ "num_envs": 1024,
+ "physics_dt": 0.01,
+ "step_dt": 0.2,
+ "decimation": 20,
+ "max_episode_length": 350,
+ "T3_T5_rollout": {
+  "d_err": 0.0,
+  "c_err": 0.0,
+  "prog_err": 0.0,
+  "prox_err": 0.0,
+  "time_ok": true,
+  "total_err": 0.0,
+  "sum_err": 0.0,
+  "flags_ok": true,
+  "term_ok": true,
+  "terminal_once": true,
+  "reset_prev_action_zero": true,
+  "reset_prev_dist_ok": 0.0,
+  "reset_cm_zero": true,
+  "reset_scan_fresh_err": 5.543231964111328e-06,
+  "reset_ep_len_zero": true,
+  "progress_bound": 0.017447471618652344,
+  "episodes_ended": 613
+ },
+ "T6_ranges": {
+  "obs_min": [
+   0.07654975354671478,
+   0.07656573504209518,
+   0.07607249170541763,
+   0.07515372335910797,
+   0.07405337691307068,
+   0.07272574305534363,
+   0.07137921452522278,
+   0.06948234885931015,
+   0.06787663698196411,
+   0.06583812832832336,
+   0.0639645978808403,
+   0.062246013432741165,
+   0.06041322275996208,
+   0.05896884202957153,
+   0.0574459545314312,
+   0.05621371045708656,
+   0.0551164448261261,
+   0.054299358278512955,
+   0.05360787361860275,
+   0.053348470479249954,
+   0.05320579558610916,
+   0.053302865475416183,
+   0.05383388698101044,
+   0.0542667880654335,
+   0.05491724982857704,
+   0.05608261004090309,
+   0.057343918830156326,
+   0.05878487974405289,
+   0.06052813306450844,
+   0.062097012996673584,
+   0.06385225057601929,
+   0.0657983347773552,
+   0.06764741241931915,
+   0.06956523656845093,
+   0.07115272432565689,
+   0.07266857475042343,
+   0.07399806380271912,
+   0.07513667643070221,
+   0.07622281461954117,
+   0.07656785100698471,
+   0.7104049921035767,
+   -1.0,
+   -1.0,
+   -1.0,
+   -1.0,
+   -1.0129144191741943,
+   -0.9027056097984314
+  ],
+  "obs_max": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.9899217486381531,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.1011486053466797,
+   0.912335991859436
+  ],
+  "reward_min": -31.236087799072266,
+  "reward_max": 0.41954371333122253
+ },
+ "checks": {
+  "T1_obs_shape_47": {
+   "pass": true,
+   "detail": [
+    1024,
+    47
+   ]
+  },
+  "T1_action_space_2": {
+   "pass": true,
+   "detail": "Box(-inf, inf, (2,), float32)"
+  },
+  "T1_lidar_block_[0:40]_equals_oracle/3.5_at_reset": {
+   "pass": true,
+   "detail": "max abs 7.03e-06 (normalized)"
+  },
+  "T1_goal_distance_[40]": {
+   "pass": true
+  },
+  "T1_sin_cos_goal_angle_[41:43]": {
+   "pass": true
+  },
+  "T1_prev_action_[43:45]_zero_at_reset": {
+   "pass": true
+  },
+  "T1_measured_velocity_[45:47]_near_zero_at_reset": {
+   "pass": true,
+   "detail": 0.0
+  },
+  "T1_lidar_in_[0,1]": {
+   "pass": true
+  },
+  "T2_clipped_action_stored_as_prev_action": {
+   "pass": true
+  },
+  "T2_actuated_velocity_matches_scaled_command": {
+   "pass": true,
+   "detail": {
+    "group0": {
+     "n_alive": 256,
+     "v_mean": 0.11065753549337387,
+     "w_mean": 0.0001587162259966135,
+     "expected_v": 0.11,
+     "expected_w": 0.0
+    },
+    "group1": {
+     "n_alive": 256,
+     "v_mean": 0.22036761045455933,
+     "w_mean": -1.0394228411314543e-07,
+     "expected_v": 0.22,
+     "expected_w": 0.0
+    },
+    "group2": {
+     "n_alive": 256,
+     "v_mean": 0.0003946813230868429,
+     "w_mean": 0.9011011123657227,
+     "expected_v": 0.0,
+     "expected_w": 0.9
+    },
+    "group3": {
+     "n_alive": 256,
+     "v_mean": 0.0002530605997890234,
+     "w_mean": -1.8010001182556152,
+     "expected_v": 0.0,
+     "expected_w": -1.8
+    }
+   }
+  },
+  "T3_goal_distance_matches_independent": {
+   "pass": true,
+   "detail": 0.0
+  },
+  "T3_clearance_matches_independent": {
+   "pass": true,
+   "detail": 0.0
+  },
+  "T3_progress_term": {
+   "pass": true,
+   "detail": 0.0
+  },
+  "T3_proximity_term": {
+   "pass": true,
+   "detail": 0.0
+  },
+  "T3_time_term_-0.02": {
+   "pass": true
+  },
+  "T3_total_reward_equals_sum_of_terms": {
+   "pass": true,
+   "detail": [
+    0.0,
+    0.0
+   ]
+  },
+  "T3_flags_and_terminated": {
+   "pass": true
+  },
+  "T3_terminal_rewards_only_on_terminal_steps": {
+   "pass": true
+  },
+  "T5_reset_prev_action_zero": {
+   "pass": true
+  },
+  "T5_reset_prev_distance_equals_new_distance": {
+   "pass": true,
+   "detail": 0.0
+  },
+  "T5_reset_actuator_state_zero": {
+   "pass": true
+  },
+  "T5_reset_lidar_fresh_scan": {
+   "pass": true,
+   "detail": 5.543231964111328e-06
+  },
+  "T5_reset_episode_length_zero": {
+   "pass": true
+  },
+  "T5_no_artificial_progress_first_step": {
+   "pass": true,
+   "detail": "max |progress| on first steps 0.0174 <= 0.540"
+  },
+  "T4_goal_terminates_with_+30_once": {
+   "pass": true,
+   "detail": {
+    "terminated": 1024,
+    "goal_outcomes": 1024
+   }
+  },
+  "T4_safety_violation_terminates_with_-30": {
+   "pass": true,
+   "detail": {
+    "terminated": 1024,
+    "c_range": [
+     0.02971947193145752,
+     0.03010094165802002
+    ]
+   }
+  },
+  "T4_physical_collision_with_margin_0": {
+   "pass": true,
+   "detail": {
+    "terminated": 1024,
+    "c_at_termination_min_max_m": [
+     -4.279613494873047e-05,
+     -1.2278556823730469e-05
+    ]
+   }
+  },
+  "T4_timeout_is_truncation_at_step_350": {
+   "pass": true,
+   "detail": {
+    "truncated_at": [
+     350
+    ],
+    "terminated_any": 0
+   }
+  },
+  "T6_finite_obs_and_rewards": {
+   "pass": true,
+   "detail": 0
+  },
+  "T6_obs_ranges": {
+   "pass": true,
+   "detail": {
+    "lidar/goal": [
+     -1.0,
+     1.0
+    ],
+    "vel": [
+     -1.0129144191741943,
+     1.1011486053466797
+    ]
+   }
+  },
+  "T7_rsl_rl_wrapper_and_one_iteration_api_smoke": {
+   "pass": true,
+   "detail": {
+    "rsl_rl_version": "5.0.1",
+    "obs_keys": [
+     "policy"
+    ],
+    "policy_obs_shape": [
+     1024,
+     47
+    ]
+   }
+  }
+ },
+ "all_pass": true
+}
