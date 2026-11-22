@@ -1,0 +1,36 @@
+{
+ "exp_id": "NAV01_static_initial",
+ "protocol": "ref_static_c10",
+ "custom": [],
+ "checkpoint": "Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation/model_200.pt",
+ "settings": {
+  "episodes": 100,
+  "obstacle_seed": 3000,
+  "start_seed": 4000,
+  "goal": [
+   -2.0,
+   -2.0
+  ],
+  "timeout_s": 80.0,
+  "seed": 42
+ },
+ "training_run_config": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation/params/config.yaml",
+ "command": [
+  "Navigation/scripts/evaluate.py",
+  "--headless",
+  "--checkpoint",
+  "Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation/model_200.pt"
+ ],
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "f00a83da80d7304d7fdfd13b6e29ae3e892a460a",
+  "branch": "reorg",
+  "dirty": true
+ },
+ "reference_repo": {
+  "path": "/home/UFAD/tcuevasmestanza/adaptive_sensor_policy",
+  "commit": "d58be3fadba24f861a590cf2b92e198aa6fc5915",
+  "branch": "spatiotemporal",
+  "dirty": true
+ }
+}

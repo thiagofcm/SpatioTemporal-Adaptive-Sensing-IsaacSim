@@ -33,12 +33,14 @@ bin/isaacrun -g 5 -- python Navigation/scripts/evaluate.py --headless \
 | Run folder | Iterations | Seed | Throughput | Notes |
 |---|---|---|---|---|
 | `2026-11-22_00-44-09_m5_initial_4096` | 201 (stopped by hand; planned 1,500) | 42 | ≈ 21k env steps/s, 6.2 s/iteration (GPU 5) | original M5 run (`scripts/m5/train.py`, before configs existed); converged by iteration ≈ 100 |
+| `2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation` | 201 (`--set agent.max_iterations=201`) | 42 | 20.2k env steps/s, 6.5 s/iteration (GPU 5) | reproduction through the YAML interface after the repository reorganization; same plateau (return 87.3, goal 99.6 %); see `docs/history/REORGANIZATION_REPORT.md` |
 
 ## Evaluations
 
 | Protocol | Policy | Episodes | Success | Notes |
 |---|---|---|---|---|
-| `ref_static_c10` | `2026-11-22_00-44-09_m5_initial_4096_model_200` | 100 | **98 %** | 2 safety violations (episodes 25, 73: the robot clips Z1 at its rightmost offset); 0 collisions or timeouts; 29.0 ± 0.7 s; min clearance mean 0.090 m |
+| `ref_static_c10` | `2026-11-22_00-44-09_m5_initial_4096_model_200` | 100 | **98 %** | 2 safety violations (episodes 25, 73: the robot clips Z1 at its rightmost offset); 0 collisions or timeouts; 29.0 ± 0.7 s; min clearance mean 0.090 m. A re-evaluation after the reorganization gave 99 % (episode 73 is borderline: 0.0498 vs 0.0508 m clearance; LiDAR noise is unseeded) |
+| `ref_static_c10` | `2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation_model_200` | 100 | **100 %** | 29.2 ± 0.7 s; min clearance mean 0.117 m, min 0.066 m |
 
 ## Results
 

@@ -1,0 +1,34 @@
+{
+ "exp_id": "NAV01_static_initial",
+ "task": "STNav-TB4-Corridor-Static-v0",
+ "run_name": "ppo_n4096_s42_reorg_validation",
+ "command": [
+  "Navigation/scripts/train.py",
+  "--headless",
+  "--config",
+  "Navigation/configs/NAV01_static_initial.yaml",
+  "--set",
+  "agent.max_iterations=201",
+  "--run_tag",
+  "reorg_validation"
+ ],
+ "host": "ece-focus-xg01",
+ "cuda_visible_devices": "5",
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "f00a83da80d7304d7fdfd13b6e29ae3e892a460a",
+  "branch": "reorg",
+  "dirty": true
+ },
+ "reference_repo": {
+  "path": "/home/UFAD/tcuevasmestanza/adaptive_sensor_policy",
+  "commit": "d58be3fadba24f861a590cf2b92e198aa6fc5915",
+  "branch": "spatiotemporal",
+  "dirty": true
+ },
+ "versions": {
+  "rsl-rl-lib": "5.0.1",
+  "torch": "2.7.0+cu128",
+  "isaaclab": "0.54.4"
+ }
+}

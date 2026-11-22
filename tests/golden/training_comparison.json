@@ -1,0 +1,73 @@
+{
+ "runs": {
+  "original": "Navigation/runs/NAV01_static_initial/2026-11-22_00-44-09_m5_initial_4096",
+  "reorganized": "Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation"
+ },
+ "iterations_compared": 200,
+ "original": {
+  "first_iter_goal_ge_0.9": 42,
+  "first_iter_goal_ge_0.98": 46,
+  "first_iter_return_ge_80": 36,
+  "iter150_200_mean": {
+   "return": 87.32684580485027,
+   "length": 147.26333408729704,
+   "goal": 0.9955476428948197,
+   "safety": 0.004452362339304504,
+   "timeout": 0.0,
+   "min_clearance": 0.10923098188404944,
+   "std": 0.3264144010403577
+  },
+  "final_iter": {
+   "return": 87.53807830810547,
+   "length": 146.97999572753906,
+   "goal": 0.9988752007484436,
+   "safety": 0.001124859438277781,
+   "std": 0.33477330207824707
+  },
+  "fps_median": 20931.5,
+  "fps_p10_p90": [
+   20448.7,
+   21793.2
+  ],
+  "s_per_iter_median": 6.261937260627747,
+  "collect_s_median": 6.0957417488098145,
+  "learn_s_median": 0.16567695140838623,
+  "total_train_time_s": 1254.1049880981445
+ },
+ "reorganized": {
+  "first_iter_goal_ge_0.9": 48,
+  "first_iter_goal_ge_0.98": 53,
+  "first_iter_return_ge_80": 47,
+  "iter150_200_mean": {
+   "return": 87.31258287616805,
+   "length": 147.5674498314951,
+   "goal": 0.995682110973433,
+   "safety": 0.004317889953324315,
+   "timeout": 0.0,
+   "min_clearance": 0.10918535964161742,
+   "std": 0.31334858665279314
+  },
+  "final_iter": {
+   "return": 86.95100402832031,
+   "length": 146.8699951171875,
+   "goal": 0.9988518953323364,
+   "safety": 0.0011481055989861488,
+   "std": 0.31628939509391785
+  },
+  "fps_median": 20150.0,
+  "fps_p10_p90": [
+   19736.7,
+   20949.1
+  ],
+  "s_per_iter_median": 6.504718899726868,
+  "collect_s_median": 6.33855128288269,
+  "learn_s_median": 0.1699448823928833,
+  "total_train_time_s": 1301.0609874725342
+ },
+ "fps_change_pct": -3.733607242672527,
+ "curve_abs_diff_mean_iter_0_200": {
+  "return": 1.9564252389011099,
+  "goal": 0.02773431096392781,
+  "length": 6.508607181150522
+ }
+}

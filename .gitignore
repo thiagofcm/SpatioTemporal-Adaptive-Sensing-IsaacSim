@@ -23,6 +23,7 @@ references/robot_description/.venv_xacro/
 Navigation/runs/**/model_*.pt
 AdaptiveSensing/runs/**/model_*.pt
 !Navigation/runs/NAV01_static_initial/2026-11-22_00-44-09_m5_initial_4096/model_200.pt
+!Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation/model_200.pt
 # sweep launcher configs and logs
 Navigation/sweeps/
 AdaptiveSensing/sweeps/
