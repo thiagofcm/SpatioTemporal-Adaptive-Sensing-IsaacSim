@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+# isaacrun: launch Isaac Lab / Isaac Sim commands on this shared server.
+#
+#   isaacrun [options] [--] <command|script.py> [args...]
+#
+# Options:
+#   -g, --gpu N|N,M|auto  restrict the run to physical GPU(s) (as numbered by nvidia-smi)
+#                      or the least-used GPU. Default: $ST_GPU, else CUDA_VISIBLE_DEVICES
+#                      if already set, else error (we don't use all 8 GPUs by accident).
+#   -t, --timeout SEC  kill the whole run after SEC seconds (exit code 124)
+#   -l, --log FILE     log file (default: $ST_ROOT/logs/launcher/<time>_<name>.log)
+#       --no-log       don't write a launcher log
+#   -h, --help         show this help
+#
+# If <command> ends in .py it runs with the env's python. Examples:
+#   isaacrun -g 3 scripts/reinforcement_learning/rsl_rl/train.py --task X --headless
+#   isaacrun -g auto -t 600 -- ./isaaclab.sh -p scripts/tutorials/00_sim/create_empty.py --headless
+#
+# What it does: sources env.sh (python env + CUDA workaround + GPU restriction)
+# and starts the command in its own process group. Ctrl-C, --timeout or the
+# launcher being killed then stop *all* of the run's processes, so no python
+# process is left running on the GPU.
+# -----------------------------------------------------------------------------
+set -uo pipefail
+
+ST_ROOT="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+usage() { sed -n '3,25p' "$ST_ROOT/bin/isaacrun" | sed 's/^# \{0,1\}//'; }
+
+gpu="${ST_GPU:-}"; timeout_s=""; log=""; do_log=1
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -g|--gpu)     gpu="${2:?--gpu needs a value}"; shift 2 ;;
+        -t|--timeout) timeout_s="${2:?--timeout needs seconds}"; shift 2 ;;
+        -l|--log)     log="${2:?--log needs a file}"; shift 2 ;;
+        --no-log)     do_log=0; shift ;;
+        -h|--help)    usage; exit 0 ;;
+        --)           shift; break ;;
+        -*)           echo "isaacrun: unknown option $1 (use -- before the command)" >&2; exit 2 ;;
+        *)            break ;;
+    esac
+done
+[ $# -gt 0 ] || { usage; exit 2; }
+
+# GPU policy: require an explicit choice on this shared machine.
+if [ -z "$gpu" ]; then
+    if [ -n "${CUDA_VISIBLE_DEVICES:-}" ]; then
+        gpu="$CUDA_VISIBLE_DEVICES"
+    else
+        echo "isaacrun: choose a GPU with --gpu N|auto (or export ST_GPU=N)." >&2
+        nvidia-smi --query-gpu=index,memory.used,utilization.gpu --format=csv >&2
+        exit 2
+    fi
+fi
+
+# shellcheck source=/dev/null
+ST_QUIET=1 source "$ST_ROOT/env.sh" "$gpu" || exit 2
+
+# Convenience: "script.py ..." -> "python script.py ..."
+if [[ "$1" == *.py ]]; then set -- python "$@"; fi
+
+# Inside the process the selected GPU is cuda:0; catch --device cuda:N (N>0).
+for a in "$@"; do
+    if [[ "$a" =~ ^cuda:[1-9] ]]; then
+        echo "isaacrun: WARNING '$a' given but only one GPU is visible (use cuda:0 or omit --device)." >&2
+    fi
+done
+
+# Logging (stdout+stderr tee'd to a file; tee -i survives Ctrl-C).
+if [ "$do_log" = 1 ]; then
+    if [ -z "$log" ]; then
+        name="$(basename "${2:-$1}")"; name="${name%.py}"
+        mkdir -p "$ST_ROOT/logs/launcher"
+        log="$ST_ROOT/logs/launcher/$(date +%Y%m%d_%H%M%S)_gpu${CUDA_VISIBLE_DEVICES//,/-}_${name}.log"
+    fi
+    mkdir -p "$(dirname "$log")"
+    exec > >(tee -i -a "$log") 2>&1
+fi
+
+shim="off"; case ":${LD_LIBRARY_PATH:-}:" in *":$ST_ROOT/.shim:"*) shim="on";; esac
+echo "[isaacrun] $(date -Is) host=$(hostname -s) gpu=${CUDA_VISIBLE_DEVICES} cuda_shim=${shim} timeout=${timeout_s:-none}"
+echo "[isaacrun] cwd=$PWD"
+echo "[isaacrun] cmd=$*"
+echo "[isaacrun] isaaclab_commit=$(git -C "$ISAACLAB_PATH" rev-parse --short HEAD 2>/dev/null || echo n/a)"
+[ "$do_log" = 1 ] && echo "[isaacrun] log=$log"
+
+# Start the command as the leader of a new process group.
+setsid "$@" &
+pid=$!
+stopping=0
+stop_group() {  # $1 = signal
+    kill "-$1" -- "-$pid" 2>/dev/null
+}
+on_signal() {
+    if [ "$stopping" = 0 ]; then
+        stopping=1
+        echo "[isaacrun] interrupt: sending SIGINT to run (press Ctrl-C again to force kill)"
+        stop_group INT
+        ( sleep 20; kill -0 "$pid" 2>/dev/null && { echo "[isaacrun] still alive after 20s: SIGKILL"; kill -KILL -- "-$pid"; } ) 2>/dev/null &
+        forcer=$!
+    else
+        echo "[isaacrun] force kill"
+        stop_group KILL
+    fi
+}
+trap on_signal INT TERM HUP
+
+timeout_flag="$(mktemp -u "${TMPDIR:-/tmp}/isaacrun_to.XXXXXX")"
+watcher=""
+if [ -n "$timeout_s" ]; then
+    (
+        sleep "$timeout_s"
+        if kill -0 "$pid" 2>/dev/null; then
+            : > "$timeout_flag"
+            echo "[isaacrun] timeout (${timeout_s}s): stopping run"
+            kill -TERM -- "-$pid" 2>/dev/null; sleep 10; kill -KILL -- "-$pid" 2>/dev/null
+        fi
+    ) &
+    watcher=$!
+fi
+
+rc=0
+while true; do
+    wait "$pid"; rc=$?
+    kill -0 "$pid" 2>/dev/null || break
+done
+# Stop helper subshells *and* their sleep children (they hold the log pipe open).
+for h in $watcher ${forcer:-}; do pkill -P "$h" 2>/dev/null; kill "$h" 2>/dev/null; done
+# Remove any helper processes the run left behind in its group.
+stop_group TERM; sleep 1; stop_group KILL
+if [ -e "$timeout_flag" ]; then rm -f "$timeout_flag"; rc=124; fi
+if [ "$stopping" = 1 ] && [ "$rc" = 0 ]; then rc=130; fi   # interrupted by user
+echo "[isaacrun] exit code $rc"
+exit "$rc"

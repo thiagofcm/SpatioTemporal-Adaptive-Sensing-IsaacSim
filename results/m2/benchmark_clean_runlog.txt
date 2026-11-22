@@ -1,0 +1,56 @@
+=== 20:51:03 start --num_envs 512 --physics_hz 200 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 512, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 12.144163131713867, "launch_to_ready_s": 18.73545265197754,
+[isaacrun] exit code 0
+=== 20:52:13 start --num_envs 1024 --physics_hz 200 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 1024, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 22.009045839309692, "launch_to_ready_s": 28.6248676776886,
+[isaacrun] exit code 0
+=== 20:53:43 start --num_envs 2048 --physics_hz 200 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 2048, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 43.04452610015869, "launch_to_ready_s": 50.08974313735962,
+[isaacrun] exit code 0
+=== 20:55:43 start --num_envs 4096 --physics_hz 200 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 4096, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 84.19676399230957, "launch_to_ready_s": 91.13123607635498,
+[isaacrun] exit code 0
+=== 20:57:55 start --num_envs 8192 --physics_hz 200 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 8192, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 167.71713519096375, "launch_to_ready_s": 174.2500627040863
+[isaacrun] exit code 0
+=== 21:01:39 start --num_envs 16384 --physics_hz 200 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 16384, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 332.82880425453186, "launch_to_ready_s": 339.429822683334
+[isaacrun] exit code 0
+=== 21:08:03 start --num_envs 512 --physics_hz 100 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 512, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 12.18466567993164, "launch_to_ready_s": 18.79969596862793, 
+[isaacrun] exit code 0
+=== 21:08:50 start --num_envs 1024 --physics_hz 100 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 1024, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 22.209739446640015, "launch_to_ready_s": 28.86557078361511
+[isaacrun] exit code 0
+=== 21:09:53 start --num_envs 2048 --physics_hz 100 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 2048, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 43.057082653045654, "launch_to_ready_s": 49.7453670501709,
+[isaacrun] exit code 0
+=== 21:11:20 start --num_envs 4096 --physics_hz 100 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 4096, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 83.91027545928955, "launch_to_ready_s": 90.52870154380798,
+[isaacrun] exit code 0
+=== 21:13:13 start --num_envs 8192 --physics_hz 100 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 8192, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 166.91557455062866, "launch_to_ready_s": 173.5303192138672
+[isaacrun] exit code 0
+=== 21:16:33 start --num_envs 16384 --physics_hz 100 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 16384, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 335.59170293807983, "launch_to_ready_s": 342.232571363449
+[isaacrun] exit code 0
+=== 21:22:40 start --num_envs 4096 --physics_hz 100 --pos_iters 32 --vel_iters 4 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 4096, "physics_hz": 100.0, "decimation": 20, "solver_iters": [32, 4], "setup_s": 84.60318160057068, "launch_to_ready_s": 91.16606330871582,
+[isaacrun] exit code 0
+=== 21:24:39 start --num_envs 16384 --physics_hz 100 --pos_iters 32 --vel_iters 4 | other procs on GPU5: 0 | my other isaac runs: 1
+[BENCH] {"num_envs": 16384, "physics_hz": 100.0, "decimation": 20, "solver_iters": [32, 4], "setup_s": 334.98283648490906, "launch_to_ready_s": 341.635957956314
+[isaacrun] exit code 0
+SWEEP_DONE 21:30:52
+=== 21:30:57 REPEAT start --num_envs 4096 --physics_hz 200 | other procs on GPU5: 0
+[BENCH] {"num_envs": 4096, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 83.91007614135742, "launch_to_ready_s": 90.58973264694214,
+[isaacrun] exit code 0
+=== 21:33:08 REPEAT start --num_envs 16384 --physics_hz 200 | other procs on GPU5: 0
+[BENCH] {"num_envs": 16384, "physics_hz": 200.0, "decimation": 40, "solver_iters": [16, 2], "setup_s": 336.11156582832336, "launch_to_ready_s": 343.072640419006
+[isaacrun] exit code 0
+=== 21:39:36 REPEAT start --num_envs 4096 --physics_hz 100 | other procs on GPU5: 0
+[BENCH] {"num_envs": 4096, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 83.24621391296387, "launch_to_ready_s": 89.87934923171997,
+[isaacrun] exit code 0
+=== 21:41:28 REPEAT start --num_envs 16384 --physics_hz 100 | other procs on GPU5: 0
+[BENCH] {"num_envs": 16384, "physics_hz": 100.0, "decimation": 20, "solver_iters": [16, 2], "setup_s": 338.1088888645172, "launch_to_ready_s": 344.855507850647,
+[isaacrun] exit code 0
+REPEATS_DONE 21:47:38

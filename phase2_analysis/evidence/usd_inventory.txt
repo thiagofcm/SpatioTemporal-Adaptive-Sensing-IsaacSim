@@ -1,0 +1,385 @@
+######## https://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Isaac/5.1/Isaac/Robots/NVIDIA/Jetbot/jetbot.usd
+  /jetbot  Xform  pos=(0.00,0.00,0.00)  
+  /jetbot/chassis  Xform  pos=(0.00,0.00,-0.00)  scale=(1.00,1.00,1.00)    kinematic=False
+  /jetbot/chassis/left_wheel_joint  PhysicsRevoluteJoint    drive:angular:physics:damping=174.53292846679688  drive:angular:physics:stiffness=0.0  drive:angular:physics:maxForce=inf
+  /jetbot/chassis/right_wheel_joint  PhysicsRevoluteJoint    drive:angular:physics:damping=174.53292846679688  drive:angular:physics:stiffness=0.0  drive:angular:physics:maxForce=inf
+  /jetbot/chassis/geometry  Xform  pos=(-0.02,0.00,0.02)  scale=(1.00,1.00,1.00)
+  /jetbot/chassis/geometry/left_antenna  Mesh  pos=(-0.08,0.04,0.06)  
+  /jetbot/chassis/geometry/left_antenna/Material_30  GeomSubset  
+  /jetbot/chassis/geometry/left_antenna/Material_33  GeomSubset  
+  /jetbot/chassis/geometry/left_antenna/Material_12  GeomSubset  
+  /jetbot/chassis/geometry/left_antenna/Material_01  GeomSubset  
+  /jetbot/chassis/geometry/right_antenna  Mesh  pos=(-0.08,-0.04,0.06)  
+  /jetbot/chassis/geometry/right_antenna/Material_30  GeomSubset  
+  /jetbot/chassis/geometry/right_antenna/Material_33  GeomSubset  
+  /jetbot/chassis/geometry/right_antenna/Material_12  GeomSubset  
+  /jetbot/chassis/geometry/right_antenna/Material_01  GeomSubset  
+  /jetbot/chassis/geometry/body  Mesh  pos=(-0.02,-0.00,0.02)  
+  /jetbot/chassis/geometry/body/Material_06  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_07  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_08  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_09  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_01  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_03  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_04  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_05  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_00  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_10  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_15  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_11  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_20  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_21  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_22  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_23  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_13  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_24  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_25  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_26  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_27  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_28  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_29  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_31  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_32  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_34  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_35  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_36  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_37  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_38  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_39  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_40  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_41  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_43  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_44  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_45  GeomSubset  
+  /jetbot/chassis/geometry/body/Material_42  GeomSubset  
+  /jetbot/chassis/geometry/caster_ball_case_front  Mesh  pos=(0.05,0.00,-0.04)  
+  /jetbot/chassis/geometry/caster_ball_case_front/Material_01  GeomSubset  
+  /jetbot/chassis/geometry/caster_ball_front  Mesh  pos=(0.04,-0.00,-0.03)  
+  /jetbot/chassis/geometry/caster_ball_case_back  Mesh  pos=(-0.07,0.00,-0.04)  
+  /jetbot/chassis/geometry/caster_ball_case_back/Material_01  GeomSubset  
+  /jetbot/chassis/geometry/caster_ball_back  Mesh  pos=(-0.08,-0.00,-0.03)  
+  /jetbot/chassis/rgb_camera  Xform  pos=(0.05,-0.00,0.07)
+  /jetbot/chassis/rgb_camera/camera_base  Mesh  pos=(0.05,-0.00,0.07)  
+  /jetbot/chassis/rgb_camera/camera_base/Material_14  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_15  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/OmniGlass  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_17  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_18  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_00  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_13  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_19  GeomSubset  
+  /jetbot/chassis/rgb_camera/camera_base/Material_10  GeomSubset  
+  /jetbot/chassis/rgb_camera/jetbot_camera  Camera  pos=(0.07,-0.00,0.06)  scale=(1.00,1.00,1.00)
+  /jetbot/left_wheel  Xform  pos=(0.00,0.05,0.00)  scale=(1.00,1.00,1.00)    kinematic=False
+  /jetbot/left_wheel/left_wheel  Mesh  pos=(0.00,0.05,0.00)  scale=(0.01,0.01,0.01)  
+  /jetbot/left_wheel/left_wheel/tire  GeomSubset  
+  /jetbot/left_wheel/left_wheel/wheel  GeomSubset  
+  /jetbot/left_wheel/Collision  Sphere  pos=(-0.00,0.06,0.00)  scale=(0.00,0.00,0.00)    radius=50.0
+  /jetbot/right_wheel  Xform  pos=(0.00,-0.05,0.00)  scale=(1.00,1.00,1.00)    kinematic=False
+  /jetbot/right_wheel/right_wheel  Mesh  pos=(0.00,-0.05,0.00)  scale=(0.01,0.01,0.01)  
+  /jetbot/right_wheel/right_wheel/tire  GeomSubset  
+  /jetbot/right_wheel/right_wheel/wheel  GeomSubset  
+  /jetbot/right_wheel/Collision  Sphere  pos=(-0.00,-0.06,0.00)  scale=(0.00,0.00,0.00)    radius=50.0
+  /jetbot/Looks  Scope
+  /jetbot/Looks/Material_00  Material
+  /jetbot/Looks/Material_00/Shader  Shader  
+  /jetbot/Looks/Material_01  Material
+  /jetbot/Looks/Material_01/Shader  Shader  
+  /jetbot/Looks/Material_02  Material
+  /jetbot/Looks/Material_02/Shader  Shader  
+  /jetbot/Looks/Material_03  Material
+  /jetbot/Looks/Material_03/Shader  Shader  
+  /jetbot/Looks/Material_04  Material
+  /jetbot/Looks/Material_04/Shader  Shader  
+  /jetbot/Looks/Material_05  Material
+  /jetbot/Looks/Material_05/Shader  Shader  
+  /jetbot/Looks/Material_06  Material
+  /jetbot/Looks/Material_06/Shader  Shader  
+  /jetbot/Looks/Material_07  Material
+  /jetbot/Looks/Material_07/Shader  Shader  
+  /jetbot/Looks/Material_08  Material
+  /jetbot/Looks/Material_08/Shader  Shader  
+  /jetbot/Looks/Material_09  Material
+  /jetbot/Looks/Material_09/Shader  Shader  
+  /jetbot/Looks/Material_10  Material
+  /jetbot/Looks/Material_10/Shader  Shader  
+  /jetbot/Looks/Material_11  Material
+  /jetbot/Looks/Material_11/Shader  Shader  
+  /jetbot/Looks/Material_12  Material
+  /jetbot/Looks/Material_12/Shader  Shader  
+  /jetbot/Looks/Material_13  Material
+  /jetbot/Looks/Material_13/Shader  Shader  
+  /jetbot/Looks/Material_14  Material
+  /jetbot/Looks/Material_14/Shader  Shader  
+  /jetbot/Looks/Material_15  Material
+  /jetbot/Looks/Material_15/Shader  Shader  
+  /jetbot/Looks/Material_16  Material
+  /jetbot/Looks/Material_16/Shader  Shader  
+  /jetbot/Looks/Material_17  Material
+  /jetbot/Looks/Material_17/Shader  Shader  
+  /jetbot/Looks/Material_18  Material
+  /jetbot/Looks/Material_18/Shader  Shader  
+######## /home/UFAD/tcuevasmestanza/isaac_lab/nav_reference/RL-Navigation/assets/jetbot/jetbot_with_lidar_updated2.usd
+  /jetbot  Xform  pos=(0.00,0.00,0.00)  
+  /jetbot/Looks  Scope
+  /jetbot/Looks/Material_00  Material
+  /jetbot/Looks/Material_00/Shader  Shader  
+  /jetbot/Looks/Material_01  Material
+  /jetbot/Looks/Material_01/Shader  Shader  
+  /jetbot/Looks/Material_02  Material
+  /jetbot/Looks/Material_02/Shader  Shader  
+  /jetbot/Looks/Material_03  Material
+  /jetbot/Looks/Material_03/Shader  Shader  
+  /jetbot/Looks/Material_04  Material
+  /jetbot/Looks/Material_04/Shader  Shader  
+  /jetbot/Looks/Material_05  Material
+  /jetbot/Looks/Material_05/Shader  Shader  
+  /jetbot/Looks/Material_06  Material
+  /jetbot/Looks/Material_06/Shader  Shader  
+  /jetbot/Looks/Material_07  Material
+  /jetbot/Looks/Material_07/Shader  Shader  
+  /jetbot/Looks/Material_08  Material
+  /jetbot/Looks/Material_08/Shader  Shader  
+  /jetbot/Looks/Material_09  Material
+  /jetbot/Looks/Material_09/Shader  Shader  
+  /jetbot/Looks/Material_10  Material
+  /jetbot/Looks/Material_10/Shader  Shader  
+  /jetbot/Looks/Material_11  Material
+  /jetbot/Looks/Material_11/Shader  Shader  
+  /jetbot/Looks/Material_12  Material
+  /jetbot/Looks/Material_12/Shader  Shader  
+  /jetbot/Looks/Material_13  Material
+  /jetbot/Looks/Material_13/Shader  Shader  
+  /jetbot/Looks/Material_14  Material
+  /jetbot/Looks/Material_14/Shader  Shader  
+  /jetbot/Looks/Material_15  Material
+  /jetbot/Looks/Material_15/Shader  Shader  
+  /jetbot/Looks/Material_16  Material
+  /jetbot/Looks/Material_16/Shader  Shader  
+  /jetbot/Looks/Material_17  Material
+  /jetbot/Looks/Material_17/Shader  Shader  
+  /jetbot/Looks/Material_18  Material
+  /jetbot/Looks/Material_18/Shader  Shader  
+  /jetbot/Looks/Material_19  Material
+  /jetbot/Looks/Material_19/Shader  Shader  
+  /jetbot/Looks/Material_20  Material
+  /jetbot/Looks/Material_20/Shader  Shader  
+  /jetbot/Looks/Material_21  Material
+  /jetbot/Looks/Material_21/Shader  Shader  
+  /jetbot/Looks/Material_22  Material
+  /jetbot/Looks/Material_22/Shader  Shader  
+  /jetbot/Looks/Material_23  Material
+  /jetbot/Looks/Material_23/Shader  Shader  
+  /jetbot/Looks/Material_24  Material
+  /jetbot/Looks/Material_24/Shader  Shader  
+  /jetbot/Looks/Material_25  Material
+  /jetbot/Looks/Material_25/Shader  Shader  
+  /jetbot/Looks/Material_26  Material
+  /jetbot/Looks/Material_26/Shader  Shader  
+  /jetbot/Looks/Material_27  Material
+  /jetbot/Looks/Material_27/Shader  Shader  
+  /jetbot/Looks/Material_28  Material
+  /jetbot/Looks/Material_28/Shader  Shader  
+  /jetbot/Looks/Material_29  Material
+  /jetbot/Looks/Material_29/Shader  Shader  
+  /jetbot/Looks/Material_30  Material
+  /jetbot/Looks/Material_30/Shader  Shader  
+  /jetbot/Looks/Material_31  Material
+  /jetbot/Looks/Material_31/Shader  Shader  
+  /jetbot/Looks/Material_32  Material
+  /jetbot/Looks/Material_32/Shader  Shader  
+  /jetbot/Looks/Material_33  Material
+  /jetbot/Looks/Material_33/Shader  Shader  
+  /jetbot/Looks/Material_34  Material
+  /jetbot/Looks/Material_34/Shader  Shader  
+  /jetbot/Looks/Material_35  Material
+  /jetbot/Looks/Material_35/Shader  Shader  
+  /jetbot/Looks/Material_36  Material
+  /jetbot/Looks/Material_36/Shader  Shader  
+  /jetbot/Looks/Material_37  Material
+  /jetbot/Looks/Material_37/Shader  Shader  
+  /jetbot/Looks/Material_38  Material
+  /jetbot/Looks/Material_38/Shader  Shader  
+  /jetbot/Looks/Material_39  Material
+  /jetbot/Looks/Material_39/Shader  Shader  
+  /jetbot/Looks/Material_40  Material
+  /jetbot/Looks/Material_40/Shader  Shader  
+  /jetbot/Looks/Material_41  Material
+  /jetbot/Looks/Material_41/Shader  Shader  
+  /jetbot/Looks/Material_42  Material
+  /jetbot/Looks/Material_42/Shader  Shader  
+  /jetbot/Looks/Material_43  Material
+  /jetbot/Looks/Material_43/Shader  Shader  
+  /jetbot/Looks/Material_44  Material
+  /jetbot/Looks/Material_44/Shader  Shader  
+  /jetbot/Looks/Material_45  Material
+  /jetbot/Looks/Material_45/Shader  Shader  
+  /jetbot/Looks/OmniGlass  Material
+  /jetbot/Looks/OmniGlass/Shader  Shader  
+  /jetbot/chassis  Xform  pos=(0.00,0.00,-0.00)  scale=(1.00,1.00,1.00)    kinematic=False
+  /jetbot/chassis/geometry  Xform  pos=(-0.02,0.00,0.02)  scale=(1.00,1.00,1.00)
+  /jetbot/chassis/geometry/left_antenna  Mesh  pos=(-0.08,0.04,0.06)  
+  /jetbot/chassis/geometry/left_antenna/Material_30  GeomSubset
+  /jetbot/chassis/geometry/left_antenna/Material_33  GeomSubset
+  /jetbot/chassis/geometry/left_antenna/Material_12  GeomSubset
+  /jetbot/chassis/geometry/left_antenna/Material_01  GeomSubset
+  /jetbot/chassis/geometry/right_antenna  Mesh  pos=(-0.08,-0.04,0.06)  
+  /jetbot/chassis/geometry/right_antenna/Material_30  GeomSubset
+  /jetbot/chassis/geometry/right_antenna/Material_33  GeomSubset
+  /jetbot/chassis/geometry/right_antenna/Material_12  GeomSubset
+  /jetbot/chassis/geometry/right_antenna/Material_01  GeomSubset
+  /jetbot/chassis/geometry/body  Mesh  pos=(-0.02,-0.00,0.02)  
+  /jetbot/chassis/geometry/body/Material_06  GeomSubset
+  /jetbot/chassis/geometry/body/Material_07  GeomSubset
+  /jetbot/chassis/geometry/body/Material_08  GeomSubset
+  /jetbot/chassis/geometry/body/Material_09  GeomSubset
+  /jetbot/chassis/geometry/body/Material_01  GeomSubset
+  /jetbot/chassis/geometry/body/Material_03  GeomSubset
+  /jetbot/chassis/geometry/body/Material_04  GeomSubset
+  /jetbot/chassis/geometry/body/Material_05  GeomSubset
+  /jetbot/chassis/geometry/body/Material_00  GeomSubset
+  /jetbot/chassis/geometry/body/Material_10  GeomSubset
+  /jetbot/chassis/geometry/body/Material_15  GeomSubset
+######## /home/UFAD/tcuevasmestanza/isaac_lab/nav_reference/RL-Navigation/assets/jetbot/obstacles.usd
+  /World  Xform  pos=(0.00,0.00,0.00)
+  /World/Walls  Xform  pos=(0.00,0.00,0.00)  scale=(1.00,1.00,1.00)
+  /World/Walls/Cube  Cube  pos=(2.00,0.00,0.25)  scale=(0.20,4.00,0.50)  size=1.0  
+  /World/Walls/Cube_01  Cube  pos=(-2.00,0.00,0.25)  scale=(0.20,4.00,0.50)  size=1.0  
+  /World/Walls/Cube_02  Cube  pos=(0.00,-2.00,0.25)  scale=(0.20,4.00,0.50)  size=1.0  
+  /World/Walls/Cube_03  Cube  pos=(0.00,2.00,0.25)  scale=(0.20,4.00,0.50)  size=1.0  
+  /World/Cylinders  Xform  pos=(0.00,0.00,0.00)  scale=(1.00,1.00,1.00)
+  /World/Cylinders/Cylinder  Cylinder  pos=(0.75,0.75,0.20)  scale=(0.75,0.75,1.00)    radius=0.4  height=0.5
+  /World/Cylinders/Cylinder_01  Cylinder  pos=(0.75,-0.75,0.20)  scale=(0.75,0.75,1.00)    radius=0.4  height=0.5
+  /World/Cylinders/Cylinder_02  Cylinder  pos=(-0.75,0.75,0.20)  scale=(0.75,0.75,1.00)    radius=0.4  height=0.5
+  /World/Cylinders/Cylinder_03  Cylinder  pos=(-0.75,-0.75,0.20)  scale=(0.75,0.75,1.00)    radius=0.4  height=0.5
+######## /home/UFAD/tcuevasmestanza/isaac_lab/nav_reference/RL-Navigation/assets/jetbot/jetbot_home.usd
+  /World  Xform  pos=(0.00,0.00,0.00)
+  /World/Cube  Cube  pos=(0.71,-0.70,0.00)  scale=(2.50,0.35,1.00)  size=1.0000000223517422  
+  /World/Cube_01  Cube  pos=(0.70,2.58,0.00)  scale=(2.50,0.35,1.00)  size=1.0000000223517422  
+  /World/Cube_02  Cube  pos=(2.13,0.94,0.00)  scale=(3.58,0.35,1.00)  size=1.0000000223517422  
+  /World/Cube_03  Cube  pos=(-0.69,0.94,0.00)  scale=(3.58,0.35,1.00)  size=1.0000000223517422  
+  /World/Cylinder  Cylinder  pos=(0.73,0.18,0.00)  scale=(0.48,0.55,1.00)    radius=0.5000000111758711  height=1.0000000223517422
+  /World/Cylinder_01  Cylinder  pos=(0.73,1.36,0.00)  scale=(0.48,0.55,1.00)    radius=0.5000000111758711  height=1.0000000223517422
+  /Environment  Xform  pos=(0.00,0.00,0.00)  scale=(1.00,1.00,1.00)
+  /Environment/defaultLight  DistantLight  pos=(0.00,0.00,0.00)  scale=(1.00,1.00,1.00)  
+######## /home/UFAD/tcuevasmestanza/isaac_lab/nav_reference/RL-Navigation/assets/jetbot/jetbot_with_lidar_updated2.usd
+  /jetbot  Xform  pos=(0.00,0.00,0.00)  
+  /jetbot/Looks  Scope
+  /jetbot/Looks/Material_00  Material
+  /jetbot/Looks/Material_00/Shader  Shader  
+  /jetbot/Looks/Material_01  Material
+  /jetbot/Looks/Material_01/Shader  Shader  
+  /jetbot/Looks/Material_02  Material
+  /jetbot/Looks/Material_02/Shader  Shader  
+  /jetbot/Looks/Material_03  Material
+  /jetbot/Looks/Material_03/Shader  Shader  
+  /jetbot/Looks/Material_04  Material
+  /jetbot/Looks/Material_04/Shader  Shader  
+  /jetbot/Looks/Material_05  Material
+  /jetbot/Looks/Material_05/Shader  Shader  
+  /jetbot/Looks/Material_06  Material
+  /jetbot/Looks/Material_06/Shader  Shader  
+  /jetbot/Looks/Material_07  Material
+  /jetbot/Looks/Material_07/Shader  Shader  
+  /jetbot/Looks/Material_08  Material
+  /jetbot/Looks/Material_08/Shader  Shader  
+  /jetbot/Looks/Material_09  Material
+  /jetbot/Looks/Material_09/Shader  Shader  
+  /jetbot/Looks/Material_10  Material
+  /jetbot/Looks/Material_10/Shader  Shader  
+  /jetbot/Looks/Material_11  Material
+  /jetbot/Looks/Material_11/Shader  Shader  
+  /jetbot/Looks/Material_12  Material
+  /jetbot/Looks/Material_12/Shader  Shader  
+  /jetbot/Looks/Material_13  Material
+  /jetbot/Looks/Material_13/Shader  Shader  
+  /jetbot/Looks/Material_14  Material
+  /jetbot/Looks/Material_14/Shader  Shader  
+  /jetbot/Looks/Material_15  Material
+  /jetbot/Looks/Material_15/Shader  Shader  
+  /jetbot/Looks/Material_16  Material
+  /jetbot/Looks/Material_16/Shader  Shader  
+  /jetbot/Looks/Material_17  Material
+  /jetbot/Looks/Material_17/Shader  Shader  
+  /jetbot/Looks/Material_18  Material
+  /jetbot/Looks/Material_18/Shader  Shader  
+  /jetbot/Looks/Material_19  Material
+  /jetbot/Looks/Material_19/Shader  Shader  
+  /jetbot/Looks/Material_20  Material
+  /jetbot/Looks/Material_20/Shader  Shader  
+  /jetbot/Looks/Material_21  Material
+  /jetbot/Looks/Material_21/Shader  Shader  
+  /jetbot/Looks/Material_22  Material
+  /jetbot/Looks/Material_22/Shader  Shader  
+  /jetbot/Looks/Material_23  Material
+  /jetbot/Looks/Material_23/Shader  Shader  
+  /jetbot/Looks/Material_24  Material
+  /jetbot/Looks/Material_24/Shader  Shader  
+  /jetbot/Looks/Material_25  Material
+  /jetbot/Looks/Material_25/Shader  Shader  
+  /jetbot/Looks/Material_26  Material
+  /jetbot/Looks/Material_26/Shader  Shader  
+  /jetbot/Looks/Material_27  Material
+  /jetbot/Looks/Material_27/Shader  Shader  
+  /jetbot/Looks/Material_28  Material
+  /jetbot/Looks/Material_28/Shader  Shader  
+  /jetbot/Looks/Material_29  Material
+  /jetbot/Looks/Material_29/Shader  Shader  
+  /jetbot/Looks/Material_30  Material
+  /jetbot/Looks/Material_30/Shader  Shader  
+  /jetbot/Looks/Material_31  Material
+  /jetbot/Looks/Material_31/Shader  Shader  
+  /jetbot/Looks/Material_32  Material
+  /jetbot/Looks/Material_32/Shader  Shader  
+  /jetbot/Looks/Material_33  Material
+  /jetbot/Looks/Material_33/Shader  Shader  
+  /jetbot/Looks/Material_34  Material
+  /jetbot/Looks/Material_34/Shader  Shader  
+  /jetbot/Looks/Material_35  Material
+  /jetbot/Looks/Material_35/Shader  Shader  
+  /jetbot/Looks/Material_36  Material
+  /jetbot/Looks/Material_36/Shader  Shader  
+  /jetbot/Looks/Material_37  Material
+  /jetbot/Looks/Material_37/Shader  Shader  
+  /jetbot/Looks/Material_38  Material
+  /jetbot/Looks/Material_38/Shader  Shader  
+  /jetbot/Looks/Material_39  Material
+  /jetbot/Looks/Material_39/Shader  Shader  
+  /jetbot/Looks/Material_40  Material
+  /jetbot/Looks/Material_40/Shader  Shader  
+  /jetbot/Looks/Material_41  Material
+  /jetbot/Looks/Material_41/Shader  Shader  
+  /jetbot/Looks/Material_42  Material
+  /jetbot/Looks/Material_42/Shader  Shader  
+  /jetbot/Looks/Material_43  Material
+  /jetbot/Looks/Material_43/Shader  Shader  
+  /jetbot/Looks/Material_44  Material
+  /jetbot/Looks/Material_44/Shader  Shader  
+  /jetbot/Looks/Material_45  Material
+  /jetbot/Looks/Material_45/Shader  Shader  
+  /jetbot/Looks/OmniGlass  Material
+  /jetbot/Looks/OmniGlass/Shader  Shader  
+  /jetbot/chassis  Xform  pos=(0.00,0.00,-0.00)  scale=(1.00,1.00,1.00)    kinematic=False
+  /jetbot/chassis/geometry  Xform  pos=(-0.02,0.00,0.02)  scale=(1.00,1.00,1.00)
+  /jetbot/chassis/geometry/left_antenna  Mesh  pos=(-0.08,0.04,0.06)  
+  /jetbot/chassis/geometry/left_antenna/Material_30  GeomSubset
+  /jetbot/chassis/geometry/left_antenna/Material_33  GeomSubset
+  /jetbot/chassis/geometry/left_antenna/Material_12  GeomSubset
+  /jetbot/chassis/geometry/left_antenna/Material_01  GeomSubset
+  /jetbot/chassis/geometry/right_antenna  Mesh  pos=(-0.08,-0.04,0.06)  
+  /jetbot/chassis/geometry/right_antenna/Material_30  GeomSubset
+  /jetbot/chassis/geometry/right_antenna/Material_33  GeomSubset
+  /jetbot/chassis/geometry/right_antenna/Material_12  GeomSubset
+  /jetbot/chassis/geometry/right_antenna/Material_01  GeomSubset
+  /jetbot/chassis/geometry/body  Mesh  pos=(-0.02,-0.00,0.02)  
+  /jetbot/chassis/geometry/body/Material_06  GeomSubset
+  /jetbot/chassis/geometry/body/Material_07  GeomSubset
+  /jetbot/chassis/geometry/body/Material_08  GeomSubset
+  /jetbot/chassis/geometry/body/Material_09  GeomSubset
+  /jetbot/chassis/geometry/body/Material_01  GeomSubset
+  /jetbot/chassis/geometry/body/Material_03  GeomSubset
+  /jetbot/chassis/geometry/body/Material_04  GeomSubset
+  /jetbot/chassis/geometry/body/Material_05  GeomSubset
+  /jetbot/chassis/geometry/body/Material_00  GeomSubset
+  /jetbot/chassis/geometry/body/Material_10  GeomSubset
+  /jetbot/chassis/geometry/body/Material_15  GeomSubset

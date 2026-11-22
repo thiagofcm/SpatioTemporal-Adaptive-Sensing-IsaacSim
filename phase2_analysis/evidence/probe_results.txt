@@ -1,0 +1,14 @@
+MultiMeshRayCaster moving-obstacle probe (probe_moving_obstacles.py), 2026-11-21, Isaac Lab 2.3.2 / Isaac Sim 5.1,
+RTX A6000, launched with isaacrun (CUDA shim active), physics dt = 1/120 s, 1 physics step + 1 LiDAR update per loop.
+Check: forward ray range must be 0.90 m when the 0.2 m cube covers y=0, else 1.45 m (wall); tolerance 0.02 m.
+
+variant                                   envs  steps  result
+kinematic obstacle, pose writes, lidar      1024   300  CRASH: CUDA illegal memory access (GpuRigidBodyView.cpp:512) on first step
+kinematic obstacle, pose writes, NO lidar     64   100  CRASH: same error  -> caused by kinematic pose writes, not by the ray caster
+kinematic obstacle, not moving, lidar         64   100  0 / 6,400 mismatches
+kinematic obstacle, pose writes, no tracking  64   100  CRASH: same error
+dynamic (gravity off), pose writes, tracked   64   200  0 / 12,524 mismatches
+dynamic (gravity off), velocity cmd, tracked  64   200  0 / 12,527 mismatches
+dynamic (gravity off), velocity cmd, tracked 4096   300  0 / 1,191,843 mismatches; 131 loops/s = 537.7k env-steps/s, 194 Mrays/s
+dynamic (gravity off), velocity cmd, NOT tracked (negative control)
+                                           1024   200  177,354 / 200,369 mismatches (88.5%) -> checker is valid; tracking is required

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# check_physx_gpu [KIT_LOG]: report whether PhysX got CUDA in an Isaac run.
+# Defaults to the newest Kit log of env_isaaclab. Exit 0 = GPU OK, 1 = CPU fallback/unknown.
+set -uo pipefail
+env_dir="${ISAAC_CONDA_ENV:-$HOME/.conda/envs/env_isaaclab}"
+logdir="$env_dir/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1"
+f="${1:-$(ls -t "$logdir"/kit_*.log 2>/dev/null | head -1)}"
+[ -f "$f" ] || { echo "no Kit log found"; exit 1; }
+echo "Kit log: $f"
+handle="$(grep -m1 -oE 'handle on CUDA lib is \S+' "$f" | awk '{print $NF}')"
+fallback="$(grep -c 'GPU solver pipeline failed' "$f")"
+echo "PhysX CUDA handle : ${handle:-<not found yet>}"
+echo "GPU->CPU fallbacks: $fallback"
+if [ -n "$handle" ] && [ "$handle" != "(nil)" ] && [ "$fallback" = 0 ]; then
+    echo "RESULT: PASS (PhysX on GPU)"; exit 0
+fi
+echo "RESULT: FAIL (PhysX not on GPU; is the CUDA shim active? source env.sh / use isaacrun)"; exit 1

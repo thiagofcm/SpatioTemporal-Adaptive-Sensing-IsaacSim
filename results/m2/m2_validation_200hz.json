@@ -1,0 +1,181 @@
+{
+ "num_envs": 1024,
+ "physics_hz": 200.0,
+ "scene": "corridor_static_object",
+ "beams": 40,
+ "V1_random_poses": {
+  "rounds": 8,
+  "rays": 327680,
+  "all": {
+   "n": 327680,
+   "max_abs_m": 2.1712605953216553,
+   "p99_abs_m": 0.0008220206946134567,
+   "mean_abs_m": 0.00010768326319521293
+  },
+  "wall": {
+   "n": 314244,
+   "max_abs_m": 0.7889078855514526,
+   "p99_abs_m": 3.147125244140625e-05,
+   "mean_abs_m": 9.184470400214195e-06
+  },
+  "static_cylinder": {
+   "n": 7931,
+   "max_abs_m": 2.1712605953216553,
+   "p99_abs_m": 0.0033618188463151455,
+   "mean_abs_m": 0.0030472578946501017
+  },
+  "moving_cylinder": {
+   "n": 3495,
+   "max_abs_m": 2.1420397758483887,
+   "p99_abs_m": 0.0044252024963498116,
+   "mean_abs_m": 0.0023552754428237677
+  },
+  "no_return": {
+   "n": 2010,
+   "max_abs_m": 0.0,
+   "p99_abs_m": 0.0,
+   "mean_abs_m": 0.0
+  },
+  "hit_flag_mismatch": 2
+ },
+ "V2_beam_ordering": {
+  "envs": 1024,
+  "mover_visible_on_expected_beam": 1023,
+  "argmin_equals_expected_beam": 988,
+  "argmin_equals_oracle_argmin": 1023,
+  "max_abs_err_expected_beam_m": 0.0008241832256317139,
+  "expected_range_m": "0.5 - 0.17 = 0.33 (mover centre on the beam)",
+  "mean_range_expected_beam_m": 0.33056098222732544
+ },
+ "V3_moving": {
+  "control_steps": 50,
+  "rays": 2048000,
+  "robot_displacement_mean_m": 0.4078483581542969,
+  "scans_with_origin_inside_obstacle_or_tilt_gt_2deg": 349,
+  "scans": 51200,
+  "valid_scans": {
+   "all": {
+    "n": 2034040,
+    "max_abs_m": 3.0611703395843506,
+    "p99_abs_m": 0.000882267951965332,
+    "mean_abs_m": 0.00012046823394484818
+   },
+   "wall": {
+    "n": 1935210,
+    "max_abs_m": 0.0028668642044067383,
+    "p99_abs_m": 3.24249267578125e-05,
+    "mean_abs_m": 6.77829757478321e-06
+   },
+   "static_cylinder": {
+    "n": 46634,
+    "max_abs_m": 2.2256407737731934,
+    "p99_abs_m": 0.0034932978451251984,
+    "mean_abs_m": 0.0026675076223909855
+   },
+   "moving_cylinder": {
+    "n": 37462,
+    "max_abs_m": 3.0611703395843506,
+    "p99_abs_m": 0.004956967197358608,
+    "mean_abs_m": 0.0028701946139335632
+   },
+   "no_return": {
+    "n": 14734,
+    "max_abs_m": 0.0,
+    "p99_abs_m": 0.0,
+    "mean_abs_m": 0.0
+   },
+   "hit_flag_mismatch": 9
+  },
+  "excluded_scans": {
+   "all": {
+    "n": 13960,
+    "max_abs_m": 3.4947359561920166,
+    "p99_abs_m": 3.137953042984009,
+    "mean_abs_m": 1.107424259185791
+   },
+   "wall": {
+    "n": 13510,
+    "max_abs_m": 3.404008150100708,
+    "p99_abs_m": 2.920675277709961,
+    "mean_abs_m": 1.1073451042175293
+   },
+   "static_cylinder": {
+    "n": 283,
+    "max_abs_m": 1.8388482332229614,
+    "p99_abs_m": 1.745051383972168,
+    "mean_abs_m": 0.9033447504043579
+   },
+   "moving_cylinder": {
+    "n": 94,
+    "max_abs_m": 0.006866293027997017,
+    "p99_abs_m": 0.005979499313980341,
+    "mean_abs_m": 0.0013954711612313986
+   },
+   "no_return": {
+    "n": 73,
+    "max_abs_m": 3.4947359561920166,
+    "p99_abs_m": 3.4896810054779053,
+    "mean_abs_m": 3.3374240398406982
+   },
+   "hit_flag_mismatch": 72
+  }
+ },
+ "V4_range_and_mount": {
+  "gpu_no_return_rays": 2012,
+  "gpu_no_return_reported_as_range_max": true,
+  "oracle_no_return_rays": 2010,
+  "no_return_disagreements_gpu_vs_oracle": 2,
+  "max_reported_range_m": 3.5,
+  "min_reported_range_m": 0.2106642723083496,
+  "origin_vs_base_plus_urdf_offset_max_m": 7.62939453125e-06,
+  "origin_vs_raycaster_ray_starts_max_m": 0.0,
+  "origin_height_above_ground_mean_m": 0.18828177452087402,
+  "base_link_height_mean_m": -0.004449466243386269
+ },
+ "V5_noise": {
+  "model": "e ~ U(-a(d) d, +a(d) d), a = 1 % (d <= 3 m), 2 % (3 < d <= 5 m); per beam, per scan; clip [0, 3.5]",
+  "draws": 200,
+  "samples_unclipped": 8110400,
+  "u_mean": -7.241553976200521e-05,
+  "u_var": 0.33326971530914307,
+  "u_var_expected": 0.3333333333333333,
+  "u_min": -1.0000019073486328,
+  "u_max": 1.000002384185791,
+  "ks_statistic_vs_U(-1,1)": 0.0025522365951538006,
+  "ks_pvalue": 0.14741245470721642,
+  "ks_pvalues_10_disjoint_subsamples_200k": [
+   0.983766829164451,
+   0.31145350927087956,
+   0.5415718980400168,
+   0.6407566463805445,
+   0.37123088645266733,
+   0.9102663962719596,
+   0.737812348540261,
+   0.9498985823075371,
+   0.5844544551340953,
+   0.7127641960463994
+  ],
+  "bands": {
+   "(0.0,3.0] m": {
+    "n": 7975400,
+    "expected_rel_halfwidth": 0.009999999776482582,
+    "max_abs_rel": 0.010000023990869522,
+    "std_rel": 0.005773020442575216,
+    "expected_std_rel": 0.005773502562848417
+   },
+   "(3.0,3.5] m": {
+    "n": 135000,
+    "expected_rel_halfwidth": 0.019999999552965164,
+    "max_abs_rel": 0.01999991573393345,
+    "std_rel": 0.011537645012140274,
+    "expected_std_rel": 0.011547005125696834
+   }
+  },
+  "corr_adjacent_beams": -0.00047870221897028387,
+  "corr_successive_scans": 0.003099286463111639,
+  "no_return_rays_unchanged": true,
+  "rays_near_cap_subject_to_clipping": 82,
+  "max_noisy_range_m": 3.5,
+  "min_noisy_range_m": 0.0011746356030926108
+ }
+}

@@ -1,0 +1,29 @@
+# --- runtime / launcher ---
+.shim/
+logs/
+
+# --- Python caches / editor ---
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# --- third_party: nested git clones (pinned commits: turtlebot4 7fd29fb, create3_sim 6c30584) and the xacro venv ---
+third_party/turtlebot4/
+third_party/create3_sim/
+third_party/.venv_xacro/
+
+# --- training outputs ---
+# TensorBoard event files (kept on disk, not versioned)
+**/events.out.tfevents.*
+# 3-iteration smoke-test runs
+results/m5/runs/*_smoke/
+# intermediate checkpoints: only the evaluated checkpoint is versioned
+results/m5/runs/**/model_*.pt
+!results/m5/runs/**/model_200.pt
+
+# --- regenerable robot-visualization exports (scripts/viz/export_robot_geometry.py) ---
+results/viz/*.glb
