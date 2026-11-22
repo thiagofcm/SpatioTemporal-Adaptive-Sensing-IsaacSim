@@ -11,8 +11,8 @@ research-line-specific code (training loops, experiment paths).
 | `control/diff_drive.py` | command model: delay, lag, gains, wheel saturation (GPU-batched) | actuator variants |
 | `sensors/` | `lidar2d.py` (MultiMeshRayCaster), `noise.py`, `patterns.py`, `base.py` (`SensorOutput`) | **M7:** `mirrorcle3d.py` (same `SensorOutput`), programmable scan patterns, acquisition timing |
 | `geometry/analytic2d.py` | analytic clearance / ray oracle (ground truth for rewards, terminations, validation) | – |
-| `scenes/` | one file per scene: geometry, DR ranges, samplers (`corridor_static_random.py`, incl. the Z1–Z4 sampler ported from the reference); spawners | **M6:** `corridor_dynamic_*.py` + a small scene registry |
-| `envs/corridor_scene.py` | scene runtime: builds the vectorized scene, GPU resets (layout, start, goal, robot, actuator), sensor binding, ground-truth queries | **M6:** moving obstacles; scene and sensor chosen by the env config |
+| `scenes/` | registry (`__init__.py`, `get_scene`); one file per scene (`corridor_static_random.py`: Z1–Z4 baffles and their sampler; `corridor_dynamic_chase_random.py`: moving OB1 / OB2, obstacle DR ranges and path-y sampler); `_common.py` (arena, corridor walls, start poses, goals); `_obstacle_motion.py` (GPU-vectorized `random_ping_pong` motion); spawners | more scenes (e.g. OB3 `triggered_chase`) |
+| `envs/corridor_scene.py` | scene runtime: the scene chosen by `scene_name`; builds the vectorized scene (walls, baffles, kinematic obstacle cylinders tracked by the ray caster), GPU resets (layout, obstacles, start, goal, robot, actuator), obstacle motion every physics step, ground-truth clearance (walls + active obstacles) | sensor chosen by the env config (M7) |
 | `tasks/nav2d/` | navigation DirectRLEnv (`STNav-TB4-Corridor-Static-v0`), its config and the RSL-RL agent config | new navigation tasks/variants |
 | `tasks/sensing/` (future) | adaptive-sensing envs wrapping navigation with a frozen policy | AdaptiveSensing |
 | `calibration/` | simulation constants used by the env (`sim_harness.py`) and the M1 calibration tools | – |
@@ -28,9 +28,10 @@ Each research line owns its scripts, configs, runs and evaluations (`Navigation/
 ## Adding things
 
 * **A scene:**
-  * add `scenes/<name>.py` with geometry, DR ranges and samplers;
-  * extend the scene runtime if it needs new body types (moving obstacles);
-  * select it from the env config (field added in M6), then from the experiment YAML (`env.<field>`).
+  * add `scenes/<name>.py` with `NAME`, `WALLS`, `HAS_BAFFLES`, `MOVING_OBSTACLES` (+ its DR ranges / samplers) and
+    register it in `scenes/__init__.py`;
+  * extend the scene runtime only for new body or motion types;
+  * select it with `env.scene_name` in the experiment YAML (task `STNav-TB4-Corridor-v0`).
 * **A sensor:**
   * add `sensors/<name>.py` returning `SensorOutput`;
   * add a config field selecting it (M7);

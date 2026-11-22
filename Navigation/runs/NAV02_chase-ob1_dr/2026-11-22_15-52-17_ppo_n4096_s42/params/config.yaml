@@ -1,0 +1,50 @@
+source: Navigation/configs/NAV02_chase-ob1_dr.yaml
+exp_id: NAV02_chase-ob1_dr
+task: STNav-TB4-Corridor-v0
+run_name: null
+env:
+  scene.num_envs: 4096
+  episode_length_s: 70.0
+  scene_name: corridor_dynamic_chase_random
+  active_obstacles:
+  - 1
+  obstacle_presence_dr: false
+  obstacle_speed_dr: true
+  obstacle_y_dr: true
+  obstacle_radius_dr: false
+  start_pose_dr: true
+  goals:
+  - - -1.8
+    - -1.7
+  - - -2.0
+    - -1.8
+  - - -2.0
+    - -2.0
+  - - -2.2
+    - -1.7
+  - - -1.8
+    - -2.1
+  - - -2.2
+    - -2.1
+  lidar_noise: true
+  lidar_period_s: 0.2
+  goal_distance_norm: 7.0
+  goal_tolerance: 0.2
+  safety_margin: 0.05
+  rewards.progress_scale: 10.0
+  rewards.proximity_scale: 1.0
+  rewards.proximity_clearance: 0.15
+  rewards.time_penalty_per_s: 0.1
+  rewards.goal_reward: 30.0
+  rewards.collision_penalty: 30.0
+  rewards.timeout_penalty: 0.0
+agent:
+  seed: 42
+  max_iterations: 1500
+  num_steps_per_env: 32
+  algorithm.learning_rate: 0.0003
+  algorithm.gamma: 0.99
+  algorithm.lam: 0.95
+  algorithm.entropy_coef: 0.005
+sweep: {}
+set: {}

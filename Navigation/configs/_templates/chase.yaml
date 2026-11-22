@@ -1,0 +1,19 @@
+# Template for a navigation experiment in the dynamic corridor (moving OB1 / OB2). Copy to Navigation/configs/<ID>.yaml,
+# set exp_id (= file name, next free NAV number, see docs/EXPERIMENTS.md), create the card from
+# docs/templates/experiment_card.md and add the registry row. Never edit a config that already has runs.
+exp_id: NAV00_chase_template
+task: STNav-TB4-Corridor-v0
+run_name: null
+env:
+  scene.num_envs: 4096
+  scene_name: corridor_dynamic_chase_random
+  active_obstacles: [1, 2]
+  obstacle_presence_dr: false
+  obstacle_speed_dr: true
+  obstacle_y_dr: true
+  start_pose_dr: true
+  goals: [[-1.80, -1.70], [-2.00, -1.80], [-2.00, -2.00], [-2.20, -1.70], [-1.80, -2.10], [-2.20, -2.10]]
+agent:
+  seed: 42
+  max_iterations: 1500
+sweep: {}

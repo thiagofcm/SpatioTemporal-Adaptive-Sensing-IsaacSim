@@ -10,6 +10,7 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 import time
 
 from isaaclab.app import AppLauncher
@@ -18,8 +19,14 @@ p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=4096)
 p.add_argument("--steps", type=int, default=200)
 p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "tests", "sim", "results", "benchmark_env.jsonl"))
+p.add_argument("--set", action="append", default=[], metavar="env.PATH=VALUE",
+               help="env cfg override, e.g. --set env.scene_name=corridor_dynamic_chase_random --set env.active_obstacles=[1,2]")
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from tools import experiments as X  # noqa: E402
+
+sets = X.parse_set(args.set)
 t_launch = time.time()
 app = AppLauncher(args).app
 
@@ -39,6 +46,7 @@ cfg = CorridorNavEnvCfg()
 cfg.scene.num_envs = args.num_envs
 cfg.sim.device = args.device
 cfg.seed = 11
+X.apply_overrides(cfg, sets["env"], "env")
 t0 = time.time()
 genv = gym.make("STNav-TB4-Corridor-Static-v0", cfg=cfg)
 agent = handle_deprecated_rsl_rl_cfg(CorridorNavPPORunnerCfg(), version("rsl-rl-lib"))
@@ -80,7 +88,7 @@ for line in out.strip().splitlines():
 res = {"num_envs": N, "steps": args.steps, "control_steps_per_s": args.steps * N / el, "wall_s": el,
        "setup_s": t_setup, "episodes_ended": sum(outcomes.values()), "outcomes": outcomes,
        "mean_reward_terms_per_step": {k: v / args.steps for k, v in term_sums.items()}, "non_finite": bad,
-       "gpu_mem_process_mib": mem, "rsl_rl_version": version("rsl-rl-lib"), "lidar_noise": cfg.lidar_noise}
+       "gpu_mem_process_mib": mem, "rsl_rl_version": version("rsl-rl-lib"), "lidar_noise": cfg.lidar_noise, "scene": cfg.scene_name, "set": args.set}
 print("[BENCH]", json.dumps(res), flush=True)
 os.makedirs(os.path.dirname(args.out), exist_ok=True)
 with open(args.out, "a") as f:

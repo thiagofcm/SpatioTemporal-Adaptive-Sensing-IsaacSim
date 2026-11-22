@@ -1,0 +1,24 @@
+{
+ "exp_id": "NAV02_chase-ob1_dr",
+ "task": "STNav-TB4-Corridor-v0",
+ "run_name": "ppo_n4096_s42",
+ "command": [
+  "Navigation/scripts/train.py",
+  "--headless",
+  "--config",
+  "Navigation/configs/NAV02_chase-ob1_dr.yaml"
+ ],
+ "host": "ece-focus-xg01",
+ "cuda_visible_devices": "4",
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "07e78a64aec3fc2a4b1e1cb3bde4a85acf2e98d7",
+  "branch": "main",
+  "dirty": true
+ },
+ "versions": {
+  "rsl-rl-lib": "5.0.1",
+  "torch": "2.7.0+cu128",
+  "isaaclab": "0.54.4"
+ }
+}

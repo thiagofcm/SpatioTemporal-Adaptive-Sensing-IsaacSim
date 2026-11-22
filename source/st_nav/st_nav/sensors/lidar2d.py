@@ -78,7 +78,8 @@ class Lidar2D(RangeSensor):
     def reset(self, env_ids=None):
         self.rc.reset(env_ids)
 
-    def read(self, sim_time=0.0) -> SensorOutput:
+    def read(self, sim_time=0.0, noise_keys=None) -> SensorOutput:
+        """noise_keys = (seed (N,), tick (N,)): reproducible per-(env, acquisition tick, beam) noise (see noise.py)."""
         data = self.rc.data                        # triggers the (lazy) ray cast
         d = torch.linalg.norm(data.ray_hits_w - self.origin_w.unsqueeze(1), dim=-1)
         hit = torch.isfinite(d) & (d <= self.range_max)
@@ -88,7 +89,7 @@ class Lidar2D(RangeSensor):
             d = torch.where(short, torch.full_like(d, self.range_max), d)
             hit = hit & ~short
         clean = d
-        noisy = self.noise(d, hit, self.range_max)
+        noisy = self.noise(d, hit, self.range_max, keys=noise_keys)
         n = d.shape[0]
         t = torch.as_tensor(sim_time, dtype=torch.float32, device=self.device)
         return SensorOutput(ranges=noisy, ranges_clean=clean, hit=hit, valid=torch.ones_like(hit),

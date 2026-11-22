@@ -1,50 +1,96 @@
-"""Plot an M5 evaluation (episodes.csv + trajectories.npy). python tools/plot_eval.py <eval_dir>"""
-import csv, math, os, sys
-import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import numpy as np
-import torch
-from matplotlib.patches import Circle, Polygon
-from st_nav.scenes import corridor_static_random as S
-E = sys.argv[1]
-rows = list(csv.DictReader(open(os.path.join(E, "episodes.csv"))))
-T = np.load(os.path.join(E, "trajectories.npy"))            # (steps, n, 2)
+#!/usr/bin/env python3
+"""Aggregate figure of a recorded evaluation (or a selection of its episodes), reconstructed from the episode folders
+only (numpy + matplotlib): all trajectories coloured by outcome over the scene (per-episode baffles / obstacle paths
+drawn faintly), outcome counts, duration and minimum-clearance distributions, success by start pose, and the failed
+episodes with their own geometry.
 
-def wall(ax, cx, cy, L, yaw, th, **kw):
-    c, s = math.cos(yaw), math.sin(yaw)
-    ax.add_patch(Polygon([(cx + c * x - s * y, cy + s * x + c * y) for x, y in
-                          [(-L / 2, -th / 2), (L / 2, -th / 2), (L / 2, th / 2), (-L / 2, th / 2)]], **kw))
+    python tools/plot_eval.py <eval_dir>                          # -> <eval_dir>/eval_overview.png
+    python tools/plot_eval.py <eval_dir> --episodes 0 1 25 73     # -> <eval_dir>/eval_selection_0_1_25_73.png
+"""
+from __future__ import annotations
 
-def zwalls(r):
-    L = torch.tensor([[float(r[f"Z{j}_length"]) for j in range(1, 5)]]); Th = torch.tensor([[float(r[f"Z{j}_thickness"]) for j in range(1, 5)]])
-    O = torch.tensor([[float(r[k]) for k in ("Z1_x_offset", "Z2_x_offset", "Z3_y_offset", "Z4_y_offset")]])
-    return S.z_walls(L, Th, O)[0].numpy()
+import argparse
+import os
+import sys
+from collections import Counter
+from pathlib import Path
 
-def base(ax):
-    for w in S.FIXED_WALLS: wall(ax, w[0], w[1], w[2], w[3], S.WALL_THICKNESS, fc="0.45", ec="k", lw=0.3)
-    ax.set_xlim(-3, 3); ax.set_ylim(-3, 3); ax.set_aspect("equal"); ax.grid(lw=0.3)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import matplotlib  # noqa: E402
 
-fail = [int(r["episode"]) for r in rows if r["success"] != "True"]
-fig, ax = plt.subplots(1, 1 + max(1, len(fail)), figsize=(7 * (1 + max(1, len(fail))), 7))
-base(ax[0])
-for r in rows:
-    i = int(r["episode"])
-    for z in zwalls(r): wall(ax[0], z[0], z[1], z[2], z[3], z[4], fc="tab:orange", alpha=0.03, ec="none")
-for r in rows:
-    i = int(r["episode"]); ok = r["success"] == "True"
-    ax[0].plot(T[:, i, 0], T[:, i, 1], color="tab:green" if ok else "tab:red", lw=0.6 if ok else 2.0, alpha=0.5 if ok else 1)
-g = (float(rows[0]["goal_x"]), float(rows[0]["goal_y"]))
-for a in ax: a.add_patch(Circle(g, 0.2, fc="none", ec="darkgreen", lw=1.5))
-n, s = len(rows), sum(r["success"] == "True" for r in rows)
-ax[0].set_title(f"{n} evaluation episodes (seeds 3000+i / 4000+i), goal {g}: {s}/{n} success\n"
-                f"green = success, red = failure; orange shading = Z1-Z4 of all episodes", fontsize=9)
-for k, i in enumerate(fail):
-    a = ax[1 + k]; r = rows[i]; base(a)
-    for z in zwalls(r): wall(a, z[0], z[1], z[2], z[3], z[4], fc="tab:orange", ec="k", lw=0.4)
-    a.plot(T[:, i, 0], T[:, i, 1], color="tab:red", lw=2)
-    last = T[~np.isnan(T[:, i, 0]), i][-1]
-    a.add_patch(Circle(last, 0.177, fc="tab:red", alpha=0.3))
-    a.set_title(f"episode {i} ({r['outcome']}, step {r['n_steps']}): start {r['start_pose_index']}, "
-                f"modes {r['z12_mode']}/{r['z34_mode']}\nmin clearance {r['min_clearance_m']} m", fontsize=9)
-    a.set_xlim(-1.0, 3.0); a.set_ylim(-1.0, 3.0)
-fig.tight_layout(); out = os.path.join(E, "eval_trajectories.png"); fig.savefig(out, dpi=110); print(out)
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+
+import episode_data as ED  # noqa: E402
+import viz_common as V  # noqa: E402
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    p.add_argument("eval_dir")
+    p.add_argument("--episodes", type=int, nargs="+", default=None)
+    p.add_argument("--max-failures", type=int, default=4)
+    p.add_argument("--out", default=None)
+    a = p.parse_args()
+    ev = ED.load_eval(a.eval_dir)
+    eps = [ED.load_episode(d) for d in ED.episode_dirs(a.eval_dir, a.episodes)]
+    metas = [e["meta"] for e in eps]
+    m0 = metas[0]
+    fails = [e for e in eps if e["meta"]["outcome"] != "goal"][:a.max_failures]
+    nf = len(fails)
+    fig = plt.figure(figsize=(20, 9.5 + (4.8 if nf else 0)))
+    gs = fig.add_gridspec(2 + (1 if nf else 0), 4, height_ratios=[1.3, 1] + ([1] if nf else []))
+    ax = fig.add_subplot(gs[0:2, 0:2])
+    V.draw_walls(ax, {"walls": [w for w in eps[0]["geometry"]["walls"] if not w.get("name", "").startswith("Z")]})
+    for e in eps:                                                    # per-episode randomized parts, faint
+        V.draw_walls(ax, {"walls": [w for w in e["geometry"]["walls"] if w.get("name", "").startswith("Z")]}, alpha=0.04)
+        V.draw_obstacle_paths(ax, e["geometry"], alpha=0.03)
+    for e in eps:
+        c = V.OUTCOME_COLORS.get(e["meta"]["outcome"], "gray")
+        ok = e["meta"]["outcome"] == "goal"
+        ax.plot(e["traj"]["x"], e["traj"]["y"], color=c, lw=0.7 if ok else 1.8, alpha=0.5 if ok else 1, zorder=3 if ok else 4)
+    V.draw_goal(ax, m0)
+    cnt = Counter(m["outcome"] for m in metas)
+    n = len(metas)
+    V.setup_map(ax, eps[0]["geometry"], f"{m0.get('exp_id', '')} {m0.get('protocol', '')}: {cnt.get('goal', 0)}/{n} success  "
+                f"({', '.join(f'{k} {v}' for k, v in sorted(cnt.items()))})", fontsize=10)
+    for k, col in V.OUTCOME_COLORS.items():
+        ax.plot([], [], color=col, label=k)
+    ax.legend(fontsize=8, loc="center right")
+    a1 = fig.add_subplot(gs[0, 2])
+    ks = list(V.OUTCOME_COLORS)
+    a1.bar(ks, [cnt.get(k, 0) for k in ks], color=[V.OUTCOME_COLORS[k] for k in ks])
+    a1.set_title("outcomes", fontsize=9); a1.tick_params(labelsize=7)
+    a2 = fig.add_subplot(gs[0, 3])
+    dur = [m["duration_s"] for m in metas if m["outcome"] == "goal"]
+    a2.hist(dur, bins=20, color="tab:green"); a2.set_title(f"duration of successes [s] (mean {np.mean(dur) if dur else float('nan'):.1f})", fontsize=9)
+    a3 = fig.add_subplot(gs[1, 2])
+    mc = [m["min_clearance_m"] for m in metas]
+    a3.hist(mc, bins=25, color="tab:blue"); a3.axvline(m0["terminations"]["safety_margin_m"], color="tab:red", ls="--", lw=1)
+    a3.set_title("minimum clearance per episode [m] (red: safety margin)", fontsize=9)
+    a4 = fig.add_subplot(gs[1, 3])
+    groups = sorted({m["start"]["index"] for m in metas})
+    a4.bar([str(g) for g in groups], [np.mean([m["success"] for m in metas if m["start"]["index"] == g]) for g in groups],
+           color="tab:green")
+    a4.set_ylim(0, 1.05); a4.set_title("success rate by start pose index", fontsize=9)
+    for i, e in enumerate(fails):
+        af = fig.add_subplot(gs[2, i])
+        V.draw_walls(af, e["geometry"]); V.draw_obstacle_paths(af, e["geometry"]); V.draw_goal(af, e["meta"])
+        af.plot(e["traj"]["x"], e["traj"]["y"], color="tab:red", lw=1.5)
+        O = e["obstacles"]
+        for j in range(len(O["ids"])):
+            if O["active"][j]:
+                af.add_patch(plt.Circle(V.last_obstacle_xy(e, j), O["radius"][j], fc="tab:purple", alpha=0.6, ec="k"))
+        af.add_patch(plt.Circle((e["traj"]["x"][-1], e["traj"]["y"][-1]), e["meta"]["robot"]["footprint_radius_m"],
+                                fc="tab:red", alpha=0.4, ec="k"))
+        V.setup_map(af, e["geometry"], V.episode_title(e["meta"]), fontsize=8)
+    fig.tight_layout()
+    out = Path(a.out) if a.out else Path(a.eval_dir) / (
+        "eval_overview.png" if a.episodes is None else "eval_selection_" + "_".join(map(str, a.episodes)) + ".png")
+    fig.savefig(out, dpi=100)
+    print(out)
+
+
+if __name__ == "__main__":
+    main()

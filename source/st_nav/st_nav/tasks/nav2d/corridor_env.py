@@ -40,7 +40,10 @@ class CorridorNavEnv(DirectRLEnv):
                                 start_pose_dr=cfg.start_pose_dr, safety_margin=cfg.safety_margin,
                                 seed=cfg.seed if cfg.seed is not None else 0, bank_seed=cfg.bank_seed,
                                 bank_assignment=cfg.bank_assignment, offsets_from_bank=cfg.offsets_from_bank,
-                                start_poses=cfg.start_poses)
+                                start_poses=cfg.start_poses, scene_name=cfg.scene_name,
+                                active_obstacles=tuple(cfg.active_obstacles), obstacle_presence_dr=cfg.obstacle_presence_dr,
+                                obstacle_speed_dr=cfg.obstacle_speed_dr, obstacle_y_dr=cfg.obstacle_y_dr,
+                                obstacle_radius_dr=cfg.obstacle_radius_dr, max_episode_s=cfg.episode_length_s)
         if cfg.goals is not None:
             scfg.goals = tuple(tuple(g) for g in cfg.goals)
         scfg.lidar.noise.enabled = cfg.lidar_noise
@@ -74,6 +77,7 @@ class CorridorNavEnv(DirectRLEnv):
         self.corr.cm.set_command(self.actions[:, 0] * self.cfg.v_max, self.actions[:, 1] * self.cfg.w_max)
 
     def _apply_action(self):
+        self.corr.advance_obstacles(self.physics_dt)              # moving obstacles (no-op in static scenes)
         wl, wr, _, _ = self.corr.cm.step()
         self.corr.robot.set_joint_velocity_target(torch.stack([wl, wr], -1), joint_ids=self.corr.wheel_ids)
 
@@ -154,7 +158,8 @@ class CorridorNavEnv(DirectRLEnv):
     def _get_observations(self) -> dict:
         due = self.ep_time + 1e-6 >= self.next_scan_t
         if bool(due.any()):
-            out = self.corr.lidar.read(self.ep_time)
+            tick = torch.round(self.ep_time / self.physics_dt).to(torch.int64)   # acquisition time (physics steps)
+            out = self.corr.lidar.read(self.ep_time, noise_keys=(self.corr.lidar_seed, tick))
             self.scan[due] = out.normalized[due]
             self.scan_clean[due] = (out.ranges_clean / out.range_max)[due]
             self.scan_t[due] = self.ep_time[due]

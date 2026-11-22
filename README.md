@@ -28,7 +28,8 @@ Navigation/             research line: scripts/ (train.py, evaluate.py), configs
 AdaptiveSensing/        research line (created with its first experiment): same layout, split by temporal / spatial /
                         spatiotemporal
 models/navigation/      frozen navigation policies for AdaptiveSensing (<ID>_<checkpoint>.pt + .json)
-tools/                  experiments.py (IDs, paths, YAML configs), monitor_run.py, plot_eval.py, make_video.py,
+tools/                  experiments.py (IDs, paths, YAML configs), monitor_run.py, episode_data.py (evaluation recording
+                        format), make_video.py, plot_episode.py, plot_eval.py (standalone: numpy + matplotlib),
                         benchmark_env.py
 tests/                  unit/ (no simulator, pytest) · sim/ (simulator regression scripts) · golden/ (refactoring checks)
 infrastructure/         M1–M5 development history (reports, scripts, results) + server diagnostics
@@ -53,8 +54,10 @@ tensorboard --logdir Navigation/runs --port 6006
 
 # evaluate (writes Navigation/eval/<ID>/<protocol>/<run>_<checkpoint>/)
 bin/isaacrun -g <gpu> -- python Navigation/scripts/evaluate.py --headless --checkpoint Navigation/runs/<ID>/<run>/model_200.pt
-python tools/plot_eval.py <eval dir>                                       # trajectories figure
-python tools/make_video.py <eval dir> --episodes 0 1 2                     # top-down MP4
+python tools/plot_eval.py <eval dir>                                       # whole-evaluation figure
+python tools/plot_episode.py <eval dir>/episode_0025                       # one episode: map + time series
+python tools/make_video.py <eval dir>/episode_0025                         # one episode MP4
+python tools/make_video.py --eval <eval dir> --episodes 0 1 2              # several episodes side by side
 ```
 
 ## Tests

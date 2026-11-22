@@ -10,6 +10,8 @@ scripts import.
 | ID | Line | Status | Question | Config |
 |---|---|---|---|---|
 | [NAV01_static_initial](../Navigation/eval/NAV01_static_initial/README.md) | Navigation | done | Can PPO learn collision-free navigation in the randomized static corridor (2D LiDAR, start-pose DR) at 4,096 envs? | [config](../Navigation/configs/NAV01_static_initial.yaml) |
+| [NAV02_chase-ob1_dr](../Navigation/eval/NAV02_chase-ob1_dr/README.md) | Navigation | evaluating | Can PPO navigate the dynamic corridor with one moving obstacle (OB1; speed / path-y DR)? | [config](../Navigation/configs/NAV02_chase-ob1_dr.yaml) |
+| [NAV03_chase-ob1ob2_dr](../Navigation/eval/NAV03_chase-ob1ob2_dr/README.md) | Navigation | evaluating | Can PPO navigate the dynamic corridor with two moving obstacles (OB1 + OB2; speed / path-y DR)? | [config](../Navigation/configs/NAV03_chase-ob1ob2_dr.yaml) |
 
 ## Experiment ID
 
@@ -26,8 +28,8 @@ scripts import.
 
 * `NN` is the next free number of the prefix. It is never reused; a retired experiment keeps its number and is
   marked `superseded by <ID>`.
-* `<scene>` is `static` (corridor_static_random) or, from M6, `chase-<obstacles>` (dynamic scenes), as in the
-  reference.
+* `<scene>` is `static` (corridor_static_random) or `chase-<obstacles>` (corridor_dynamic_chase_random, e.g.
+  `chase-ob1`, `chase-ob1ob2`), as in the reference.
 * `<short-desc>` says what makes the experiment different, in lowercase words joined by `-`.
 * When an experiment corresponds to one in the reference repository (e.g. `ST04`), the card says so.
 * The ID is the only name used for the experiment's config, runs folder, eval folder and registry row.
@@ -43,18 +45,40 @@ Navigation/
 │     params/run_info.json                  command, git state of this repo, versions
 │     model_*.pt, events.out.tfevents.*     checkpoints and TensorBoard (only listed checkpoints are in git)
 └── eval/<ID>/README.md                   the experiment card (from docs/templates/experiment_card.md)
-    eval/<ID>/<protocol>/<run>_<ckpt>/    one folder per evaluated policy: episodes.csv, summary.json, run_config.json,
-                                          trajectories.npy, recording.npz, figures, videos
+    eval/<ID>/<protocol>/summary.csv      one row per evaluated policy (same episodes: directly comparable)
+    eval/<ID>/<protocol>/<run>_<ckpt>/    one folder per evaluated policy: run_config.json (resolved configuration),
+                                          episodes.csv, summary.json, world_geometry.json, figures, videos and
+      episode_NNNN/                       one folder per episode (format: tools/episode_data.py): metadata.json,
+                                          world_geometry.json, trajectory.csv, steps.csv, lidar.npz, obstacles.npz
 models/navigation/<ID>_<ckpt>.pt + .json  navigation policies promoted for reuse by AdaptiveSensing
 ```
 
 * **`<protocol>`:** a named evaluation protocol defined in `Navigation/scripts/evaluate.py` (`PROTOCOLS`). It fixes
   episodes, seeds, goal and timeout, so all policies in one protocol folder are directly comparable.
   * `ref_static_c10`: the reference protocol. 100 episodes; obstacles from reference seeds 3000+i (held out from
-    training); start poses from reference seeds 4000+i; goal (−2, −2); 80 s timeout.
+    training); start poses from reference seeds 4000+i; goal (−2, −2); 70 s timeout (= training episode length;
+    the reference evaluation used 80 s).
+  * `ref_chase_c10`: dynamic scenes (reference ST04 / ST05 evaluation). Same start seeds, goal and timeout; the
+    moving obstacles follow the run's scene settings.
+  * **Reproducibility:** episode i has per-episode seeds derived from (`--seed`, i) (`st_nav/crng.py`, counter-based).
+    They fix its whole obstacle realization and its LiDAR noise (per acquisition time and beam), independently of all
+    other envs, so every policy evaluated with the same protocol and seed meets identical obstacle trajectories and
+    identical noise for identical measurements. The seeds are recorded in each episode's `metadata.json`.
   * Overriding any protocol setting on the command line writes to `<protocol>_custom-<keys>`.
 * **`<run_name>`:** `ppo_n<num_envs>_s<seed>` by default (or `run_name` from the config), plus `_<run_tag>` if one
   is given.
+
+## Evaluation recordings and visualization
+
+Every episode folder is self-contained: the visualization tools rebuild the scene from it alone (numpy + matplotlib;
+no st_nav, Isaac Lab or PyTorch), as in the reference's AdaptiveFPS/eval/<...>/episode_NNNN/.
+
+```bash
+python tools/make_video.py <eval_dir>/episode_0025                 # one episode: map + timelines (MP4 in the folder)
+python tools/make_video.py --eval <eval_dir> --episodes 0 1 25     # several episodes side by side
+python tools/plot_episode.py <eval_dir>/episode_0025               # static figure of one episode
+python tools/plot_eval.py <eval_dir> [--episodes 0 1 25]           # whole evaluation (or a selection)
+```
 
 ## Configs
 

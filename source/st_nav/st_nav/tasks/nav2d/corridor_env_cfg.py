@@ -51,12 +51,19 @@ class CorridorNavEnvCfg(DirectRLEnvCfg):
     # ---- rewards ----
     rewards: RewardCfg = RewardCfg()
     # ---- scenario ----
+    scene_name: str = "corridor_static_random"           # st_nav.scenes: corridor_static_random | corridor_dynamic_chase_random
+    # moving obstacles (dynamic scenes; reference flag names): fixed active set and per-episode randomization
+    active_obstacles: tuple = (1, 2)                     # e.g. (1,) = OB1 only, (1, 2) = OB1 + OB2
+    obstacle_presence_dr: bool = False
+    obstacle_speed_dr: bool = False
+    obstacle_y_dr: bool = False
+    obstacle_radius_dr: bool = False                     # not supported (mesh sizes baked at start-up)
     start_pose_dr: bool = True                           # reference ST04-07: 5 start points, yaw pi +- 10 deg, per reset (M5)
     bank_size: int = 1024
-    privileged_critic: bool = False
+    privileged_critic: bool = False                      # optional critic observation group (clean scan + GT)
     # ---- evaluation overrides (None/defaults = training behaviour; see CorridorSceneCfg) ----
     bank_seed: int = 0
     bank_assignment: str = "random"
     offsets_from_bank: bool = False
     start_poses: tuple | None = None
-    goals: tuple | None = None                           # None: reference ST01 9-goal list                      # optional critic observation group (clean scan + GT)
+    goals: tuple | None = None                           # None: reference ST01 9-goal list

@@ -39,8 +39,10 @@ bin/isaacrun -g 5 -- python Navigation/scripts/evaluate.py --headless \
 
 | Protocol | Policy | Episodes | Success | Notes |
 |---|---|---|---|---|
-| `ref_static_c10` | `2026-11-22_00-44-09_m5_initial_4096_model_200` | 100 | **98 %** | 2 safety violations (episodes 25, 73: the robot clips Z1 at its rightmost offset); 0 collisions or timeouts; 29.0 ± 0.7 s; min clearance mean 0.090 m. A re-evaluation after the reorganization gave 99 % (episode 73 is borderline: 0.0498 vs 0.0508 m clearance; LiDAR noise is unseeded) |
-| `ref_static_c10` | `2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation_model_200` | 100 | **100 %** | 29.2 ± 0.7 s; min clearance mean 0.117 m, min 0.066 m |
+| `ref_static_c10` (70 s, per-episode seeds) | `2026-11-22_00-44-09_m5_initial_4096_model_200` | 100 | **98 %** | 2 safety violations (episodes 25, 73: the robot clips Z1 at its rightmost offset); 0 collisions or timeouts; 29.0 s mean; min clearance mean 0.090 m |
+| `ref_static_c10` (70 s, per-episode seeds) | `2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation_model_200` | 100 | **100 %** | 29.2 s mean; min clearance mean 0.117 m, min 0.065 m |
+
+Evaluations re-run on 2026-11-22 with the 70 s timeout (= training) and per-episode reproducible obstacle / LiDAR-noise randomness; earlier 80 s results were replaced.
 
 ## Results
 
@@ -50,7 +52,7 @@ bin/isaacrun -g 5 -- python Navigation/scripts/evaluate.py --headless \
 * **Driving style:** the policy drives near v_max (0.217 m/s mean) and passes close to obstacles (mean minimum
   clearance 0.090 m against the 0.05 m safety margin).
 * **Possible memorization:** trajectories are very similar across layouts, which suggests a largely memorized route.
-  Figures and video: `ref_static_c10/<policy>/eval_trajectories.png`, `eval_episodes_0_1_2_25_73.mp4`.
+  Figures: `ref_static_c10/<policy>/eval_overview.png`, `episode_0025/episode_0025.png`, `episode_0073/episode_0073.png`.
 
 ## Conclusion and next step
 

@@ -12,6 +12,7 @@ are the old ones (table below).
 | [M3_corridor_scene](M3_corridor_scene/) | Randomized static corridor with the reference distributions? | [M3_REPORT.md](M3_corridor_scene/results/M3_REPORT.md) | 20,480 layouts, 0 constraint violations, KS-matched to the reference sampler |
 | [M4_rl_environment](M4_rl_environment/) | RL environment (47-dim obs, rewards, terminations, resets) correct? | [M4_REPORT.md](M4_rl_environment/results/M4_REPORT.md) | 31/31 checks; 55.6k steps/s at 16,384 envs; follow-up: base-link velocity obs, goal-distance norm 7 m, timeout bootstrapping verified |
 | [M5_initial_navigation](M5_initial_navigation/) | First PPO policy | continued as experiment **NAV01** ([card](../Navigation/eval/NAV01_static_initial/README.md)) | 98/100 on the reference protocol at iteration 200 |
+| [M6_dynamic_scene](M6_dynamic_scene/) | Moving obstacles OB1 / OB2 (reference corridor_dynamic_chase_random), consistent with LiDAR and collisions? | [REPORT.md](M6_dynamic_scene/REPORT.md) | 20/20 sim checks + unit tests; 27k steps/s at 4,096 envs; experiments NAV02 / NAV03 prepared |
 | [robot_viz](robot_viz/) | Robot geometry renders / motion video | – | `.glb` exports are regenerable and git-ignored |
 | [server](server/) | GPU server diagnostics (PhysX on GPU, ray caster, Vulkan) | [PHASE1_INSTALLATION_REPORT.md](server/PHASE1_INSTALLATION_REPORT.md) | rendering unavailable (`/dev/dri`); headless GPU physics works with the CUDA workaround |
 

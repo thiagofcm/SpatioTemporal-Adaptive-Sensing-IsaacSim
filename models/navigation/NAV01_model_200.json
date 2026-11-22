@@ -11,5 +11,5 @@
  "sensor": {"type": "lidar2d", "beams": 40, "range_m": 3.5, "period_s": 0.2, "noise": "datasheet uniform"},
  "network": {"framework": "rsl-rl-lib 5.0.1", "actor_hidden_dims": [256, 256, 128], "activation": "elu", "obs_normalization": true, "checkpoint_keys": ["actor_state_dict", "critic_state_dict", "optimizer_state_dict", "iter", "infos"]},
  "load": "OnPolicyRunner(env, CorridorNavPPORunnerCfg (via handle_deprecated_rsl_rl_cfg), ...).load(path); policy = runner.get_inference_policy() (deterministic actor mean, includes the observation normalizer)",
- "evaluation": {"protocol": "ref_static_c10", "success": "98/100", "failures": "2 safety violations (episodes 25, 73: clip Z1 at its rightmost offset)", "success_duration_s": 29.0, "result_dir": "Navigation/eval/NAV01_static_initial/ref_static_c10/2026-11-22_00-44-09_m5_initial_4096_model_200"}
+ "evaluation": {"protocol": "ref_static_c10 (70 s, per-episode seeds)", "success": "98/100", "failures": "2 safety violations (episodes 25, 73: clip Z1 at its rightmost offset)", "success_duration_s": 29.0, "result_dir": "Navigation/eval/NAV01_static_initial/ref_static_c10/2026-11-22_00-44-09_m5_initial_4096_model_200"}
 }

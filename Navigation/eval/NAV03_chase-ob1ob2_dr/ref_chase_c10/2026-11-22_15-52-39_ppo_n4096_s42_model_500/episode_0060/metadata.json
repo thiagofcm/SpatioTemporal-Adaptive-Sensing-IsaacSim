@@ -1,0 +1,289 @@
+{
+ "schema_version": "1.0",
+ "episode_index": 60,
+ "exp_id": "NAV03_chase-ob1ob2_dr",
+ "protocol": "ref_chase_c10",
+ "policy": "2026-11-22_15-52-39_ppo_n4096_s42_model_500",
+ "checkpoint": "Navigation/runs/NAV03_chase-ob1ob2_dr/2026-11-22_15-52-39_ppo_n4096_s42/model_500.pt",
+ "seeds": {
+  "start_pose_seed": 4060,
+  "static_obstacles_seed": null,
+  "env_seed": 42
+ },
+ "start": {
+  "x": 2.5,
+  "y": 2.5,
+  "yaw": -3.08347,
+  "index": 0
+ },
+ "goal": {
+  "x": -2.0,
+  "y": -2.0
+ },
+ "deterministic_policy": true,
+ "outcome": "goal",
+ "success": true,
+ "n_steps": 148,
+ "duration_s": 29.6,
+ "episode_return": 88.941,
+ "final_goal_distance_m": 0.1739,
+ "distance_traveled_m": 6.372,
+ "min_clearance_m": 0.1508,
+ "moving_obstacles": {
+  "ids": [
+   "OB1",
+   "OB2"
+  ],
+  "active": [
+   true,
+   true
+  ],
+  "speed_mps": [
+   0.05132989585399628,
+   0.06641145795583725
+  ],
+  "path_y_m": [
+   1.6494126319885254,
+   1.0694317817687988
+  ]
+ },
+ "task": "navigation",
+ "scene": "corridor_dynamic_chase_random",
+ "control": {
+  "control_dt_s": 0.2,
+  "physics_dt_s": 0.01,
+  "decimation": 20,
+  "episode_length_s": 70.0,
+  "max_steps": 350
+ },
+ "robot": {
+  "model": "TurtleBot4 Standard (articulated, PhysX)",
+  "footprint_radius_m": 0.177,
+  "wheel_radius_m": 0.03575,
+  "track_width_m": 0.233,
+  "wheel_speed_max_mps": 0.305,
+  "v_max_mps": 0.22,
+  "w_max_radps": 2.0,
+  "action": "a in [-1, 1]^2 -> command (a0 * v_max, a1 * w_max)"
+ },
+ "actuator": {
+  "model": "calibrated command model (delay, first-order lag, gains, wheel saturation)",
+  "delay_s": 0.14,
+  "delay_w_s": 0.12,
+  "tau_v_s": 0.01,
+  "tau_w_s": 0.05,
+  "k_v": 1.0,
+  "k_w": 0.9,
+  "accel_v_max": 1.0,
+  "accel_w_max": 0.0
+ },
+ "lidar": {
+  "type": "lidar2d",
+  "num_beams": 40,
+  "beam_angles_rad": [
+   0.0,
+   0.15707963267948966,
+   0.3141592653589793,
+   0.47123889803846897,
+   0.6283185307179586,
+   0.7853981633974483,
+   0.9424777960769379,
+   1.0995574287564276,
+   1.2566370614359172,
+   1.413716694115407,
+   1.5707963267948966,
+   1.7278759594743862,
+   1.8849555921538759,
+   2.0420352248333655,
+   2.199114857512855,
+   2.356194490192345,
+   2.5132741228718345,
+   2.670353755551324,
+   2.827433388230814,
+   2.9845130209103035,
+   3.141592653589793,
+   3.2986722862692828,
+   3.4557519189487724,
+   3.612831551628262,
+   3.7699111843077517,
+   3.9269908169872414,
+   4.084070449666731,
+   4.241150082346221,
+   4.39822971502571,
+   4.5553093477052,
+   4.71238898038469,
+   4.869468613064179,
+   5.026548245743669,
+   5.183627878423159,
+   5.340707511102648,
+   5.497787143782138,
+   5.654866776461628,
+   5.811946409141117,
+   5.969026041820607,
+   6.126105674500097
+  ],
+  "range_max_m": 3.5,
+  "range_min_m": 0.0,
+  "mount_offset_xyz_m": [
+   -0.04,
+   0.0,
+   0.192915
+  ],
+  "ray_alignment": "base",
+  "noise": {
+   "enabled": true,
+   "model": "datasheet uniform: error ~ U(+-a(d) * d), then cap",
+   "seeding": "per episode, acquisition physics tick and beam (see random_seeds)",
+   "bands": [
+    [
+     3.0,
+     0.01
+    ],
+    [
+     5.0,
+     0.02
+    ],
+    [
+     25.0,
+     0.025
+    ]
+   ]
+  },
+  "geometry_note": "beam b of lidar row k points at origin_yaw[k] + beam_angle_rad[b] from (origin_x, origin_y)[k]"
+ },
+ "sensing": {
+  "mode": "fixed_rate",
+  "period_s": 0.2,
+  "beams_per_scan": 40,
+  "note": "lidar.npz: fresh = a scan was acquired at this step; beam_acquired / beam_t_acq give the per-beam acquisition flag and time (all beams at the scan time here). Adaptive temporal / spatial / spatiotemporal sensing varies these per beam (and may add an event log)."
+ },
+ "terminations": {
+  "goal_tolerance_m": 0.2,
+  "safety_margin_m": 0.05,
+  "clearance": "footprint clearance = distance to the nearest wall / active obstacle - footprint radius"
+ },
+ "rewards": {
+  "progress_scale": 10.0,
+  "proximity_scale": 1.0,
+  "proximity_clearance": 0.15,
+  "time_penalty_per_s": 0.1,
+  "goal_reward": 30.0,
+  "collision_penalty": 30.0,
+  "timeout_penalty": 0.0
+ },
+ "dr": {
+  "start_pose_dr": true,
+  "obstacle_presence_dr": false,
+  "obstacle_speed_dr": true,
+  "obstacle_y_dr": true,
+  "obstacle_radius_dr": false,
+  "lidar_noise": true,
+  "static_obstacle_dr": false
+ },
+ "moving_obstacles_spec": {
+  "ids": [
+   "OB1",
+   "OB2"
+  ],
+  "radius_m": 0.17,
+  "height_m": 0.5,
+  "motion": [
+   {
+    "type": "random_ping_pong",
+    "start": [
+     1.4,
+     1.7
+    ],
+    "end": [
+     2.4,
+     1.7
+    ],
+    "speed": 0.06,
+    "reversal_start": [
+     0.0,
+     0.25
+    ],
+    "reversal_end": [
+     0.75,
+     1.0
+    ]
+   },
+   {
+    "type": "random_ping_pong",
+    "start": [
+     2.4,
+     1.1
+    ],
+    "end": [
+     1.4,
+     1.1
+    ],
+    "speed": 0.06,
+    "reversal_start": [
+     0.0,
+     0.25
+    ],
+    "reversal_end": [
+     0.75,
+     1.0
+    ]
+   }
+  ],
+  "turn_pause_range_s": [
+   4.6,
+   5.0
+  ],
+  "active_obstacles": [
+   1,
+   2
+  ],
+  "presence_prob": null,
+  "speed_ranges_mps": [
+   [
+    0.04,
+    0.08
+   ],
+   [
+    0.04,
+    0.08
+   ]
+  ],
+  "path_y_ranges_m": [
+   [
+    1.2,
+    1.7
+   ],
+   [
+    0.6,
+    1.1
+   ]
+  ],
+  "path_y_gap_range_m": [
+   0.55,
+   0.65
+  ]
+ },
+ "random_seeds": {
+  "episode_seed": -345980065115524766,
+  "obstacle_seed": -8755505594174814994,
+  "lidar_noise_seed": -818979776814866898,
+  "episode_number": 1,
+  "note": "counter-based (st_nav/crng.py): episode_seed = key(env seed, env index, episode number); obstacle draws = uniform(obstacle_seed, stream, obstacle, counter); LiDAR noise of beam b acquired at physics tick t = uniform(lidar_noise_seed, t, b)"
+ },
+ "timebase": "t_sim = simulated seconds since reset; trajectory / lidar / obstacles row k = after step k (row 0 = reset); steps row k = step k",
+ "lidar_rows_note": "ranges = the observation the policy received after step k (row 0: reset observation; last row NaN: the terminal state is not observed); ranges_clean = noise-free ranges at the end of step k for every row; origin_* = sensor pose when `ranges` was acquired (terminal row: the pose of ranges_clean)",
+ "files": {
+  "metadata.json": "episode, outcome, seeds, robot, actuator, LiDAR, sensing, moving obstacles, DR flags",
+  "world_geometry.json": "all walls of this episode (cx, cy, length, thickness, yaw) and moving-obstacle paths",
+  "trajectory.csv": "row k = robot state after step k (row 0 = reset): pose, base_link velocity, goal distance, clearance",
+  "steps.csv": "row k = step k: policy action in [-1, 1], command (m/s, rad/s), actuator output, reward terms, sensing, done",
+  "lidar.npz": "row k = scan of the observation after step k: ranges (observed, noisy; NaN where not observed), ranges_clean, per-beam acquisition time/flag, sensor origin pose at acquisition",
+  "obstacles.npz": "moving obstacles: ids, radius, active, x/y per row (row k = after step k)"
+ },
+ "rows": {
+  "trajectory": 149,
+  "steps": 148,
+  "lidar": 149,
+  "obstacles": 149
+ }
+}

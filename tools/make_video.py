@@ -1,78 +1,157 @@
-"""Top-down MP4 of selected evaluation episodes (from recording.npz + episodes.csv; no Isaac Sim needed).
-    python tools/make_video.py <eval_dir> --episodes 0 1 2 25 73 [--speed 2]"""
-import argparse, csv, math, os
-import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import numpy as np
-import torch
-from matplotlib.animation import FFMpegWriter
-from matplotlib.collections import LineCollection
-from matplotlib.patches import Circle, Polygon
-from st_nav.scenes import corridor_static_random as S
+#!/usr/bin/env python3
+"""Top-down MP4 of recorded evaluation episodes, reconstructed only from the episode folders (tools/episode_data.py):
+world geometry, robot footprint and heading, trail, LiDAR beams (drawn from the sensor pose at acquisition), moving
+obstacles, goal. Needs only numpy + matplotlib (+ ffmpeg); no st_nav, Isaac Lab or PyTorch.
 
-p = argparse.ArgumentParser(); p.add_argument("eval_dir"); p.add_argument("--episodes", type=int, nargs="+", default=[0, 1, 2, 25, 73])
-p.add_argument("--speed", type=float, default=2.0); p.add_argument("--out", default=None); a = p.parse_args()
-rows = list(csv.DictReader(open(os.path.join(a.eval_dir, "episodes.csv"))))
-R = np.load(os.path.join(a.eval_dir, "recording.npz")); P, SC, ang, dt = R["pose"], R["scan"], R["beam_angles"], float(R["step_dt"])
-eps = a.episodes
-nsteps = [int(rows[i]["n_steps"]) for i in eps]
-F = max(nsteps) + 1 + int(1.5 / dt)                        # hold the end ~1.5 s
+    # one episode: map + timelines (speed, angular rate, clearance, goal distance) -> <episode_dir>/<episode>.mp4
+    python tools/make_video.py <eval_dir>/episode_0025
+    # several episodes side by side (grid)          -> <eval_dir>/episodes_0_1_25.mp4
+    python tools/make_video.py --eval <eval_dir> --episodes 0 1 25
+    python tools/make_video.py <dir_a>/episode_0003 <dir_b>/episode_0003 --out compare.mp4   # any folders
 
-def wall(ax, cx, cy, L, yaw, th, **kw):
-    c, s = math.cos(yaw), math.sin(yaw)
-    ax.add_patch(Polygon([(cx + c * x - s * y, cy + s * x + c * y) for x, y in
-                          [(-L / 2, -th / 2), (L / 2, -th / 2), (L / 2, th / 2), (-L / 2, th / 2)]], **kw))
+Options: --speed (playback speed vs simulated time, default 2), --no-lidar, --out.
+"""
+from __future__ import annotations
 
-def zwalls(r):
-    L = torch.tensor([[float(r[f"Z{j}_length"]) for j in range(1, 5)]]); Th = torch.tensor([[float(r[f"Z{j}_thickness"]) for j in range(1, 5)]])
-    O = torch.tensor([[float(r[k]) for k in ("Z1_x_offset", "Z2_x_offset", "Z3_y_offset", "Z4_y_offset")]])
-    return S.z_walls(L, Th, O)[0].numpy()
+import argparse
+import math
+import os
+import shutil
+import sys
+from pathlib import Path
 
-nc = 3; nr = math.ceil(len(eps) / nc)
-fig, axs = plt.subplots(nr, nc, figsize=(5.2 * nc, 5.4 * nr)); axs = np.atleast_1d(axs).ravel()
-art = []
-for k, i in enumerate(eps):
-    ax, r = axs[k], rows[i]
-    for w in S.FIXED_WALLS: wall(ax, w[0], w[1], w[2], w[3], S.WALL_THICKNESS, fc="0.45", ec="k", lw=0.3)
-    for z in zwalls(r): wall(ax, z[0], z[1], z[2], z[3], z[4], fc="tab:orange", ec="k", lw=0.4)
-    g = (float(r["goal_x"]), float(r["goal_y"]))
-    ax.add_patch(Circle(g, 0.2, fc="tab:green", alpha=0.2, ec="darkgreen")); ax.plot(*g, "*", color="darkgreen", ms=10)
-    ax.set_xlim(-3, 3); ax.set_ylim(-3, 3); ax.set_aspect("equal"); ax.set_xticks([]); ax.set_yticks([])
-    ok = r["success"] == "True"
-    ax.set_title(f"episode {i}  (obstacle seed {r['static_obstacles_seed']}, start {r['start_pose_index']})", fontsize=9)
-    rays = LineCollection([], colors="tab:red", linewidths=0.6, alpha=0.55); ax.add_collection(rays)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+from matplotlib.animation import FFMpegWriter  # noqa: E402
+from matplotlib.collections import LineCollection  # noqa: E402
+
+import episode_data as ED  # noqa: E402
+import viz_common as V  # noqa: E402
+
+
+def ffmpeg_path():
+    exe = shutil.which("ffmpeg") or os.path.expanduser("~/.local/bin/ffmpeg")
+    if not os.path.exists(exe):
+        try:
+            import imageio_ffmpeg
+            exe = imageio_ffmpeg.get_ffmpeg_exe()
+        except ImportError:
+            raise SystemExit("ffmpeg not found (PATH, ~/.local/bin or the imageio-ffmpeg package)")
+    return exe
+
+
+def make_panel(ax, ep, lidar=True):
+    meta, geo = ep["meta"], ep["geometry"]
+    V.draw_walls(ax, geo)
+    V.draw_obstacle_paths(ax, geo, alpha=0.12)
+    V.draw_goal(ax, meta)
+    V.setup_map(ax, geo, V.episode_title(meta) + f"\nstart {meta['start']['index']}  " +
+                (f"OB active {meta['moving_obstacles']['active']}" if "moving_obstacles" in meta else ""), fontsize=8)
+    rays = LineCollection([], colors="tab:red", linewidths=0.6, alpha=0.55)
+    ax.add_collection(rays)
     trail, = ax.plot([], [], color="tab:blue", lw=1.5)
-    body = Circle((0, 0), 0.177, fc="tab:blue", alpha=0.35, ec="navy"); ax.add_patch(body)
-    head, = ax.plot([], [], color="navy", lw=2)
-    txt = ax.text(-2.9, 2.62, "", fontsize=8.5, family="monospace", va="top",
+    body, head = V.robot_artists(ax, meta)
+    obs = V.obstacle_artists(ax, ep)
+    txt = ax.text(0.02, 0.98, "", transform=ax.transAxes, fontsize=8, family="monospace", va="top",
                   bbox=dict(fc="white", alpha=0.8, ec="none"))
-    art.append((i, rays, trail, body, head, txt, ok, r))
-for ax in axs[len(eps):]:
-    ax.axis("off")
-    ax.text(0.02, 0.6, "M5 initial policy (model_200), deterministic\nreference evaluation protocol: goal (-2, -2),\n"
-            "obstacles from seed 3000+i, start from seed 4000+i\n\nblue: TurtleBot4 footprint (r 0.177 m) + heading\n"
-            "red: 40 LiDAR beams as observed (noisy, 3.5 m)\norange: Z1-Z4 of this episode\n"
-            f"playback {a.speed:g}x real time", fontsize=9, va="top", transform=ax.transAxes)
-sup = fig.suptitle("", fontsize=11); fig.tight_layout(rect=(0, 0, 1, 0.96))
+    T, n = ep["traj"], int(meta["n_steps"])
 
-def draw(f):
-    for i, rays, trail, body, head, txt, ok, r in art:
-        n = int(r["n_steps"]); s = min(f, n)
-        x, y, yaw = P[s, i]
-        trail.set_data(P[: s + 1, i, 0], P[: s + 1, i, 1]); body.center = (x, y)
-        head.set_data([x, x + 0.25 * math.cos(yaw)], [y, y + 0.25 * math.sin(yaw)])
-        sc = SC[s, i] if s < n else SC[s - 1, i]
-        segs = [[(x, y), (x + d * math.cos(yaw + t), y + d * math.sin(yaw + t))] for d, t in zip(sc, ang) if np.isfinite(d)]
-        rays.set_segments(segs)
-        v = 0.0 if s == 0 else math.hypot(*(P[s, i, :2] - P[s - 1, i, :2])) / dt
-        status = "running" if f < n else ("GOAL" if ok else r["outcome"].upper().replace("_", " "))
-        body.set_facecolor("tab:blue" if f < n else ("tab:green" if ok else "tab:red"))
-        txt.set_text(f"t {s * dt:5.1f} s   v {v:4.2f} m/s\n{status}")
-    sup.set_text(f"STNav-TB4-Corridor-Static-v0  |  t = {min(f, max(nsteps)) * dt:5.1f} s")
+    def update(k):
+        s = min(k, n)
+        set_rays = []
+        if lidar:
+            o, ends, hit = ED.lidar_points(ep, s)
+            set_rays = [[tuple(o), tuple(e)] for e in ends]
+        rays.set_segments(set_rays)
+        trail.set_data(T["x"][:s + 1], T["y"][:s + 1])
+        V.set_robot(body, head, T["x"][s], T["y"][s], T["yaw"][s])
+        V.set_obstacles(obs, ep, s)
+        done = k >= n
+        body.set_facecolor(V.OUTCOME_COLORS.get(meta["outcome"], "tab:blue") if done else "tab:blue")
+        txt.set_text(f"t {T['t_sim'][s]:5.1f} s  v {T['v_mps'][s]:4.2f} m/s\nclr {T['clearance_m'][s]:5.3f} m"
+                     + (f"\n{meta['outcome'].upper().replace('_', ' ')}" if done else ""))
+    return update
 
-out = a.out or os.path.join(a.eval_dir, "eval_episodes_" + "_".join(map(str, eps)) + ".mp4")
-w = FFMpegWriter(fps=a.speed / dt, bitrate=3000)
-with w.saving(fig, out, dpi=100):
-    for f in range(F):
-        draw(f); w.grab_frame()
-print(out, F, "frames")
+
+def render(eps, out, speed=2.0, lidar=True, dpi=100):
+    single = len(eps) == 1
+    dt = float(eps[0]["meta"]["control"]["control_dt_s"])
+    n_max = max(int(e["meta"]["n_steps"]) for e in eps)
+    frames = n_max + 1 + int(1.5 / dt)
+    if single:
+        ep = eps[0]
+        fig = plt.figure(figsize=(14, 7))
+        gs = fig.add_gridspec(4, 2, width_ratios=[1.15, 1])
+        ax_map = fig.add_subplot(gs[:, 0])
+        upd = [make_panel(ax_map, ep, lidar)]
+        T, St = ep["traj"], ep["steps"]
+        series = [("v_mps", "v [m/s]", St.get("cmd_v_mps")), ("w_radps", "w [rad/s]", St.get("cmd_w_radps")),
+                  ("clearance_m", "clearance [m]", None), ("goal_distance_m", "goal distance [m]", None)]
+        cursors = []
+        for i, (k, lab, cmd) in enumerate(series):
+            a = fig.add_subplot(gs[i, 1])
+            a.plot(T["t_sim"], T[k], color="tab:blue", lw=1, label="measured" if cmd is not None else None)
+            if cmd is not None:
+                a.step(St["t_sim"], cmd, where="pre", color="k", lw=0.8, alpha=0.6, label="command")
+                a.legend(fontsize=7, loc="upper right")
+            if k == "clearance_m":
+                a.axhline(ep["meta"]["terminations"]["safety_margin_m"], color="tab:red", lw=0.8, ls="--")
+            a.set_ylabel(lab, fontsize=8); a.grid(lw=0.3); a.tick_params(labelsize=7)
+            cursors.append(a.axvline(0, color="tab:red", lw=1))
+        a.set_xlabel("t [s]", fontsize=8)
+        upd.append(lambda k: [c.set_xdata([T["t_sim"][min(k, len(T["t_sim"]) - 1)]] * 2) for c in cursors])
+    else:
+        nc = min(3, len(eps)); nr = math.ceil(len(eps) / nc)
+        fig, axs = plt.subplots(nr, nc, figsize=(5.2 * nc, 5.4 * nr))
+        axs = np.atleast_1d(axs).ravel()
+        upd = [make_panel(ax, ep, lidar) for ax, ep in zip(axs, eps)]
+        for ax in axs[len(eps):]:
+            ax.axis("off")
+    m = eps[0]["meta"]
+    sup = fig.suptitle("", fontsize=11)
+    fig.tight_layout(rect=(0, 0, 1, 0.95))
+    plt.rcParams["animation.ffmpeg_path"] = ffmpeg_path()
+    w = FFMpegWriter(fps=speed / dt, bitrate=3000, extra_args=["-pix_fmt", "yuv420p"])
+    with w.saving(fig, str(out), dpi=dpi):
+        for f in range(frames):
+            for u in upd:
+                u(f)
+            sup.set_text(f"{m.get('exp_id', '')}  {m.get('protocol', '')}  {m.get('policy', '')}  |  "
+                         f"t = {min(f, n_max) * dt:5.1f} s  ({speed:g}x)")
+            w.grab_frame()
+    plt.close(fig)
+    return out, frames
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    p.add_argument("episode_dirs", nargs="*", help="episode folder(s)")
+    p.add_argument("--eval", help="evaluation folder (with --episodes)")
+    p.add_argument("--episodes", type=int, nargs="+", help="episode indices in --eval")
+    p.add_argument("--speed", type=float, default=2.0)
+    p.add_argument("--no-lidar", dest="lidar", action="store_false")
+    p.add_argument("--out", default=None)
+    a = p.parse_args()
+    dirs = [Path(d) for d in a.episode_dirs]
+    if a.eval:
+        dirs += ED.episode_dirs(a.eval, a.episodes)
+    if not dirs:
+        p.error("give episode folders or --eval <dir> --episodes ...")
+    eps = [ED.load_episode(d) for d in dirs]
+    if a.out:
+        out = Path(a.out)
+    elif len(eps) == 1:
+        out = dirs[0] / f"{dirs[0].name}.mp4"
+    else:
+        base = Path(a.eval) if a.eval else dirs[0].parent
+        out = base / ("episodes_" + "_".join(str(e["meta"]["episode_index"]) for e in eps) + ".mp4")
+    out, frames = render(eps, out, a.speed, a.lidar)
+    print(out, frames, "frames")
+
+
+if __name__ == "__main__":
+    main()

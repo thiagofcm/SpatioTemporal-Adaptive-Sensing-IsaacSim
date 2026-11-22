@@ -1,11 +1,15 @@
-"""M3 scene manager for `corridor_static_object_random` (articulated TB4, 2D LiDAR, GPU-vectorized resets).
+"""Scene runtime for the corridor scenes (articulated TB4, 2D LiDAR, GPU-vectorized resets): M3 static scene
+`corridor_static_random` (Z1-Z4 baffles) and, from M6, `corridor_dynamic_chase_random` (moving OB1 / OB2); the scene
+is chosen by name (st_nav.scenes registry).
 
 This is the simulation layer the DirectRLEnv (M4) wraps: scene construction, randomization, resets, robot stepping
 with the calibrated command model, ground-truth geometry and collision flags, and the sensor. No MDP logic here.
 
-Single source of geometry: per-env wall tables (fixed walls + Z1-Z4 baffles, [cx, cy, hx, hy, yaw]) feed
-  * the USD/PhysX scene (static walls; kinematic baffle bodies posed at reset),
-  * the ray-caster targets (walls static, baffles tracked),
+Single source of geometry: per-env wall tables (fixed walls + Z1-Z4 baffles, [cx, cy, hx, hy, yaw]) and the moving
+obstacle model (per-env state, advanced every physics step) feed
+  * the USD/PhysX scene (static walls; kinematic baffle bodies posed at reset; kinematic obstacle cylinders posed
+    every physics step, parked below the floor when inactive),
+  * the ray-caster targets (walls static, baffles and obstacles tracked),
   * the analytic ground truth (footprint clearance, collisions) — independent of the sensor.
 Must be imported after the app is launched.
 """
@@ -26,11 +30,14 @@ from isaaclab.utils.math import euler_xyz_from_quat
 from pxr import Gf, UsdGeom
 
 from st_nav import config as C
+from st_nav import crng
 from st_nav.assets.turtlebot4 import TB4_CFG, TB4_COMMAND_MODEL, TB4_GEOMETRY
 from st_nav.calibration.sim_harness import CASTER_FRICTION, GROUND_FRICTION, bind_caster_material
 from st_nav.control.diff_drive import CommandModel
-from st_nav.geometry.analytic2d import wall_clearance, walls_from_specs
+from st_nav.geometry.analytic2d import circle_clearance, wall_clearance, walls_from_specs
 from st_nav.scenes import corridor_static_random as S
+from st_nav.scenes import get_scene
+from st_nav.scenes._obstacle_motion import OBSTACLE_RADIUS, RandomPingPongObstacles
 from st_nav.scenes.spawners import StaticPrimitiveGroupCfg
 from st_nav.sensors.lidar2d import Lidar2D, Lidar2DCfg
 
@@ -56,6 +63,15 @@ class CorridorSceneCfg:
     contact_force_threshold: float = 1.0    # N, horizontal contact force on base_link counted as physical contact
     lidar: Lidar2DCfg = field(default_factory=Lidar2DCfg)
     seed: int = 0
+    # ---- scene selection and moving obstacles (M6; reference flag names) ----
+    scene_name: str = "corridor_static_random"   # st_nav.scenes registry: corridor_static_random | corridor_dynamic_chase_random
+    active_obstacles: tuple = (1, 2)             # moving obstacles present in every episode (OB1 = 1, OB2 = 2)
+    obstacle_presence_dr: bool = False
+    obstacle_speed_dr: bool = False
+    obstacle_y_dr: bool = False
+    obstacle_radius_dr: bool = False             # not supported (mesh sizes are baked at start-up)
+    obstacle_height: float = C.OBSTACLE_HEIGHT
+    max_episode_s: float = 600.0                 # longest episode (sizes the pre-generated obstacle draws)
     # ---- evaluation options (defaults = training behaviour) ----
     bank_assignment: str = "random"         # "sequential": env i uses bank entry i (seed bank_seed + i)
     offsets_from_bank: bool = False         # True: Z offsets = the bank entry's own (reference seed) offsets, no resampling
@@ -92,6 +108,14 @@ class CorridorScene:
         self.gen = torch.Generator(device=device)
         self.gen.manual_seed(cfg.seed)
         n = self.n
+        self.scene_mod = get_scene(cfg.scene_name)
+        self.has_baffles = bool(self.scene_mod.HAS_BAFFLES)
+        if cfg.obstacle_radius_dr:
+            raise NotImplementedError("obstacle_radius_dr: the ray caster bakes mesh sizes at start-up")
+        if not self.has_baffles:                                    # no Z1-Z4: zero-size placeholders, no bank
+            self.bank, self.bank_idx = None, torch.zeros(n, dtype=torch.long, device=device)
+            self.z_len = self.z_thick = self.z_bank_off = self.z_off = torch.zeros(n, 4, device=device)
+            return
         # size bank (reference sampler) and per-env assignment
         self.bank = S.sample_bank(min(cfg.bank_size, n), cfg.bank_seed)
         k = len(self.bank["seeds"])
@@ -115,10 +139,10 @@ class CorridorScene:
                                         physics_material=sim_utils.RigidBodyMaterialCfg(
                                             static_friction=GROUND_FRICTION, dynamic_friction=GROUND_FRICTION))
         sc.robot = TB4_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
-        boxes = [(w[0], w[1], w[2], S.WALL_THICKNESS, cfg.wall_height, w[3]) for w in S.FIXED_WALLS]
+        boxes = [(w[0], w[1], w[2], S.WALL_THICKNESS, cfg.wall_height, w[3]) for w in self.scene_mod.WALLS]
         sc.walls = AssetBaseCfg(
             prim_path="{ENV_REGEX_NS}/Walls", spawn=StaticPrimitiveGroupCfg(boxes=boxes, cylinders=[]))
-        for i in range(4):
+        for i in range(4 if self.has_baffles else 0):
             setattr(sc, f"z{i + 1}", RigidObjectCfg(
                 prim_path=f"{{ENV_REGEX_NS}}/Z{i + 1}",
                 spawn=sim_utils.CuboidCfg(
@@ -128,9 +152,21 @@ class CorridorScene:
                     collision_props=sim_utils.CollisionPropertiesCfg(),
                     visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.85, 0.45, 0.15))),
                 init_state=RigidObjectCfg.InitialStateCfg(pos=(0.0, 0.0, cfg.baffle_height / 2))))
+        for j in range(len(self.scene_mod.MOVING_OBSTACLES)):     # OB<j+1>: kinematic cylinder, posed every physics step
+            setattr(sc, f"ob{j + 1}", RigidObjectCfg(
+                prim_path=f"{{ENV_REGEX_NS}}/OB{j + 1}",
+                spawn=sim_utils.CylinderCfg(
+                    radius=OBSTACLE_RADIUS, height=cfg.obstacle_height, axis="Z",
+                    rigid_props=sim_utils.RigidBodyPropertiesCfg(kinematic_enabled=True, disable_gravity=True),
+                    mass_props=sim_utils.MassPropertiesCfg(mass=20.0),
+                    collision_props=sim_utils.CollisionPropertiesCfg(),
+                    visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.2, 0.4, 0.9))),
+                init_state=RigidObjectCfg.InitialStateCfg(pos=(0.0, 0.0, -cfg.obstacle_height))))
         targets = [MultiMeshRayCasterCfg.RaycastTargetCfg(prim_expr="{ENV_REGEX_NS}/Walls", track_mesh_transforms=False)]
         targets += [MultiMeshRayCasterCfg.RaycastTargetCfg(prim_expr=f"{{ENV_REGEX_NS}}/Z{i + 1}",
-                                                           track_mesh_transforms=True) for i in range(4)]
+                                                           track_mesh_transforms=True) for i in range(4 if self.has_baffles else 0)]
+        targets += [MultiMeshRayCasterCfg.RaycastTargetCfg(prim_expr=f"{{ENV_REGEX_NS}}/OB{j + 1}", track_mesh_transforms=True)
+                    for j in range(len(self.scene_mod.MOVING_OBSTACLES))]
         self.lidar_cfg = cfg.lidar
         self.lidar_cfg.targets = targets
         sc.lidar = self.lidar_cfg.raycaster_cfg()
@@ -139,7 +175,8 @@ class CorridorScene:
 
     def prepare_stage(self):
         """USD edits that must precede physics start: per-env baffle sizes and the frictionless caster."""
-        self._scale_baffles()
+        if self.has_baffles:
+            self._scale_baffles()
         mat = sim_utils.RigidBodyMaterialCfg(static_friction=CASTER_FRICTION, dynamic_friction=CASTER_FRICTION,
                                              restitution=0.0, friction_combine_mode="min")
         mat.func("/World/Materials/caster", mat)
@@ -150,14 +187,30 @@ class CorridorScene:
         device, n = self.device, self.n
         self.scene, self.sim = scene, sim
         self.robot = self.scene["robot"]
-        self.baffles = [self.scene[f"z{i + 1}"] for i in range(4)]
+        self.baffles = [self.scene[f"z{i + 1}"] for i in range(4 if self.has_baffles else 0)]
+        specs = self.scene_mod.MOVING_OBSTACLES
+        self.obstacles = [self.scene[f"ob{j + 1}"] for j in range(len(specs))]
+        cfg, sm = self.cfg, self.scene_mod
+        self.obs_model = RandomPingPongObstacles(
+            specs, n, device, active=cfg.active_obstacles, presence_dr=cfg.obstacle_presence_dr,
+            presence_prob=getattr(sm, "OBSTACLE_PRESENCE_PROB", None), speed_dr=cfg.obstacle_speed_dr,
+            speed_ranges=getattr(sm, "OBSTACLE_SPEED_RANGES", None), y_dr=cfg.obstacle_y_dr,
+            y_sampler=getattr(sm, "sample_obstacle_path_y", None), max_episode_s=cfg.max_episode_s) if specs else None
         self.wheel_ids, _ = self.robot.find_joints(["left_wheel_joint", "right_wheel_joint"], preserve_order=True)
         self.lidar = Lidar2D(self.lidar_cfg, self.scene["lidar"], device)
         self.contact = self.scene["contact"]
         self.cm = CommandModel(n, self.dt, TB4_GEOMETRY, TB4_COMMAND_MODEL, device=device)
         self.origins = self.scene.env_origins
-        self.fixed_walls = walls_from_specs(S.FIXED_WALLS, device=device)            # (10, 5) [cx, cy, hx, hy, yaw]
-        self.walls = torch.zeros(n, len(S.FIXED_WALLS) + 4, 5, device=device)
+        self.fixed_walls = walls_from_specs(self.scene_mod.WALLS, device=device)     # (10, 5) [cx, cy, hx, hy, yaw]
+        self.walls = torch.zeros(n, len(self.scene_mod.WALLS) + (4 if self.has_baffles else 0), 5, device=device)
+        self.walls[:, :len(self.scene_mod.WALLS)] = self.fixed_walls
+        # per-episode random seeds (counter-based, st_nav.crng): episode seed = f(base seed, env index, episode number of
+        # that env), so an episode's obstacle motion and LiDAR noise never depend on other envs' resets or terminations
+        self.env_index = torch.arange(n, device=device, dtype=torch.int64)
+        self.episode_count = torch.zeros(n, dtype=torch.int64, device=device)
+        self.episode_seed = torch.zeros(n, dtype=torch.int64, device=device)
+        self.obstacle_seed = torch.zeros(n, dtype=torch.int64, device=device)
+        self.lidar_seed = torch.zeros(n, dtype=torch.int64, device=device)
         self.goal = torch.zeros(n, 2, device=device)
         self.start = torch.zeros(n, 3, device=device)
         self.sim_time = torch.zeros(n, device=device)
@@ -182,6 +235,36 @@ class CorridorScene:
         k = len(env_ids)
         if k == 0:
             return
+        self.episode_count[env_ids] += 1
+        self.episode_seed[env_ids] = crng.key(int(self.cfg.seed), self.env_index[env_ids], self.episode_count[env_ids])
+        self.obstacle_seed[env_ids] = crng.key(self.episode_seed[env_ids], crng.OBSTACLES)
+        self.lidar_seed[env_ids] = crng.key(self.episode_seed[env_ids], crng.LIDAR_NOISE)
+        if self.has_baffles:
+            self._reset_baffles(env_ids)
+        org = self.origins[env_ids]
+        if self.cfg.start_poses is not None:
+            self.start[env_ids] = torch.tensor(self.cfg.start_poses, dtype=torch.float32, device=self.device)[env_ids]
+        else:
+            self.start[env_ids] = S.sample_start(k, self.cfg.start_pose_dr, self.device, self.gen)
+        self.goal[env_ids] = S.sample_goal(k, self.cfg.goals, self.device, self.gen)
+        if self.obs_model is not None:                             # after the start / goal draws (reference order)
+            self.obs_model.reset(env_ids, self.obstacle_seed[env_ids])
+            self._write_obstacle_poses(env_ids)
+        st = self.start[env_ids]
+        rpos = torch.cat([org[:, :2] + st[:, :2], torch.zeros(k, 1, device=self.device)], 1)
+        rq = torch.stack([torch.cos(st[:, 2] / 2), 0 * st[:, 2], 0 * st[:, 2], torch.sin(st[:, 2] / 2)], 1)
+        self.robot.write_root_pose_to_sim(torch.cat([rpos, rq], 1), env_ids=env_ids)
+        self.robot.write_root_velocity_to_sim(torch.zeros(k, 6, device=self.device), env_ids=env_ids)
+        self.robot.write_joint_state_to_sim(torch.zeros(k, 2, device=self.device), torch.zeros(k, 2, device=self.device),
+                                            joint_ids=self.wheel_ids, env_ids=env_ids)
+        self.robot.set_joint_velocity_target(torch.zeros(k, 2, device=self.device), joint_ids=self.wheel_ids,
+                                             env_ids=env_ids)
+        self.cm.reset(env_ids)
+        self.sim_time[env_ids] = 0.0
+        self.scene.reset(env_ids)
+
+    def _reset_baffles(self, env_ids: torch.Tensor):
+        k = len(env_ids)
         if self.cfg.offsets_from_bank:
             off = self.z_bank_off[env_ids]
         else:
@@ -199,23 +282,31 @@ class CorridorScene:
             pose = torch.cat([org[:, :2] + zw[:, i, :2], torch.full((k, 1), self.cfg.baffle_height / 2, device=self.device),
                               torch.stack([torch.cos(yaw / 2), 0 * yaw, 0 * yaw, torch.sin(yaw / 2)], 1)], 1)
             b.write_root_pose_to_sim(pose, env_ids=env_ids)
-        if self.cfg.start_poses is not None:
-            self.start[env_ids] = torch.tensor(self.cfg.start_poses, dtype=torch.float32, device=self.device)[env_ids]
-        else:
-            self.start[env_ids] = S.sample_start(k, self.cfg.start_pose_dr, self.device, self.gen)
-        self.goal[env_ids] = S.sample_goal(k, self.cfg.goals, self.device, self.gen)
-        st = self.start[env_ids]
-        rpos = torch.cat([org[:, :2] + st[:, :2], torch.zeros(k, 1, device=self.device)], 1)
-        rq = torch.stack([torch.cos(st[:, 2] / 2), 0 * st[:, 2], 0 * st[:, 2], torch.sin(st[:, 2] / 2)], 1)
-        self.robot.write_root_pose_to_sim(torch.cat([rpos, rq], 1), env_ids=env_ids)
-        self.robot.write_root_velocity_to_sim(torch.zeros(k, 6, device=self.device), env_ids=env_ids)
-        self.robot.write_joint_state_to_sim(torch.zeros(k, 2, device=self.device), torch.zeros(k, 2, device=self.device),
-                                            joint_ids=self.wheel_ids, env_ids=env_ids)
-        self.robot.set_joint_velocity_target(torch.zeros(k, 2, device=self.device), joint_ids=self.wheel_ids,
-                                             env_ids=env_ids)
-        self.cm.reset(env_ids)
-        self.sim_time[env_ids] = 0.0
-        self.scene.reset(env_ids)
+
+    # ------------------------------------------------------------------ moving obstacles
+    def _write_obstacle_poses(self, env_ids=None):
+        """Kinematic obstacle bodies to the model positions; inactive obstacles parked below the floor."""
+        ids = slice(None) if env_ids is None else env_ids
+        org = self.origins[ids]
+        pos = self.obs_model.positions()[ids]
+        act = self.obs_model.active[ids]
+        h = self.cfg.obstacle_height
+        quat = torch.zeros(pos.shape[0], 4, device=self.device)
+        quat[:, 0] = 1.0
+        for j, ob in enumerate(self.obstacles):
+            z = torch.where(act[:, j], torch.full_like(pos[:, j, 0], h / 2), torch.full_like(pos[:, j, 0], -2.0 * h))
+            pose = torch.cat([org[:, :2] + pos[:, j], z[:, None], quat], 1)
+            ob.write_root_pose_to_sim(pose, env_ids=env_ids)
+
+    def advance_obstacles(self, dt: float):
+        """Advance every env's moving obstacles by one physics step and pose their bodies (no-op in static scenes)."""
+        if self.obs_model is not None:
+            self.obs_model.advance(dt)
+            self._write_obstacle_poses()
+
+    def obstacle_circles(self) -> torch.Tensor | None:
+        """(N, K, 3) [cx, cy, r] of the moving obstacles (env-local; r = 0 for inactive ones), None in static scenes."""
+        return None if self.obs_model is None else self.obs_model.circles(OBSTACLE_RADIUS)
 
     # ------------------------------------------------------------------ stepping
     def step(self, v: torch.Tensor, w: torch.Tensor):
@@ -224,6 +315,7 @@ class CorridorScene:
         for _ in range(self.cfg.decimation):
             wl, wr, _, _ = self.cm.step()
             self.robot.set_joint_velocity_target(torch.stack([wl, wr], -1), joint_ids=self.wheel_ids)
+            self.advance_obstacles(self.dt)
             self.scene.write_data_to_sim()
             self.sim.step(render=False)
             self.scene.update(self.dt)
@@ -236,9 +328,13 @@ class CorridorScene:
         return p, torch.remainder(yaw + math.pi, 2 * math.pi) - math.pi
 
     def footprint_clearance(self) -> torch.Tensor:
-        """c: minimum distance from the robot footprint (circle r_fp at base_link) to any wall / baffle surface."""
+        """c: minimum distance from the robot footprint (circle r_fp at base_link) to any wall / baffle / active
+        moving-obstacle surface."""
         p, _ = self.robot_pose2d()
-        return wall_clearance(p, self.walls) - self.cfg.footprint_radius
+        c = wall_clearance(p, self.walls)
+        if self.obs_model is not None:
+            c = torch.minimum(c, circle_clearance(p, self.obs_model.circles(OBSTACLE_RADIUS)))
+        return c - self.cfg.footprint_radius
 
     def goal_distance(self) -> torch.Tensor:
         p, _ = self.robot_pose2d()

@@ -22,15 +22,14 @@ import math
 import numpy as np
 import torch
 
-# ---------------------------------------------------------------- reference constants (envs/scenes/_common.py) -------
-WALL_THICKNESS = 0.15
-ARENA_INTERIOR_HALF = 2.910 - WALL_THICKNESS / 2.0
-OUTER_WALLS = [(-2.910, 0.000, 6.00, math.pi / 2), (0.000, 2.910, 6.00, 0.0), (2.910, 0.000, 6.00, -math.pi / 2),
-               (0.000, -2.910, 6.00, math.pi)]
-CORRIDOR_WALLS = [(0.975, 2.080, 1.660, math.pi / 2), (-0.175, 1.325, 2.450, 0.0), (-1.325, 0.225, 2.350, math.pi / 2),
-                  (-2.080, -0.875, 1.660, 0.0), (1.580, -0.325, 2.660, 0.0), (0.325, -1.580, 2.660, math.pi / 2)]
-C1, C4, C5, C6 = CORRIDOR_WALLS[0], CORRIDOR_WALLS[3], CORRIDOR_WALLS[4], CORRIDOR_WALLS[5]
-FIXED_WALLS = OUTER_WALLS + CORRIDOR_WALLS            # never change
+from ._common import (ARENA_INTERIOR_HALF, C1, C4, C5, C6, CORRIDOR_WALLS, FIXED_WALLS, GOAL_LIST_DEFAULT,  # noqa: F401
+                      GOAL_LIST_ST01, MAX_SAMPLING_ATTEMPTS, OUTER_WALLS, START_POSE_LIST, START_YAW_CENTER,
+                      START_YAW_NOISE, STARTING_POS, STARTING_YAW, WALL_THICKNESS, sample_goal, sample_start)
+
+NAME = "corridor_static_random"          # reference scene corridor_static_object_random
+HAS_BAFFLES = True                       # Z1-Z4 kinematic baffles (sizes from the bank, offsets per reset)
+MOVING_OBSTACLES = ()
+WALLS = FIXED_WALLS                      # static walls (the baffles are added per env by the scene runtime)
 
 # ------------------------------------------------- reference constants (corridor_static_object_random.py) ------------
 NOMINAL = ((0.55, 0.15, 0.1, 0.6), (0.60, 0.15, 0.60, 0.15), (-0.5, -0.2, -0.0, -0.3))   # lengths, thicknesses, offsets
@@ -41,18 +40,6 @@ CORRIDOR_WIDTH = 1.50
 MIN_NOMINAL_CLEARANCE = 0.75
 MIN_Z1_Z3_DISTANCE = 0.70
 GEOMETRY_TOL = 1e-9
-
-# ------------------------------------------------- reference constants (envs/turtlebot_var_scan_rate.py) -------------
-STARTING_POS = (2.5, 2.5)
-STARTING_YAW = -2.9441970937399127
-START_POSE_LIST = ((2.50, 2.50), (2.30, 2.50), (2.50, 2.30), (2.30, 2.30), (2.40, 2.40))
-START_YAW_CENTER = math.pi
-START_YAW_NOISE = math.radians(10)
-GOAL_LIST_DEFAULT = ((-1.8, -2.5),)
-# AdaptiveFPS/config/spatiotemporal/ST01-ST03 goal_pose_list (static randomized scene)
-GOAL_LIST_ST01 = ((-1.80, -2.50), (-1.50, -2.50), (-2.10, -2.50), (-1.80, -2.20), (-1.60, -2.30), (-2.00, -2.30),
-                  (-1.50, -2.20), (-2.10, -2.20), (-1.80, -2.00))
-
 
 def z_walls(lengths: torch.Tensor, thick: torch.Tensor, offsets: torch.Tensor) -> torch.Tensor:
     """Batched port of `static_obstacle_walls`: (N, 4) x3 -> (N, 4, 5) [cx, cy, length, yaw, thickness]."""
@@ -111,7 +98,6 @@ def sample_offsets(lengths: torch.Tensor, thick: torch.Tensor, fallback: torch.T
 # seed gives bit-identical configurations (tests/unit/test_static_obstacle_sampler.py against tests/golden/reference_bank.npz).
 HARD_PAIR_PROB = 0.5               # probability that a Z pair uses the "hard" mode (nominal clearance in [0.75, 0.80])
 HARD_BAND = 0.05                   # m, width of the hard nominal-clearance band above MIN_NOMINAL_CLEARANCE
-MAX_SAMPLING_ATTEMPTS = 1000       # per rejection loop (reference envs/scenes/_common.py)
 
 
 def static_obstacle_walls(lengths, thicknesses, offsets):
@@ -188,19 +174,3 @@ def sample_bank(k: int, seed: int = 0) -> dict:
     return {"lengths": np.array([r["lengths"] for r in rows]), "thicknesses": np.array([r["thicknesses"] for r in rows]),
             "offsets": np.array([r["offsets"] for r in rows]), "pair_modes": [r["pair_modes"] for r in rows],
             "seeds": np.arange(seed, seed + k)}
-
-
-def sample_start(n: int, start_pose_dr: bool, device, generator=None) -> torch.Tensor:
-    """(n, 3) start poses x, y, yaw (reference semantics)."""
-    if not start_pose_dr:
-        return torch.tensor([[*STARTING_POS, STARTING_YAW]], device=device).repeat(n, 1)
-    pts = torch.tensor(START_POSE_LIST, device=device)
-    idx = torch.randint(len(START_POSE_LIST), (n,), device=device, generator=generator)
-    dyaw = (torch.rand(n, device=device, generator=generator) * 2 - 1) * START_YAW_NOISE
-    yaw = torch.remainder(START_YAW_CENTER + dyaw + math.pi, 2 * math.pi) - math.pi
-    return torch.cat([pts[idx], yaw[:, None]], 1)
-
-
-def sample_goal(n: int, goals, device, generator=None) -> torch.Tensor:
-    g = torch.tensor(goals, device=device, dtype=torch.float32)
-    return g[torch.randint(len(goals), (n,), device=device, generator=generator)]

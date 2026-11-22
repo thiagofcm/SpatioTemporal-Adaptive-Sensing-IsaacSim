@@ -24,15 +24,33 @@ Navigation/runs/**/model_*.pt
 AdaptiveSensing/runs/**/model_*.pt
 !Navigation/runs/NAV01_static_initial/2026-11-22_00-44-09_m5_initial_4096/model_200.pt
 !Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation/model_200.pt
+!Navigation/runs/NAV02_chase-ob1_dr/2026-11-22_15-52-17_ppo_n4096_s42/model_500.pt
+!Navigation/runs/NAV03_chase-ob1ob2_dr/2026-11-22_15-52-39_ppo_n4096_s42/model_500.pt
 # sweep launcher configs and logs
 Navigation/sweeps/
 AdaptiveSensing/sweeps/
 
+# --- evaluation outputs (Navigation/eval, AdaptiveSensing/eval) ---
+# Evaluations are bit-reproducible (checkpoint + protocol + --seed), so the heavy per-episode arrays and the videos
+# are regenerated on demand: Navigation/scripts/evaluate.py, then tools/make_video.py. Versioned per episode:
+# metadata.json, world_geometry.json, trajectory.csv, steps.csv; per evaluation: episodes.csv, summary.json,
+# run_config.json, world_geometry.json, plots (*.png); per protocol: summary.csv.
+Navigation/eval/**/episode_*/*.npz
+AdaptiveSensing/eval/**/episode_*/*.npz
+Navigation/eval/**/*.mp4
+AdaptiveSensing/eval/**/*.mp4
+
 # --- regression-check outputs (regenerated on every run) ---
 tests/sim/results/
+# golden snapshots: only the baseline and the reference sampler output are versioned
+tests/golden/*.npz
+!tests/golden/pre.npz
+!tests/golden/reference_bank.npz
 
 # --- infrastructure history ---
 # 3-iteration smoke-test runs
 infrastructure/M5_initial_navigation/results/runs/*_smoke/
 # regenerable robot-visualization exports (infrastructure/robot_viz/scripts/export_robot_geometry.py)
 infrastructure/robot_viz/results/*.glb
+# milestone videos rendered from recordings (regenerable with tools/make_video.py)
+infrastructure/M6_dynamic_scene/results/*.mp4
