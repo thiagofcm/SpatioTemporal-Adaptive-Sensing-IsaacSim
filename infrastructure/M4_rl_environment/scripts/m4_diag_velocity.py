@@ -3,7 +3,7 @@
 Records base_link roll/pitch, body-frame angular rates, link height, CoM vs link forward velocity, and the reset
 spawn height vs the settled height. Fixed actions per group: (1,0) start-from-rest, (1,+-1) turn reversals, (0,0).
 
-    isaacrun -g 5 -- python scripts/m4/m4_diag_velocity.py --headless --num_envs 256
+    isaacrun -g 5 -- python infrastructure/M4_rl_environment/scripts/m4_diag_velocity.py --headless --num_envs 256
 """
 import argparse
 import json
@@ -13,7 +13,7 @@ from isaaclab.app import AppLauncher
 
 p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=256)
-p.add_argument("--out_dir", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m4", "diag"))
+p.add_argument("--out_dir", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M4_rl_environment", "results", "diag"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 app = AppLauncher(args).app

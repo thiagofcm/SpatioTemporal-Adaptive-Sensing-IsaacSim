@@ -1,0 +1,43 @@
+# NAV01_static_initial: first PPO navigation policy (milestone M5), TurtleBot4 + 40-beam 2D LiDAR, randomized static
+# corridor. Back-filled after training: it reproduces the settings of run 2026-11-22_00-44-09_m5_initial_4096
+# (trained before configs existed, stopped by hand at iteration 200). Card: Navigation/eval/NAV01_static_initial/README.md
+#
+# Every key overrides a field of the configclasses registered with `task` (env: CorridorNavEnvCfg,
+# agent: CorridorNavPPORunnerCfg). Values equal to today's defaults are listed on purpose: they pin the experiment.
+# Train:  isaacrun -g <gpu> -- python Navigation/scripts/train.py --headless --config Navigation/configs/NAV01_static_initial.yaml
+exp_id: NAV01_static_initial
+task: STNav-TB4-Corridor-Static-v0
+run_name: null                      # default: ppo_n<num_envs>_s<seed>
+
+env:
+  scene.num_envs: 4096
+  episode_length_s: 70.0            # 350 control steps (5 Hz)
+  # ---- domain randomization ----
+  start_pose_dr: true               # 5 reference start points, yaw pi +- 10 deg, per reset
+  bank_size: 1024                   # Z1-Z4 sizes per env from the reference sampler (seeds 0..1023); offsets per reset
+  lidar_noise: true                 # datasheet uniform range noise
+  # ---- sensing (independent of control) ----
+  lidar_period_s: 0.2               # one scan per control step
+  # ---- observation / terminations ----
+  goal_distance_norm: 7.0
+  goal_tolerance: 0.20
+  safety_margin: 0.05
+  # ---- reward ----
+  rewards.progress_scale: 10.0
+  rewards.proximity_scale: 1.0
+  rewards.proximity_clearance: 0.15
+  rewards.time_penalty_per_s: 0.1
+  rewards.goal_reward: 30.0
+  rewards.collision_penalty: 30.0
+  rewards.timeout_penalty: 0.0
+
+agent:
+  seed: 42
+  max_iterations: 1500              # the M5 run was stopped by hand after iteration 200
+  num_steps_per_env: 32
+  algorithm.learning_rate: 3.0e-4
+  algorithm.gamma: 0.99
+  algorithm.lam: 0.95
+  algorithm.entropy_coef: 0.005
+
+sweep: {}                           # reserved, e.g. {agent.seed: [42, 43, 44]} (one run per combination)

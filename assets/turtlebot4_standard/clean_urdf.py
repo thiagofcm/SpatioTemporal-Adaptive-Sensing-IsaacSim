@@ -1,7 +1,7 @@
 """Clean the xacro-expanded TurtleBot4 Standard URDF for the Isaac Sim URDF importer.
 
 - removes <gazebo>, <ros2_control> and <transmission> elements (simulator plugins, not geometry/physics)
-- resolves package://<pkg>/... mesh URIs to absolute paths in the pinned clones (third_party/)
+- resolves package://<pkg>/... mesh URIs to absolute paths in the pinned clones (references/robot_description/)
 - prints a summary of links (mass, collision geometry) and movable joints (limits, dynamics)
 
 Usage: python3 clean_urdf.py <raw.urdf> <clean.urdf>
@@ -12,7 +12,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TP = os.path.normpath(os.path.join(HERE, "..", "..", "third_party"))
+TP = os.path.normpath(os.path.join(HERE, "..", "..", "references", "robot_description"))
 PKG_DIRS = {}
 for repo in ("turtlebot4", "create3_sim"):
     for d, _, files in os.walk(os.path.join(TP, repo)):

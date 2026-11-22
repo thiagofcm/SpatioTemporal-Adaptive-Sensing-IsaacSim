@@ -7,7 +7,7 @@ One process = one (num_envs, physics_hz, solver iterations) configuration, three
                              control step), ground-truth clearance (analytic), 47-dim observation assembly
 Robots receive random (v, w) commands, so they also collide with walls (contact stress).
 
-    isaacrun -g auto -- python scripts/m2/m2_benchmark.py --headless --num_envs 4096 --physics_hz 200
+    isaacrun -g auto -- python infrastructure/M2_lidar/scripts/m2_benchmark.py --headless --num_envs 4096 --physics_hz 200
 """
 import argparse
 import json
@@ -24,7 +24,7 @@ p.add_argument("--physics_hz", type=float, default=200.0)
 p.add_argument("--pos_iters", type=int, default=16)
 p.add_argument("--vel_iters", type=int, default=2)
 p.add_argument("--control_steps", type=int, default=0, help="per phase (0 = auto)")
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m2", "benchmark_clean.jsonl"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M2_lidar", "results", "benchmark_clean.jsonl"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 t_launch = time.time()

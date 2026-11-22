@@ -1,7 +1,7 @@
 """Coherence and repeatability checks of the clean M2 benchmark (CPU only).
 
-Inputs : results/m2/benchmark_clean.jsonl (main sweep), benchmark_clean_repeats.jsonl (repeats), benchmark_clean_runlog.txt
-Output : results/m2/benchmark_check.json and a markdown table on stdout.
+Inputs : infrastructure/M2_lidar/results/benchmark_clean.jsonl (main sweep), benchmark_clean_repeats.jsonl (repeats), benchmark_clean_runlog.txt
+Output : infrastructure/M2_lidar/results/benchmark_check.json and a markdown table on stdout.
 
 Checks
   isolation   : every run started with no other process on its GPU (run log)
@@ -15,8 +15,8 @@ import json
 import os
 import re
 
-RES = os.path.join(os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))),
-                   "results", "m2")
+RES = os.path.join(os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))),
+                   "infrastructure", "M2_lidar", "results")
 main = [json.loads(l) for l in open(os.path.join(RES, "benchmark_clean.jsonl")) if l.strip()]
 rep_f = os.path.join(RES, "benchmark_clean_repeats.jsonl")
 reps = [json.loads(l) for l in open(rep_f) if l.strip()] if os.path.exists(rep_f) else []

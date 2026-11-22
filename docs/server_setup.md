@@ -1,4 +1,4 @@
-# Spatiotemporal Adaptive Sensing: Development Workspace
+# GPU server setup and launch tooling (formerly the repository README)
 
 Workspace for the spatiotemporal adaptive sensing project: RL mobile-robot navigation with a programmable Mirrorcle SyMPL 3D LiDAR, built on Isaac Lab 2.3.2 / Isaac Sim 5.1.
 
@@ -6,11 +6,11 @@ This folder currently holds the **headless launch tooling** for the shared GPU s
 
 > **Status (2026-11-21):** headless GPU physics, parallel RL training and Warp ray casting work using the CUDA workaround below.
 > Rendering (cameras, RTX LiDAR, `--video`, `--livestream`) is **unavailable** until the server administrator fixes the driver and render-device permissions.
-> See `../phase1_diagnostics/PHASE1_INSTALLATION_REPORT.md`.
+> See `infrastructure/server/PHASE1_INSTALLATION_REPORT.md`.
 
 ---
 
-## Folder layout
+## Folder layout (phase-1 tooling only; the current repository layout is in ../README.md)
 
 ```
 spatiotemporal_sensing/
@@ -19,7 +19,7 @@ spatiotemporal_sensing/
 ├── bin/
 │   ├── isaacrun           launcher: GPU restriction, logging, timeout, clean shutdown
 │   └── check_physx_gpu    checks the latest Isaac Sim log to confirm PhysX ran on the GPU
-├── validation/
+├── infrastructure/server/
 │   ├── diag_empty.py      empty scene, GPU physics stepping test
 │   ├── diag_raycaster.py  headless GPU LiDAR (Warp ray caster) benchmark
 │   └── vkprobe.py         Vulkan device check (rendering readiness)
@@ -117,7 +117,7 @@ What `isaacrun` does on every run:
 cd ~/isaac_lab/IsaacLab_Fork
 
 # Validation: empty scene with GPU physics (should finish 1000 steps in ~1 s)
-isaacrun -g 3 -t 180 ~/isaac_lab/spatiotemporal_sensing/validation/diag_empty.py --headless --steps 1000
+isaacrun -g 3 -t 180 ~/isaac_lab/spatiotemporal_sensing/infrastructure/server/diag_empty.py --headless --steps 1000
 ~/isaac_lab/spatiotemporal_sensing/bin/check_physx_gpu
 
 # Official tutorial
@@ -132,7 +132,7 @@ isaacrun -g 3 scripts/reinforcement_learning/rsl_rl/play.py \
     --task Isaac-Cartpole-Direct-v0 --headless --num_envs 16
 
 # Headless GPU LiDAR benchmark
-isaacrun -g 3 -t 240 ~/isaac_lab/spatiotemporal_sensing/validation/diag_raycaster.py --headless --num_envs 1024
+isaacrun -g 3 -t 240 ~/isaac_lab/spatiotemporal_sensing/infrastructure/server/diag_raycaster.py --headless --num_envs 1024
 ```
 
 ### Interactive use (method B)
@@ -208,7 +208,7 @@ export CUDA_VISIBLE_DEVICES=N         # the process can only see GPU N
 | Offline inspection (save tensors → plot locally) | ✅ | the recommended way to inspect LiDAR data until rendering returns |
 
 ### After the administrator's fix
-1. `python validation/vkprobe.py` (after `source env.sh`) should list 8× NVIDIA RTX A6000.
+1. `python infrastructure/server/vkprobe.py` (after `source env.sh`) should list 8× NVIDIA RTX A6000.
 2. `env.sh` should print `CUDA shim : not needed`.
 3. Re-run the validation commands above, then test `--enable_cameras` / `--video` / `--livestream` (see the phase-1 report).
 

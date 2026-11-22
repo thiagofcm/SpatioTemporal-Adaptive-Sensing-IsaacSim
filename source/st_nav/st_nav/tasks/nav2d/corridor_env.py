@@ -172,7 +172,7 @@ class CorridorNavEnv(DirectRLEnv):
             self.actions,
             # base_link frame velocity (= wheel-odometry twist of the real robot). NOT root_lin_vel_b, which in
             # Isaac Lab is the CoM velocity: the CoM sits 0.137 m above base_link, so body pitch rocking adds
-            # w_y * 0.137 (up to ~0.13 m/s) to it (M4 follow-up diagnostics, results/m4/diag).
+            # w_y * 0.137 (up to ~0.13 m/s) to it (M4 follow-up diagnostics, infrastructure/M4_rl_environment/results/diag).
             (rd.root_link_lin_vel_b[:, 0] / self.cfg.v_max)[:, None],
             (rd.root_link_ang_vel_b[:, 2] / self.cfg.w_max)[:, None],
         ], dim=1)

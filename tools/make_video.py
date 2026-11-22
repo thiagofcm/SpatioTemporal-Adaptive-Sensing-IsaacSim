@@ -1,5 +1,5 @@
 """Top-down MP4 of selected evaluation episodes (from recording.npz + episodes.csv; no Isaac Sim needed).
-    python scripts/m5/m5_animate_eval.py <eval_dir> --episodes 0 1 2 25 73 [--speed 2]"""
+    python tools/make_video.py <eval_dir> --episodes 0 1 2 25 73 [--speed 2]"""
 import argparse, csv, math, os
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt

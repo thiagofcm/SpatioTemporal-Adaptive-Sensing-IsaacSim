@@ -5,7 +5,7 @@ T2 steady-state grid   : (v, w) grid incl. infeasible combinations -> measured v
 T3 intrinsic response  : in-motion steps of v and w (command applied directly) -> delay / rise of the drive+contacts
 T4 frames              : rplidar_link pose in base_link from the USD; collision footprint radii
 
-    isaacrun -g auto -- python scripts/m1/m1_robot_validation.py --headless [--physics_hz 200]
+    isaacrun -g auto -- python infrastructure/M1_robot_calibration/scripts/m1_robot_validation.py --headless [--physics_hz 200]
 """
 import argparse
 import json
@@ -17,7 +17,7 @@ from isaaclab.app import AppLauncher
 
 p = argparse.ArgumentParser()
 p.add_argument("--physics_hz", type=float, default=200.0)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m1"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M1_robot_calibration", "results"))
 p.add_argument("--pos_iters", type=int, default=16)
 p.add_argument("--vel_iters", type=int, default=2)
 p.add_argument("--tag", default="", help="suffix for output files (keeps the approved M1 results intact)")

@@ -10,7 +10,7 @@ from st_nav.scenes import corridor_static_random as S
 
 class cfg:  # CorridorNavEnvCfg.goal_tolerance (cfg module needs Kit/pxr)
     goal_tolerance = 0.20
-OUT = os.path.join(os.environ.get("ST_ROOT", "."), "results", "m4", "figures", "m4_start_goal_poses.png")
+OUT = os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M4_rl_environment", "results", "figures", "m4_start_goal_poses.png")
 L, T, O = (torch.tensor([v]) for v in S.NOMINAL)
 zw = S.z_walls(L, T, O)[0].numpy()
 

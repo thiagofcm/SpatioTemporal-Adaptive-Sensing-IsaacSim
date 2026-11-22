@@ -2,7 +2,7 @@
 import json, os, sys
 import numpy as np
 from st_nav.calibration.real_data import load_all, step_metrics, transitions
-RES = os.path.join(os.environ.get("ST_ROOT", "."), "results", "m1")
+RES = os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M1_robot_calibration", "results")
 runs = {r.name: r for r in load_all() if r.duration > 5.0}
 out = {}
 for tag in sys.argv[1:]:
@@ -28,4 +28,4 @@ for tag in sys.argv[1:]:
                      "rise_diff": m[3] - m[1]}
     out[tag or "200hz"] = res
     print(tag or "200hz", json.dumps({c: {k: round(v, 3) for k, v in x.items()} for c, x in res.items()}))
-json.dump(out, open(os.path.join(os.environ.get("ST_ROOT", "."), "results", "m2", "rate_check_timing.json"), "w"), indent=1)
+json.dump(out, open(os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M2_lidar", "results", "rate_check_timing.json"), "w"), indent=1)

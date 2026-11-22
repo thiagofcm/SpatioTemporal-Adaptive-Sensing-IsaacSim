@@ -1,12 +1,12 @@
 """Record body poses of the articulated TB4 executing a command program (calibrated command model), for offline
 rendering. Headless physics only (no RTX).
 
-    isaacrun -g auto -- python scripts/viz/record_robot_motion.py --headless
+    isaacrun -g auto -- python infrastructure/robot_viz/scripts/record_robot_motion.py --headless
 """
 import argparse, os
 from isaaclab.app import AppLauncher
 p = argparse.ArgumentParser(); p.add_argument("--fps", type=float, default=30.0)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "viz"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "robot_viz", "results"))
 AppLauncher.add_app_launcher_args(p); args = p.parse_args(); app = AppLauncher(args).app
 import numpy as np, torch
 from st_nav.assets.turtlebot4 import TB4_COMMAND_MODEL, TB4_GEOMETRY, TB4_PHYSICS_DT

@@ -1,4 +1,4 @@
-"""Plot an M5 evaluation (episodes.csv + trajectories.npy). python scripts/m5/m5_plot_eval.py <eval_dir>"""
+"""Plot an M5 evaluation (episodes.csv + trajectories.npy). python tools/plot_eval.py <eval_dir>"""
 import csv, math, os, sys
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt

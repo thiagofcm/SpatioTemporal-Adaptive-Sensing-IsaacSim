@@ -6,7 +6,7 @@ V3  moving robot (calibrated command model, random commands) + moving obstacle  
 V4  range limits (no-return rays = range_max, flags) and mounting (sensor pose vs base pose + URDF offset)
 V5  noise model statistics (reference datasheet-uniform model)                         -> U(-1, 1) of e / (a(d) d)
 
-    isaacrun -g auto -- python scripts/m2/m2_lidar_validation.py --headless
+    isaacrun -g auto -- python infrastructure/M2_lidar/scripts/m2_lidar_validation.py --headless
 """
 import argparse
 import json
@@ -20,7 +20,7 @@ p.add_argument("--num_envs", type=int, default=1024)
 p.add_argument("--physics_hz", type=float, default=200.0)
 p.add_argument("--scene", default="corridor_static_object")
 p.add_argument("--debug", action="store_true")
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m2"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M2_lidar", "results"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 app = AppLauncher(args).app

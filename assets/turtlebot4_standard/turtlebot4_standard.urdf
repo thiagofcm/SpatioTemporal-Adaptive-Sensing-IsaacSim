@@ -5,7 +5,7 @@
     <visual>
       <origin rpy="0 0 1.5707963267948966" xyz="0 0 0.039200000000000006" />
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/create3_sim/irobot_create_common/irobot_create_description/meshes/body_visual.dae" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/create3_sim/irobot_create_common/irobot_create_description/meshes/body_visual.dae" />
       </geometry>
     </visual>
     <collision name="create3_base_collision">
@@ -28,12 +28,12 @@
   <link name="bumper">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/create3_sim/irobot_create_common/irobot_create_description/meshes/bumper_visual.dae" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/create3_sim/irobot_create_common/irobot_create_description/meshes/bumper_visual.dae" />
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/create3_sim/irobot_create_common/irobot_create_description/meshes/bumper_collision.dae" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/create3_sim/irobot_create_common/irobot_create_description/meshes/bumper_collision.dae" />
       </geometry>
     </collision>
     <inertial>
@@ -371,12 +371,12 @@
     <visual>
       <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="0 0 0" />
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/shell.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/shell.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision name="shell_collision">
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/shell_collision.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/shell_collision.dae" scale="1 1 1" />
       </geometry>
     </collision>
     <inertial>
@@ -392,7 +392,7 @@
   <link name="front_left_bottom_weight_block">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <inertial>
@@ -409,7 +409,7 @@
   <link name="front_left_top_weight_block">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <inertial>
@@ -426,7 +426,7 @@
   <link name="front_right_bottom_weight_block">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <inertial>
@@ -443,7 +443,7 @@
   <link name="front_right_top_weight_block">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/weight_block.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <inertial>
@@ -461,7 +461,7 @@
     <visual>
       <origin rpy="0 1.5707963267948966 0" />
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>
@@ -484,7 +484,7 @@
     <visual>
       <origin rpy="0 1.5707963267948966 0" />
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>
@@ -507,7 +507,7 @@
     <visual>
       <origin rpy="0 1.5707963267948966 0" />
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>
@@ -530,7 +530,7 @@
     <visual>
       <origin rpy="0 1.5707963267948966 0" />
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/tower_standoff.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>
@@ -552,7 +552,7 @@
   <link name="tower_sensor_plate">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/tower_sensor_plate.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/tower_sensor_plate.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>
@@ -574,7 +574,7 @@
   <link name="rplidar_link">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/rplidar.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/rplidar.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>
@@ -597,7 +597,7 @@
   <link name="oakd_camera_bracket">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/camera_bracket.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/camera_bracket.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <inertial>
@@ -613,7 +613,7 @@
   <link name="oakd_link">
     <visual>
       <geometry>
-        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/turtlebot4/turtlebot4_description/meshes/oakd_pro.dae" scale="1 1 1" />
+        <mesh filename="/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/turtlebot4/turtlebot4_description/meshes/oakd_pro.dae" scale="1 1 1" />
       </geometry>
     </visual>
     <collision>

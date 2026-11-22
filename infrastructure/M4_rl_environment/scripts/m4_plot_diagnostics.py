@@ -1,9 +1,9 @@
-"""Figures for the M4 follow-up diagnostics (reads results/m4/diag; no Isaac Sim needed)."""
+"""Figures for the M4 follow-up diagnostics (reads infrastructure/M4_rl_environment/results/diag; no Isaac Sim needed)."""
 import os
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-D = os.path.join(os.environ.get("ST_ROOT", "."), "results", "m4", "diag")
+D = os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M4_rl_environment", "results", "diag")
 fig, ax = plt.subplots(1, 3, figsize=(19, 5.2))
 # (a) trajectories, deterministic vs stochastic policy (first 64 envs, first episode portion)
 for tag, col in (("stochastic", "tab:blue"), ("deterministic", "tab:red")):

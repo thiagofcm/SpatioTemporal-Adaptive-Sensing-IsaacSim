@@ -5,7 +5,7 @@ Per control step: random (v, w) -> calibrated command model -> 20 physics steps 
 ground-truth clearance and collision flags -> goal distance -> partial reset of envs with a safety violation,
 goal reached (< 0.20 m) or timeout (350 steps = 70 s, reference episode length).
 
-    isaacrun -g auto -- python scripts/m3/m3_benchmark.py --headless --num_envs 16384
+    isaacrun -g auto -- python infrastructure/M3_corridor_scene/scripts/m3_benchmark.py --headless --num_envs 16384
 """
 import argparse
 import json
@@ -19,7 +19,7 @@ from isaaclab.app import AppLauncher
 p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=4096)
 p.add_argument("--control_steps", type=int, default=150)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m3", "benchmark.jsonl"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M3_corridor_scene", "results", "benchmark.jsonl"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 t_launch = time.time()

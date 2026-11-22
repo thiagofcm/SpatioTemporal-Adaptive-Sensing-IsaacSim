@@ -11,7 +11,7 @@
       -> wheel angular-velocity targets [rad/s] for the PhysX velocity drives
 
 The command model only adds what the PhysX drive + contact dynamics do not already produce: its parameters are
-fitted with the physics in the loop (scripts/m1/m1_calibrate.py), so delay/lag are never counted twice.
+fitted with the physics in the loop (infrastructure/M1_robot_calibration/scripts/m1_calibrate.py), so delay/lag are never counted twice.
 Every parameter is a per-env tensor so it can be randomized per episode later.
 """
 from __future__ import annotations

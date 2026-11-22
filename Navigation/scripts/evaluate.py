@@ -1,4 +1,4 @@
-"""M5 evaluation, following the reference protocol (adaptive_sensor_policy/AdaptiveFPS/evaluation):
+"""Navigation evaluation. Protocol ref_static_c10 = the reference protocol (adaptive_sensor_policy/AdaptiveFPS/evaluation):
 
 * episode i (i = 0..n-1) uses the Z1-Z4 configuration of reference seed STATIC_OBSTACLES_SEED + i (sizes AND offsets from
   the reference sampler; seeds 3000.. are outside the training bank 0..1023, i.e. held-out obstacle sizes),
@@ -7,28 +7,57 @@
 * timeout 80 s = 400 steps (reference EVAL_TIMEOUT_S); deterministic policy (actor mean); LiDAR noise on.
 All episodes run in parallel (env i = episode i); only each env's first episode is counted.
 
-    isaacrun -g 5 -- python scripts/m5/m5_evaluate.py --headless --checkpoint <run>/model_200.pt
+    isaacrun -g 5 -- python Navigation/scripts/evaluate.py --headless \
+        --checkpoint Navigation/runs/<ID>/<run>/model_200.pt [--protocol ref_static_c10]
+
+Output (default): Navigation/eval/<ID>/<protocol>/<run>_<checkpoint>/ (ID taken from the checkpoint path):
+episodes.csv, summary.json, run_config.json, trajectories.npy, recording.npz. Existing folders need --overwrite.
+The training run's env overrides (params/config.yaml, if present) are applied before the protocol's settings.
 """
 import argparse
 import csv
 import json
 import math
 import os
+import sys
 import time
 
 from isaaclab.app import AppLauncher
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+from tools import experiments as X  # noqa: E402
+
+# named evaluation protocols: every policy evaluated under one protocol sees identical episodes
+PROTOCOLS = {"ref_static_c10": dict(episodes=100, obstacle_seed=3000, start_seed=4000, goal=(-2.0, -2.0), timeout_s=80.0)}
+
 p = argparse.ArgumentParser()
 p.add_argument("--checkpoint", required=True)
-p.add_argument("--episodes", type=int, default=100)
-p.add_argument("--obstacle_seed", type=int, default=3000)       # reference STATIC_OBSTACLES_SEED
-p.add_argument("--start_seed", type=int, default=4000)          # reference START_POSE_SEED
-p.add_argument("--goal", type=float, nargs=2, default=(-2.0, -2.0))
-p.add_argument("--timeout_s", type=float, default=80.0)
+p.add_argument("--protocol", default="ref_static_c10", choices=sorted(PROTOCOLS))
+p.add_argument("--episodes", type=int, default=None)            # the remaining options override the protocol
+p.add_argument("--obstacle_seed", type=int, default=None)       # reference STATIC_OBSTACLES_SEED
+p.add_argument("--start_seed", type=int, default=None)          # reference START_POSE_SEED
+p.add_argument("--goal", type=float, nargs=2, default=None)
+p.add_argument("--timeout_s", type=float, default=None)
 p.add_argument("--seed", type=int, default=42)                  # reference RUN_SEED (LiDAR noise generator)
 p.add_argument("--out_dir", default=None)
+p.add_argument("--overwrite", action="store_true")
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
+custom = [k for k in PROTOCOLS[args.protocol] if getattr(args, k) is not None]
+for k, v in PROTOCOLS[args.protocol].items():
+    setattr(args, k, v if getattr(args, k) is None else getattr(args, k))
+run_dir = os.path.dirname(os.path.abspath(args.checkpoint))
+exp_id = X.exp_id_from_run_path(args.checkpoint)
+if args.out_dir is None:
+    if exp_id is None:
+        raise SystemExit("checkpoint is not inside <line>/runs/<ID>/<run>/: pass --out_dir")
+    scenario = args.protocol + ("_custom-" + "-".join(custom) if custom else "")
+    policy_name = os.path.basename(run_dir) + "_" + os.path.basename(args.checkpoint).replace(".pt", "")
+    args.out_dir = str(X.paths(exp_id)["eval"] / scenario / policy_name)
+if os.path.exists(os.path.join(args.out_dir, "episodes.csv")) and not args.overwrite:
+    raise SystemExit(f"{args.out_dir} already has results; pass --overwrite (and note why in the experiment card)")
+run_cfg_path = os.path.join(run_dir, "params", "config.yaml")
+run_exp = X.yaml.safe_load(open(run_cfg_path)) if os.path.exists(run_cfg_path) else None
 t_start = time.time()
 app = AppLauncher(args).app
 
@@ -58,6 +87,9 @@ def reference_start_pose(seed):
 n = args.episodes
 starts = [reference_start_pose(args.start_seed + i) for i in range(n)]
 cfg = CorridorNavEnvCfg()
+if run_exp:                                                      # the training run's env settings
+    X.apply_overrides(cfg, X.flatten(run_exp.get("env") or {}), "env")
+    X.apply_overrides(cfg, (run_exp.get("set") or {}).get("env") or {}, "env")
 cfg.scene.num_envs = n
 cfg.sim.device = args.device
 cfg.seed = args.seed
@@ -134,8 +166,14 @@ for k in range(int(u.max_episode_length) + 2):
 t_eval = time.time() - t_loop
 
 R = {k: v.cpu().numpy() for k, v in res.items()}
-out_dir = args.out_dir or os.path.join(os.path.dirname(os.path.abspath(args.checkpoint)), "eval_" + os.path.basename(args.checkpoint).replace(".pt", ""))
+out_dir = args.out_dir
 os.makedirs(out_dir, exist_ok=True)
+with open(os.path.join(out_dir, "run_config.json"), "w") as f:
+    json.dump({"exp_id": exp_id, "protocol": args.protocol, "custom": custom,
+               "checkpoint": os.path.relpath(os.path.abspath(args.checkpoint), X.REPO_ROOT),
+               "settings": {k: getattr(args, k) for k in ("episodes", "obstacle_seed", "start_seed", "goal", "timeout_s", "seed")},
+               "training_run_config": run_cfg_path if run_exp else None, "command": sys.argv,
+               "repo": X.git_state(X.REPO_ROOT), "reference_repo": X.git_state(X.REFERENCE_ROOT)}, f, indent=1)
 rows = []
 for i in range(n):
     oc = OUTCOME_NAMES.get(int(R["outcome"][i]), "running")

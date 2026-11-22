@@ -346,7 +346,7 @@
   </gazebo>
   <gazebo>
     <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <parameters>/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/third_party/create3_sim/irobot_create_common/irobot_create_control/config/control.yaml</parameters>
+      <parameters>/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/references/robot_description/create3_sim/irobot_create_common/irobot_create_control/config/control.yaml</parameters>
       <ros>
         <remapping>~/odom:=odom</remapping>
         <remapping>/tf:=tf</remapping>

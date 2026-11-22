@@ -1,7 +1,7 @@
 """M5 pre-check: start-pose randomization (default ON) in the RL env. Verifies the 5 reference points, yaw in
 pi +- 10 deg (uniform, wrapped), per-reset resampling, robot placed exactly at the sampled pose, safe initial clearance.
 
-    isaacrun -g 5 -- python scripts/m5/m5_verify_start_dr.py --headless --num_envs 1024
+    isaacrun -g 5 -- python tests/sim/start_pose_dr_check.py --headless --num_envs 1024
 """
 import argparse
 import json
@@ -85,7 +85,8 @@ res = {
 res["pass"] = bool(cfg.start_pose_dr and dpos.max() < 1e-5 and all(v > 0 for v in res["position_counts"].values())
                    and dyaw.abs().max() <= math.radians(10) + 1e-5 and PE.max() < 1e-3 and C0.min() > cfg.safety_margin
                    and any(len(set(s)) > 1 for s in per_env_starts))
-os.makedirs("results/m5", exist_ok=True)
-json.dump(res, open("results/m5/start_dr_check.json", "w"), indent=1)
+OUT = os.path.join(os.environ.get("ST_ROOT", "."), "tests", "sim", "results")
+os.makedirs(OUT, exist_ok=True)
+json.dump(res, open(os.path.join(OUT, "start_pose_dr_check.json"), "w"), indent=1)
 print("[START-DR]", json.dumps(res), flush=True)
 os._exit(0)

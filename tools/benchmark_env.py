@@ -4,7 +4,7 @@ A randomly initialized RSL-RL actor-critic (inference only: no learning, nothing
 loop matches a PPO rollout: policy forward -> env.step (20 physics steps, command model, LiDAR with noise, rewards,
 terminations, partial resets, observations). Reports throughput, outcome counts, reward-term means and stability.
 
-    isaacrun -g auto -- python scripts/m4/m4_benchmark.py --headless --num_envs 16384
+    isaacrun -g auto -- python tools/benchmark_env.py --headless --num_envs 16384
 """
 import argparse
 import json
@@ -17,7 +17,7 @@ from isaaclab.app import AppLauncher
 p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=4096)
 p.add_argument("--steps", type=int, default=200)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m4", "benchmark.jsonl"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "tests", "sim", "results", "benchmark_env.jsonl"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 t_launch = time.time()

@@ -7,7 +7,7 @@ V3 collisions : robots driven forward / backward into walls and baffles; ground-
 V4 resets     : full and partial resets (state, isolation of other envs), start-pose fixed / DR, goals
 Also saves representative layouts + scans for the top-down figures (m3_plots.py).
 
-    isaacrun -g auto -- python scripts/m3/m3_validation.py --headless --num_envs 2048
+    isaacrun -g auto -- python infrastructure/M3_corridor_scene/scripts/m3_validation.py --headless --num_envs 2048
 """
 import argparse
 import json
@@ -19,7 +19,7 @@ from isaaclab.app import AppLauncher
 p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=2048)
 p.add_argument("--resets", type=int, default=10)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m3"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M3_corridor_scene", "results"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 app = AppLauncher(args).app

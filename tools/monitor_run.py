@@ -1,5 +1,5 @@
 """Summarize an M5 run from its tensorboard events (no Isaac Sim needed).
-    python scripts/m5/m5_monitor.py results/m5/runs/<run> [--every 10]"""
+    python tools/monitor_run.py Navigation/runs/<ID>/<run> [--every 10]"""
 import argparse, glob
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 p = argparse.ArgumentParser(); p.add_argument("run"); p.add_argument("--every", type=int, default=10); a = p.parse_args()

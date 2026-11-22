@@ -4,7 +4,7 @@ Inputs : results/viz/tb4_geometry.npz (export_robot_geometry.py), results/viz/tb
 Outputs: results/viz/tb4_model_sheet.png        geometry, collision shapes, frames, LiDAR mount and beam pattern
          results/viz/tb4_motion.mp4             recording of the command program (physics poses from PhysX)
 
-    python scripts/viz/render_robot.py [--workers 32]
+    python infrastructure/robot_viz/scripts/render_robot.py [--workers 32]
 """
 import argparse
 import math
@@ -22,8 +22,8 @@ import numpy as np
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.spatial import ConvexHull
 
-ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-VIZ = os.path.join(ROOT, "results", "viz")
+ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+VIZ = os.path.join(ROOT, "infrastructure", "robot_viz", "results")
 G = dict(np.load(os.path.join(VIZ, "tb4_geometry.npz")))     # fully loaded: worker processes must not share a zip handle
 LIDAR_N, LIDAR_RES_DEG, LIDAR_RANGE = 40, 9.0, 3.5
 

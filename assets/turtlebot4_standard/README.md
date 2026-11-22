@@ -9,14 +9,14 @@ Articulated TurtleBot4 Standard for Isaac Lab 2.3.2 / Isaac Sim 5.1, built from 
 | TurtleBot4 Standard | `github.com/turtlebot/turtlebot4` → `turtlebot4_description` | `jazzy` | `7fd29fb420e906f3aca4a904adb54b69b11c7c00` (2025-09-09) | Apache-2.0 |
 | Create3 base | `github.com/iRobotEducation/create3_sim` → `irobot_create_description` | `jazzy` | `6c305843afcfe094bf8eb2a0c6997f531e526b9d` (2026-09-24) | BSD-3-Clause |
 
-The clones are in `third_party/` (not modified).
+The clones are in `references/robot_description/` (not modified).
 
 ## Build pipeline
 
-1. **xacro → URDF** in an isolated venv (`third_party/.venv_xacro`, `pip install xacro`; the conda env is untouched).
-   * `$(find pkg)` is resolved by a 20-line stand-in for `ament_index_python` (`third_party/xacro_shim/`) that maps package names to the clones. There is no ROS on this machine.
+1. **xacro → URDF** in an isolated venv (`references/robot_description/.venv_xacro`, `pip install xacro`; the conda env is untouched).
+   * `$(find pkg)` is resolved by a 20-line stand-in for `ament_index_python` (`references/robot_description/xacro_shim/`) that maps package names to the clones. There is no ROS on this machine.
    ```bash
-   cd third_party
+   cd references/robot_description
    PYTHONPATH=$PWD/xacro_shim .venv_xacro/bin/xacro turtlebot4/turtlebot4_description/urdf/standard/turtlebot4.urdf.xacro \
        gazebo:=ignition -o ../assets/turtlebot4_standard/turtlebot4_standard_raw.urdf
    ```

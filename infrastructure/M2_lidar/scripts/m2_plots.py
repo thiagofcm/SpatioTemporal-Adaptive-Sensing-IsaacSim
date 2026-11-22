@@ -1,6 +1,6 @@
 """M2 figures: LiDAR scans, validation errors, noise statistics, benchmark. CPU only.
 
-    python scripts/m2/m2_plots.py
+    python infrastructure/M2_lidar/scripts/m2_plots.py
 """
 import json
 import math
@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle, Polygon
 
-ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-RES = os.path.join(ROOT, "results", "m2")
+ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+RES = os.path.join(ROOT, "infrastructure", "M2_lidar", "results")
 FIG = os.path.join(RES, "figures")
 os.makedirs(FIG, exist_ok=True)
 D = dict(np.load(os.path.join(RES, "m2_validation_data.npz")))

@@ -48,7 +48,7 @@ the effort limit (1 N.m per wheel, ~ 7 m/s^2 for 5.4 kg) is not binding at the c
 drive is near-ideal and the robot's lag is set by the calibrated CommandModel (st_nav.control.diff_drive)."""
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Calibrated command model (M1, scripts/m1/m1_calibrate.py): fitted with the PhysX drive + contacts in the loop against
+# Calibrated command model (M1, infrastructure/M1_robot_calibration/scripts/m1_calibrate.py): fitted with the PhysX drive + contacts in the loop against
 # 16 real TurtleBot4 step-response recordings (motion_dynamic_charac/runs), so the simulated drive dynamics (rise
 # ~17-38 ms, no delay) are not counted twice. In-motion transitions: delay/rise within +-0.02 s of the real robot.
 # Not modelled: the firmware start-up delay after >= 0.8 s at rest (real 0.53 +- 0.59 s, highly variable).

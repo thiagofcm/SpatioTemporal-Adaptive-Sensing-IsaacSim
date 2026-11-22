@@ -1,7 +1,7 @@
 """Export the converted TurtleBot4 USD geometry (visual meshes, collision shapes as PhysX sees them, key frames) into
 per-body triangle meshes, for offline (GPU-free) visualization. Read-only on the USD.
 
-    isaacrun -g auto -- python scripts/viz/export_robot_geometry.py --headless
+    isaacrun -g auto -- python infrastructure/robot_viz/scripts/export_robot_geometry.py --headless
 
 Output: results/viz/tb4_geometry.npz (+ .glb files for interactive viewing in any glTF viewer)
 """
@@ -11,7 +11,7 @@ import os
 from isaaclab.app import AppLauncher
 
 p = argparse.ArgumentParser()
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "viz"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "robot_viz", "results"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 app = AppLauncher(args).app

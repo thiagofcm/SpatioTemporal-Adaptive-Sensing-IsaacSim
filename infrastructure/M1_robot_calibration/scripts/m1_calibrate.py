@@ -10,7 +10,7 @@ Scoring (per parameter combination, over all runs):
   samples within 2.5 s after a start-from-rest command (firmware start-up regime, 0.3-1.9 s real delays) are
   excluded from the fit and reported separately.
 
-    isaacrun -g auto -- python scripts/m1/m1_calibrate.py --headless
+    isaacrun -g auto -- python infrastructure/M1_robot_calibration/scripts/m1_calibrate.py --headless
 """
 import argparse
 import itertools
@@ -22,7 +22,7 @@ from isaaclab.app import AppLauncher
 
 p = argparse.ArgumentParser()
 p.add_argument("--physics_hz", type=float, default=200.0)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m1"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M1_robot_calibration", "results"))
 p.add_argument("--delays", default="0,0.02,0.04,0.06,0.08,0.10,0.12,0.14,0.16,0.18,0.20,0.22,0.24")
 p.add_argument("--taus", default="0,0.02,0.04,0.06,0.08,0.10")
 p.add_argument("--kws", default="0.85,0.90,0.95,1.00")

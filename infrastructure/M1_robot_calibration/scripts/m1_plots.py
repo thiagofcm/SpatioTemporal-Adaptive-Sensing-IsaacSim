@@ -1,6 +1,6 @@
-"""M1 calibration plots and acceptance metrics (CPU only; reads results/m1/*.npz and the real recordings).
+"""M1 calibration plots and acceptance metrics (CPU only; reads infrastructure/M1_robot_calibration/results/*.npz and the real recordings).
 
-    python scripts/m1/m1_plots.py            (conda-env python with PYTHONPATH from env.sh)
+    python infrastructure/M1_robot_calibration/scripts/m1_plots.py            (conda-env python with PYTHONPATH from env.sh)
 """
 import json
 import os
@@ -13,8 +13,8 @@ import numpy as np
 
 from st_nav.calibration.real_data import load_all, startup_mask, step_metrics, transitions
 
-ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-RES = os.path.join(ROOT, "results", "m1")
+ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+RES = os.path.join(ROOT, "infrastructure", "M1_robot_calibration", "results")
 FIG = os.path.join(RES, "figures")
 os.makedirs(FIG, exist_ok=True)
 d = np.load(os.path.join(RES, "m1_calibration_final.npz"))          # selected model + no-model, all runs

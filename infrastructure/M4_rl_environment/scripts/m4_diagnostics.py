@@ -6,7 +6,7 @@ D3  measured linear velocity > v_max: per-physics-substep decomposition (CoM vs 
     finite-difference motion, command-model output, contact force, steps since reset)
 D4  timeout bootstrapping with the installed RSL-RL (RslRlVecEnvWrapper + PPO.process_env_step)
 
-    isaacrun -g 5 -- python scripts/m4/m4_diagnostics.py --headless --num_envs 1024
+    isaacrun -g 5 -- python infrastructure/M4_rl_environment/scripts/m4_diagnostics.py --headless --num_envs 1024
 """
 import argparse
 import json
@@ -18,7 +18,7 @@ from isaaclab.app import AppLauncher
 
 p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=1024)
-p.add_argument("--out_dir", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m4", "diag"))
+p.add_argument("--out_dir", default=os.path.join(os.environ.get("ST_ROOT", "."), "infrastructure", "M4_rl_environment", "results", "diag"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 app = AppLauncher(args).app

@@ -7,7 +7,7 @@ T4 termination semantics: goal, safety violation, physical collision (margin 0),
 T5 partial resets: prev distance / actions / actuator state / fresh LiDAR scan; no artificial progress
 T6 numerical stability (random actions)            T7 RSL-RL 5.0.1 compatibility (wrapper + 1-iteration API smoke)
 
-    isaacrun -g auto -- python scripts/m4/m4_validation.py --headless --num_envs 1024
+    isaacrun -g auto -- python tests/sim/nav_env_validation.py --headless --num_envs 1024
 """
 import argparse
 import json
@@ -18,7 +18,7 @@ from isaaclab.app import AppLauncher
 
 p = argparse.ArgumentParser()
 p.add_argument("--num_envs", type=int, default=1024)
-p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "results", "m4"))
+p.add_argument("--out", default=os.path.join(os.environ.get("ST_ROOT", "."), "tests", "sim", "results"))
 AppLauncher.add_app_launcher_args(p)
 args = p.parse_args()
 app = AppLauncher(args).app

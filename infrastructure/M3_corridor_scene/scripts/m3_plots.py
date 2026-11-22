@@ -1,7 +1,7 @@
 """M3 figures (CPU): randomized environments with robot, start, goal and LiDAR; randomization distributions vs the
 reference sampler; collision-detection summary.
 
-    python scripts/m3/m3_plots.py
+    python infrastructure/M3_corridor_scene/scripts/m3_plots.py
 """
 import json
 import math
@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle, Polygon
 
-ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-RES = os.path.join(ROOT, "results", "m3")
+ROOT = os.environ.get("ST_ROOT", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
+RES = os.path.join(ROOT, "infrastructure", "M3_corridor_scene", "results")
 FIG = os.path.join(RES, "figures")
 os.makedirs(FIG, exist_ok=True)
 D = dict(np.load(os.path.join(RES, "m3_validation_data.npz")))
