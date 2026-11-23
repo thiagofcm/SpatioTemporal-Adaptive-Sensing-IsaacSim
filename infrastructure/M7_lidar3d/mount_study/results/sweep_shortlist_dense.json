@@ -1,0 +1,58 @@
+{
+ "args": {
+  "z": [
+   0.36,
+   0.6,
+   0.02
+  ],
+  "pitch": [
+   -2.0,
+   16.0,
+   0.5
+  ],
+  "candidates": [
+   0.3998,
+   5.0,
+   0.4,
+   5.75,
+   0.4,
+   6.75,
+   0.46,
+   6.25,
+   0.46,
+   7.25,
+   0.5,
+   6.5,
+   0.5,
+   7.5,
+   0.5,
+   8.0,
+   0.56,
+   8.0
+  ],
+  "every": 2,
+  "n_random": 5000,
+  "chunk": 128,
+  "tag": "shortlist_dense",
+  "worst_body_pitch": true
+ },
+ "poses": {
+  "static": {
+   "n": 12228,
+   "trajectory": 7228,
+   "random": 5000
+  },
+  "dynamic": {
+   "n": 13557,
+   "trajectory": 8557,
+   "random": 5000
+  }
+ },
+ "body_pitch_deg": -0.252,
+ "worst_body_pitch_deg": -1.31,
+ "base_z_m": -0.00445,
+ "row_elevations_deg": [
+  -6.7941179275512695,
+  6.7941179275512695
+ ]
+}

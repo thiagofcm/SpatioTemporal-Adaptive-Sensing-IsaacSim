@@ -1,4 +1,4 @@
-"""DirectRLEnv: articulated TurtleBot4 navigation in the randomized static corridor, 40-beam 2D LiDAR.
+"""DirectRLEnv: articulated TurtleBot4 navigation in the corridor scenes with a ray-casting LiDAR (2D or 3D).
 
 Simulation layer: st_nav.envs.corridor_scene.CorridorScene (validated in M3), used in its deferred mode:
 scene config -> prepare_stage() in _setup_scene() -> attach() after the base class started physics.
@@ -7,8 +7,9 @@ Step (DirectRLEnv order): _pre_physics_step -> decimation x (_apply_action, phys
 _reset_idx (finished envs) -> _get_observations. Dones and rewards therefore use the post-step state of THIS control
 step; observations of reset envs are those of their new initial state.
 
-Observation (47): [0:40] LiDAR ranges / 3.5 (latest scan, noisy) | [40] goal distance / 5.94 (clipped [0, 1]) |
-[41] sin(goal angle) | [42] cos(goal angle) | [43:45] previous action (v, w) in [-1, 1] |
+Observation (R + 7, R = rays of the sensor: 2D LiDAR 40 -> 47; 3D LiDAR 139 x 34 = 4,726 -> 4,733):
+[0:R] LiDAR ranges / range_max (latest scan, noisy, sensor ray order) | [R] goal distance / goal_distance_norm (clipped
+[0, 1]) | [R+1] sin(goal angle) | [R+2] cos(goal angle) | [R+3:R+5] previous action (v, w) in [-1, 1] |
 [45] base_link v / v_max | [46] base_link w / w_max         (goal angle = bearing to goal in the robot frame)
 Rewards and terminations use ground-truth geometry only (footprint clearance, goal distance), never the LiDAR.
 """
@@ -46,7 +47,17 @@ class CorridorNavEnv(DirectRLEnv):
                                 obstacle_radius_dr=cfg.obstacle_radius_dr, max_episode_s=cfg.episode_length_s)
         if cfg.goals is not None:
             scfg.goals = tuple(tuple(g) for g in cfg.goals)
-        scfg.lidar.noise.enabled = cfg.lidar_noise
+        scfg.wall_height, scfg.baffle_height, scfg.obstacle_height = cfg.wall_height, cfg.baffle_height, cfg.obstacle_height
+        if cfg.sensor == "lidar3d":
+            scfg.lidar = cfg.lidar3d.to_ray_lidar_cfg()
+            scfg.lidar.noise.enabled = scfg.lidar.noise.enabled and cfg.lidar_noise
+            self.scan_period = float(cfg.lidar3d.period_s)
+        elif cfg.sensor == "lidar2d":
+            scfg.lidar.noise.enabled = cfg.lidar_noise
+            self.scan_period = float(cfg.lidar_period_s)
+        else:
+            raise ValueError(f"unknown sensor {cfg.sensor!r} (lidar2d | lidar3d)")
+        cfg.observation_space = scfg.lidar.num_rays + 7            # [scan | goal (3) | previous action (2) | v, w]
         self.corr = CorridorScene.deferred(scfg, cfg.sim.device)
         self.corr.build_scene_cfg(cfg.scene)
         super().__init__(cfg, render_mode, **kwargs)
@@ -156,15 +167,18 @@ class CorridorNavEnv(DirectRLEnv):
         return p, yaw
 
     def _get_observations(self) -> dict:
-        due = self.ep_time + 1e-6 >= self.next_scan_t
+        # tolerance half a physics step: ep_time accumulates step_dt in float32 (error ~1e-5 s after tens of seconds), so
+        # a 1e-6 tolerance misses due times of periods that are not multiples of step_dt (3D LiDAR 0.25 s; M7)
+        tol = 0.5 * self.physics_dt
+        due = self.ep_time + tol >= self.next_scan_t
         if bool(due.any()):
             tick = torch.round(self.ep_time / self.physics_dt).to(torch.int64)   # acquisition time (physics steps)
             out = self.corr.lidar.read(self.ep_time, noise_keys=(self.corr.lidar_seed, tick))
             self.scan[due] = out.normalized[due]
             self.scan_clean[due] = (out.ranges_clean / out.range_max)[due]
             self.scan_t[due] = self.ep_time[due]
-            self.next_scan_t[due] = self.next_scan_t[due] + self.cfg.lidar_period_s * torch.ceil(
-                (self.ep_time[due] + 1e-6 - self.next_scan_t[due]) / self.cfg.lidar_period_s).clamp(min=1)
+            self.next_scan_t[due] = self.next_scan_t[due] + self.scan_period * torch.ceil(
+                (self.ep_time[due] + tol - self.next_scan_t[due]) / self.scan_period).clamp(min=1)
         p, yaw = self._robot_state()
         g = self.corr.goal - p
         dist = torch.linalg.norm(g, dim=1)

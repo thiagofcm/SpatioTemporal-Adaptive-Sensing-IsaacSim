@@ -15,7 +15,7 @@ on it:
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md) | **Experiment registry and conventions:** IDs, configs, runs, evaluations |
 | [docs/architecture.md](docs/architecture.md) | The shared simulation library and where new scenes, sensors and tasks go |
 | [docs/research_plan.md](docs/research_plan.md) | Research direction and roadmap |
-| [infrastructure/README.md](infrastructure/README.md) | M1–M5 development and validation history (robot calibration, LiDAR, scene, RL env) |
+| [infrastructure/README.md](infrastructure/README.md) | M1–M7 development and validation history (robot calibration, LiDAR, scene, RL env, dynamic scene, 3D LiDAR) |
 | [docs/server_setup.md](docs/server_setup.md) | GPU server launch tooling: CUDA workaround, `isaacrun`, GPU selection |
 | [docs/references.md](docs/references.md) | External repositories used as references (paths, commits) |
 
@@ -32,7 +32,7 @@ tools/                  experiments.py (IDs, paths, YAML configs), monitor_run.p
                         format), make_video.py, plot_episode.py, plot_eval.py (standalone: numpy + matplotlib),
                         benchmark_env.py
 tests/                  unit/ (no simulator, pytest) · sim/ (simulator regression scripts) · golden/ (refactoring checks)
-infrastructure/         M1–M5 development history (reports, scripts, results) + server diagnostics
+infrastructure/         M1–M7 development history (reports, scripts, results) + server diagnostics
 docs/                   registry, architecture, plan, server setup, references, templates, history/
 references/             robot description sources (TurtleBot4, Create3) used to build the robot USD
 assets/                 TurtleBot4 USD and its conversion pipeline

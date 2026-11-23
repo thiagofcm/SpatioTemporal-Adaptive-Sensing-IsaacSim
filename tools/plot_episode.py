@@ -31,7 +31,9 @@ def plot_episode(ep_dir, out=None, scan_steps=None):
     meta, geo, T, St, O = ep["meta"], ep["geometry"], ep["traj"], ep["steps"], ep["obstacles"]
     n = int(meta["n_steps"])
     fig = plt.figure(figsize=(15, 7.5))
-    gs = fig.add_gridspec(5, 2, width_ratios=[1.1, 1])
+    is3d = ED.is_per_scan(ep)
+    img3d = is3d and len(ep["lidar"]["grid_shape"]) == 2
+    gs = fig.add_gridspec(5 + 2 * img3d, 2, width_ratios=[1.1, 1])
     ax = fig.add_subplot(gs[:, 0])
     V.draw_walls(ax, geo)
     V.draw_obstacle_paths(ax, geo)
@@ -45,21 +47,32 @@ def plot_episode(ep_dir, out=None, scan_steps=None):
     lc.set_array(T["v_mps"][1:]); lc.set_clim(0, meta["robot"]["v_max_mps"])
     ax.add_collection(lc)
     fig.colorbar(lc, ax=ax, fraction=0.035, pad=0.01).set_label("v [m/s]", fontsize=8)
-    for k in (scan_steps if scan_steps is not None else [0, n // 2, n]):
-        k = min(int(k), n)
-        o, ends, hit = ED.lidar_points(ep, k)
-        ax.scatter(ends[hit, 0], ends[hit, 1], s=5, color="tab:red", zorder=3)
+    scan_steps = [min(int(k), n) for k in (scan_steps if scan_steps is not None else [0, n // 2, n])]
+    for k in scan_steps:
+        if is3d:                                                    # 3D returns above the floor, top-down
+            o, xy, z, floor = V.scan3d_topdown(ep, k)
+            ax.scatter(xy[~floor, 0], xy[~floor, 1], s=1, color="tab:red", zorder=3, linewidths=0)
+        else:
+            o, ends, hit = ED.lidar_points(ep, k)
+            ax.scatter(ends[hit, 0], ends[hit, 1], s=5, color="tab:red", zorder=3)
         ax.plot([o[0]], [o[1]], "o", color="tab:red", ms=3)
     ax.add_patch(plt.Circle((T["x"][-1], T["y"][-1]), meta["robot"]["footprint_radius_m"],
                             fc=V.OUTCOME_COLORS.get(meta["outcome"], "tab:blue"), alpha=0.5, ec="k"))
-    V.setup_map(ax, geo, V.episode_title(meta) + "\nred dots: LiDAR hits at the marked steps; purple: obstacle tracks")
+    V.setup_map(ax, geo, V.episode_title(meta) + "\nred dots: LiDAR hits at the marked steps" +
+                (" (3D, floor returns omitted)" if is3d else "") + "; purple: obstacle tracks")
+    if img3d:                                                       # range image of the last marked step's scan
+        k = scan_steps[-1]
+        im = V.range_image_axes(fig.add_subplot(gs[0:2, 1]), ep,
+                                f"range image, scan in the observation at step {k} (row 0 = top, col 0 = left)")
+        im.set_data(ED.range_image(ep, max(ED.scan_index(ep, k), 0)))
+        fig.colorbar(im, ax=im.axes, fraction=0.03, pad=0.01).set_label("range [m]", fontsize=7)
     rows = [("speed [m/s]", [(T["t_sim"], T["v_mps"], "measured v"), (St["t_sim"], St["cmd_v_mps"], "command v")]),
             ("ang. rate [rad/s]", [(T["t_sim"], T["w_radps"], "measured w"), (St["t_sim"], St["cmd_w_radps"], "command w")]),
             ("clearance [m]", [(T["t_sim"], T["clearance_m"], "footprint clearance")]),
             ("goal dist. [m]", [(T["t_sim"], T["goal_distance_m"], None)]),
             ("cum. reward", [(St["t_sim"], St["cumulative_reward"], None)])]
     for i, (lab, curves) in enumerate(rows):
-        a = fig.add_subplot(gs[i, 1])
+        a = fig.add_subplot(gs[i + 2 * img3d, 1])
         for t, y, l in curves:
             a.plot(t, y, lw=1, label=l)
         if lab.startswith("clearance"):

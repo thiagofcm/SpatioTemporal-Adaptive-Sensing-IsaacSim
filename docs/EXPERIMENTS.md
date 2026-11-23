@@ -80,6 +80,9 @@ python tools/plot_episode.py <eval_dir>/episode_0025               # static figu
 python tools/plot_eval.py <eval_dir> [--episodes 0 1 25]           # whole evaluation (or a selection)
 ```
 
+3D LiDAR episodes (`lidar.npz` per-scan layout, schema 1.1) are drawn as the scan's 3D returns projected top-down
+(coloured by height, floor returns grey); single-episode videos and figures add the range image.
+
 ## Configs
 
 Defaults live in the Isaac Lab configclasses registered with the config's Gym `task` (for navigation:
@@ -94,6 +97,11 @@ agent: {seed: 42, max_iterations: 1500, algorithm.learning_rate: 3.0e-4}
 sweep: {}                      # reserved: {agent.seed: [42, 43, 44]} -> one run per combination
 ```
 
+* Sensor: `env.sensor: lidar2d` (default; 40-beam 2D LiDAR, `lidar_period_s`) or `lidar3d` (fixed 3D LiDAR, all its
+  settings under `env.lidar3d.*`: FoV, rows / cols, placement, ray order or `ray_table`, mount position and
+  roll/pitch/yaw, range, noise type / sigma, period, floor target). Templates with every field:
+  `Navigation/configs/_templates/{static,chase}_lidar3d.yaml`. `env.lidar_noise: false` disables either sensor's
+  noise. Object heights: `env.wall_height`, `env.baffle_height`, `env.obstacle_height`.
 * Precedence: configclass defaults < YAML < `--set <env|agent>.<path>=<value>` on the command line.
 * Unknown keys are errors.
 * Each run records the resolved configs in `params/`.

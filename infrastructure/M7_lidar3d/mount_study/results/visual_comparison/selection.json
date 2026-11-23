@@ -1,0 +1,72 @@
+{
+ "eval": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/eval/NAV03_chase-ob1ob2_dr/ref_chase_c10/2026-11-22_15-52-39_ppo_n4096_s42_model_500",
+ "episode": 56,
+ "row": 15,
+ "t_s": 3.0,
+ "min_rays_on_an_obstacle_over_both_mounts": 1039,
+ "robot": {
+  "x": 1.917891,
+  "y": 2.089576,
+  "yaw_deg": -118.9985212031929
+ },
+ "obstacles": [
+  [
+   1.8705193996429443,
+   1.5199848413467407,
+   0.17000000178813934,
+   0.5
+  ],
+  [
+   1.4642951488494873,
+   0.8854873180389404,
+   0.17000000178813934,
+   0.5
+  ]
+ ],
+ "configs": {
+  "R1": {
+   "z_mount_m": 0.5,
+   "pitch_deg": 7.5
+  },
+  "R4": {
+   "z_mount_m": 0.4,
+   "pitch_deg": 6.75
+  }
+ },
+ "per_config": {
+  "R1": {
+   "rays_on_OB1_OB2": [
+    1205,
+    1039
+   ],
+   "floor_pct": 26.089716462124418,
+   "wall_pct": 26.428269149386374,
+   "moving obstacle_pct": 47.482014388489205,
+   "escaping ray_pct": 0.0
+  },
+  "R4": {
+   "rays_on_OB1_OB2": [
+    1202,
+    1042
+   ],
+   "floor_pct": 28.713499788404572,
+   "wall_pct": 23.80448582310622,
+   "moving obstacle_pct": 47.482014388489205,
+   "escaping ray_pct": 0.0
+  }
+ },
+ "episode_means": {
+  "R1": {
+   "floor_pct": 20.205416323743602,
+   "wall_pct": 70.41311735887363,
+   "moving obstacle_pct": 9.38146631738276,
+   "escaping ray_pct": 0.0
+  },
+  "R4": {
+   "floor_pct": 25.640692786802678,
+   "wall_pct": 64.98342286113369,
+   "moving obstacle_pct": 9.37588435206364,
+   "escaping ray_pct": 0.0
+  }
+ }
+}

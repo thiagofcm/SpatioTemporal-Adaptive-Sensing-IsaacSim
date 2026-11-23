@@ -1,0 +1,66 @@
+{
+ "frames": [
+  {
+   "frame": "F1",
+   "scene": "static",
+   "eval": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/eval/NAV01_static_initial/ref_static_c10/2026-11-22_00-44-09_m5_initial_4096_model_200",
+   "episode": 53,
+   "row": 6,
+   "x": 2.324211,
+   "y": 2.41502,
+   "yaw_deg": -139.07398831632523
+  },
+  {
+   "frame": "F2",
+   "scene": "static",
+   "eval": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/eval/NAV01_static_initial/ref_static_c10/2026-11-22_00-44-09_m5_initial_4096_model_200",
+   "episode": 47,
+   "row": 84,
+   "x": -0.01362,
+   "y": 0.088924,
+   "yaw_deg": -130.6098546961961
+  },
+  {
+   "frame": "F3",
+   "scene": "dynamic",
+   "eval": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/eval/NAV03_chase-ob1ob2_dr/ref_chase_c10/2026-11-22_15-52-39_ppo_n4096_s42_model_500",
+   "episode": 61,
+   "row": 12,
+   "x": 2.01422,
+   "y": 2.18717,
+   "yaw_deg": -118.77042670495132
+  }
+ ],
+ "candidates": [
+  {
+   "label": "current (baseline)",
+   "z_mount_m": 0.3998,
+   "pitch_deg": 5.0
+  },
+  {
+   "label": "R4: current height, re-tilted",
+   "z_mount_m": 0.4,
+   "pitch_deg": 6.75
+  },
+  {
+   "label": "R3",
+   "z_mount_m": 0.46,
+   "pitch_deg": 7.25
+  },
+  {
+   "label": "R1 (recommended)",
+   "z_mount_m": 0.5,
+   "pitch_deg": 7.5
+  },
+  {
+   "label": "R2: above the obstacles",
+   "z_mount_m": 0.56,
+   "pitch_deg": 8.0
+  },
+  {
+   "label": "N1: no tilt margin",
+   "z_mount_m": 0.5,
+   "pitch_deg": 6.5
+  }
+ ]
+}

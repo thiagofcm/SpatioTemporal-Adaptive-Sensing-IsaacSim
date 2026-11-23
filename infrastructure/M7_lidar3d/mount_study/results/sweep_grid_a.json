@@ -1,0 +1,39 @@
+{
+ "args": {
+  "z": [
+   0.36,
+   0.48,
+   0.02
+  ],
+  "pitch": [
+   0.0,
+   16.0,
+   0.25
+  ],
+  "candidates": null,
+  "every": 10,
+  "n_random": 500,
+  "chunk": 128,
+  "tag": "grid_a",
+  "worst_body_pitch": true
+ },
+ "poses": {
+  "static": {
+   "n": 1979,
+   "trajectory": 1479,
+   "random": 500
+  },
+  "dynamic": {
+   "n": 2260,
+   "trajectory": 1760,
+   "random": 500
+  }
+ },
+ "body_pitch_deg": -0.252,
+ "worst_body_pitch_deg": -1.31,
+ "base_z_m": -0.00445,
+ "row_elevations_deg": [
+  -6.7941179275512695,
+  6.7941179275512695
+ ]
+}

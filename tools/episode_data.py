@@ -12,11 +12,22 @@ visualization tools. Pure Python (numpy, csv, json): no st_nav, Isaac Lab or PyT
         world_geometry.json  every wall of THIS episode (fixed walls + randomized baffles), moving-obstacle paths
         trajectory.csv       row k = robot state after step k (row 0 = reset state)
         steps.csv            row k = step k (1..n): action, command, rewards, sensing, termination
-        lidar.npz            row k = scan of the observation after step k (row 0 = reset observation)
+        lidar.npz            2D (layout per_row): row k = scan of the observation after step k (row 0 = reset)
+                             3D (layout per_scan, schema 1.1): one row per ACQUIRED scan + row_scan_index (see below)
         obstacles.npz        moving obstacles, row k = after step k (empty arrays in static scenes)
 <line>/eval/<ID>/<protocol>/summary.csv   one row per evaluated policy (same episodes, directly comparable)
 
 Conventions: env-local frame (m), yaw in rad CCW from +x, t_sim = simulated seconds since reset.
+
+lidar.npz per-scan layout (3D sensors; `layout` = "per_scan"; files without `layout` are per_row):
+    ranges, ranges_clean (S, R) float32   observed (noisy) / noise-free ranges of the S acquired scans (R rays)
+    scan_step (S,), scan_t_sim (S,)       control-step row and time of each acquisition
+    origin_xyz (S, 3), base_quat_wxyz (S, 4)   sensor origin (env-local) and base orientation at acquisition
+    t_sim, fresh, row_scan_index (rows,)  per control-step row: scan acquired at this step / scan in the observation
+    azimuth_deg, elevation_deg, ray_dirs_s (R, 3)   ray table in the sensor frame; ray_dirs_b (R, 3) in base_link
+    grid_row, grid_col (R,), grid_shape (2,)        range-image cell of each ray (empty if the ray set is not a grid)
+    mount_offset_xyz, mount_rpy_deg, range_max
+    end point of ray r of scan i = origin_xyz[i] + range * R(base_quat_wxyz[i]) @ ray_dirs_b[r]
 """
 from __future__ import annotations
 
@@ -27,7 +38,7 @@ from pathlib import Path
 
 import numpy as np
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"           # 1.1: optional per-scan LiDAR layout (3D); 1.0 files are read unchanged
 TRAJECTORY_FIELDS = ["step", "t_sim", "x", "y", "yaw", "v_mps", "w_radps", "goal_distance_m", "clearance_m",
                      "distance_traveled_m"]
 STEP_FIELDS = ["step", "t_sim", "action_v", "action_w", "cmd_v_mps", "cmd_w_radps", "act_v_mps", "act_w_radps",
@@ -38,8 +49,9 @@ FILE_INDEX = {
     "world_geometry.json": "all walls of this episode (cx, cy, length, thickness, yaw) and moving-obstacle paths",
     "trajectory.csv": "row k = robot state after step k (row 0 = reset): pose, base_link velocity, goal distance, clearance",
     "steps.csv": "row k = step k: policy action in [-1, 1], command (m/s, rad/s), actuator output, reward terms, sensing, done",
-    "lidar.npz": "row k = scan of the observation after step k: ranges (observed, noisy; NaN where not observed), "
-                 "ranges_clean, per-beam acquisition time/flag, sensor origin pose at acquisition",
+    "lidar.npz": "2D: row k = scan of the observation after step k: ranges (observed, noisy; NaN where not observed), "
+                 "ranges_clean, per-beam acquisition time/flag, sensor origin pose at acquisition. 3D (layout per_scan): acquired scans only + row_scan_index (see "
+                 "lidar_scans_note)",
     "obstacles.npz": "moving obstacles: ids, radius, active, x/y per row (row k = after step k)",
 }
 
@@ -103,7 +115,8 @@ def write_episode(ep_dir, meta: dict, geometry: dict, traj: dict, steps: dict, l
     ep_dir.mkdir(parents=True, exist_ok=True)
     n_rows = len(traj["step"])
     meta = {"schema_version": SCHEMA_VERSION, **meta, "files": FILE_INDEX, "rows": {
-        "trajectory": n_rows, "steps": len(steps["step"]), "lidar": int(np.asarray(lidar["ranges"]).shape[0]),
+        "trajectory": n_rows, "steps": len(steps["step"]),
+        ("lidar_scans" if "layout" in lidar else "lidar"): int(np.asarray(lidar["ranges"]).shape[0]),
         "obstacles": int(np.asarray(obstacles["x"]).shape[0])}}
     write_json(ep_dir / "metadata.json", meta)
     write_json(ep_dir / "world_geometry.json", geometry)
@@ -180,8 +193,12 @@ def wall_polygon(w: dict) -> np.ndarray:
 
 def lidar_points(ep: dict, row: int):
     """World (env-local) end points of the beams of lidar row `row`, from the sensor pose at acquisition.
-    Returns (origin (2,), ends (B, 2), hit (B,) bool)."""
+    Returns (origin (2,), ends (B, 2), hit (B,) bool). Per-scan (3D) layout: the scan in the observation at control
+    step `row`, projected top-down (x, y of the 3D end points; see lidar_scan for z)."""
     L = ep["lidar"]
+    if is_per_scan(ep):
+        sc = lidar_scan(ep, max(scan_index(ep, row), 0))
+        return sc["origin"][:2], sc["points"][:, :2], sc["hit"]
     ranges = L["ranges"][row]
     if not np.isfinite(ranges).any():
         ranges = L["ranges_clean"][row]
@@ -189,3 +206,43 @@ def lidar_points(ep: dict, row: int):
     ang = oyaw + L["beam_angle_rad"]
     ends = np.stack([ox + ranges * np.cos(ang), oy + ranges * np.sin(ang)], -1)
     return np.array([ox, oy]), ends, ranges < float(L["range_max"]) - 1e-6
+
+
+# --------------------------------------------------------------------------------------------- 3D (per-scan) helpers
+def is_per_scan(ep: dict) -> bool:
+    return "layout" in ep["lidar"] and str(ep["lidar"]["layout"]) == "per_scan"
+
+
+def quat_apply(q, v):
+    """Rotate vectors v (..., 3) by unit quaternions q (..., 4) (w, x, y, z)."""
+    q, v = np.asarray(q, dtype=np.float64), np.asarray(v, dtype=np.float64)
+    w, xyz = q[..., :1], q[..., 1:]
+    t = 2.0 * np.cross(xyz, v)
+    return v + w * t + np.cross(xyz, t)
+
+
+def scan_index(ep: dict, row: int) -> int:
+    """Per-scan layout: index of the scan in the observation at control-step row `row` (-1 before the first)."""
+    return int(ep["lidar"]["row_scan_index"][row])
+
+
+def lidar_scan(ep: dict, scan: int, clean: bool = False) -> dict:
+    """Per-scan layout: 3D end points of scan `scan` (env-local frame).
+    Returns {origin (3,), points (R, 3), ranges (R,), hit (R,) bool, t_sim, step}."""
+    L = ep["lidar"]
+    r = (L["ranges_clean"] if clean else L["ranges"])[scan].astype(np.float64)
+    d_w = quat_apply(L["base_quat_wxyz"][scan][None], L["ray_dirs_b"])
+    o = L["origin_xyz"][scan].astype(np.float64)
+    return {"origin": o, "points": o + r[:, None] * d_w, "ranges": r, "hit": r < float(L["range_max"]) - 1e-6,
+            "t_sim": float(L["scan_t_sim"][scan]), "step": int(L["scan_step"][scan])}
+
+
+def range_image(ep: dict, scan: int, clean: bool = False) -> np.ndarray:
+    """Per-scan layout: (rows, cols) range image of scan `scan` (row 0 = top, col 0 = left; NaN = no ray in the cell)."""
+    L = ep["lidar"]
+    shape = tuple(int(v) for v in L["grid_shape"])
+    if len(shape) != 2:
+        raise ValueError("this ray set has no grid (grid_shape empty)")
+    img = np.full(shape, np.nan, dtype=np.float32)
+    img[L["grid_row"], L["grid_col"]] = (L["ranges_clean"] if clean else L["ranges"])[scan]
+    return img

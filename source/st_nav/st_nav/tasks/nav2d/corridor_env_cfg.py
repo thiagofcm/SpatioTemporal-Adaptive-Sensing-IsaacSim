@@ -8,6 +8,7 @@ from isaaclab.utils import configclass
 
 from st_nav import config as C
 from st_nav.calibration.sim_harness import GROUND_FRICTION
+from st_nav.sensors.lidar import Lidar3DCfg
 
 
 @configclass
@@ -34,14 +35,16 @@ class CorridorNavEnvCfg(DirectRLEnvCfg):
     scene: InteractiveSceneCfg = InteractiveSceneCfg(num_envs=4096, env_spacing=7.0, replicate_physics=False)
     # ---- spaces ----
     action_space: int = 2                                # (v, w) in [-1, 1] -> +-0.22 m/s, +-2.0 rad/s
-    observation_space: int = 47
+    observation_space: int = 47                         # set by the env from the sensor: num_rays + 7 (2D: 40 + 7)
     state_space: int = 0
     # ---- actions ----
     v_max: float = 0.22
     w_max: float = 2.0
     # ---- sensing (independent of the control rate) ----
-    lidar_period_s: float = 1.0 / C.LIDAR_HZ             # 0.2 s: one scan per control step by default
-    lidar_noise: bool = True
+    sensor: str = "lidar2d"                              # lidar2d (40 beams, 3.5 m, M2) | lidar3d (block below)
+    lidar3d: Lidar3DCfg = Lidar3DCfg()                   # 3D LiDAR: grid / ray table, mount pose, range, noise, period
+    lidar_period_s: float = 1.0 / C.LIDAR_HZ             # 2D LiDAR period: 0.2 s, one scan per control step
+    lidar_noise: bool = True                             # master switch (2D datasheet noise; 3D: and lidar3d.noise_type)
     # ---- observation normalization ----
     goal_distance_norm: float = 7.0                      # > max start-goal distance 6.79 m (reference MAX_GOAL_DISTANCE
     #                                                      5.9397 saturated obs[40] at episode start; changed after M4)
@@ -51,6 +54,9 @@ class CorridorNavEnvCfg(DirectRLEnvCfg):
     # ---- rewards ----
     rewards: RewardCfg = RewardCfg()
     # ---- scenario ----
+    wall_height: float = C.WALL_HEIGHT                   # m, fixed walls (geometry only; the robot is planar)
+    baffle_height: float = C.WALL_HEIGHT                 # m, Z1-Z4 baffles
+    obstacle_height: float = C.OBSTACLE_HEIGHT           # m, moving obstacles OB1 / OB2
     scene_name: str = "corridor_static_random"           # st_nav.scenes: corridor_static_random | corridor_dynamic_chase_random
     # moving obstacles (dynamic scenes; reference flag names): fixed active set and per-episode randomization
     active_obstacles: tuple = (1, 2)                     # e.g. (1,) = OB1 only, (1, 2) = OB1 + OB2

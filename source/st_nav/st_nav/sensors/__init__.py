@@ -1,2 +1,3 @@
-"""Range sensors behind a common SensorOutput interface (2D LiDAR now; Mirrorcle 3D LiDAR later)."""
+"""Range sensors behind a common SensorOutput interface: one ray-casting LiDAR (lidar.py) with a 2D preset and a 3D
+(Mirrorcle raster approximation) configuration."""
 from .base import RangeSensor, SensorOutput  # noqa: F401

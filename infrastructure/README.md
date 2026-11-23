@@ -1,4 +1,4 @@
-# Infrastructure: development and validation history (M1–M5)
+# Infrastructure: development and validation history (M1–M7)
 
 The work that built and validated the simulation, kept read-only next to the active research lines. Each milestone
 folder holds its `scripts/` (still runnable; default outputs go to the milestone's own `results/`) and its
@@ -13,6 +13,7 @@ are the old ones (table below).
 | [M4_rl_environment](M4_rl_environment/) | RL environment (47-dim obs, rewards, terminations, resets) correct? | [M4_REPORT.md](M4_rl_environment/results/M4_REPORT.md) | 31/31 checks; 55.6k steps/s at 16,384 envs; follow-up: base-link velocity obs, goal-distance norm 7 m, timeout bootstrapping verified |
 | [M5_initial_navigation](M5_initial_navigation/) | First PPO policy | continued as experiment **NAV01** ([card](../Navigation/eval/NAV01_static_initial/README.md)) | 98/100 on the reference protocol at iteration 200 |
 | [M6_dynamic_scene](M6_dynamic_scene/) | Moving obstacles OB1 / OB2 (reference corridor_dynamic_chase_random), consistent with LiDAR and collisions? | [REPORT.md](M6_dynamic_scene/REPORT.md) | 20/20 sim checks + unit tests; 27k steps/s at 4,096 envs; experiments NAV02 / NAV03 prepared |
+| [M7_lidar3d](M7_lidar3d/) | Fixed 3D LiDAR (Mirrorcle raster approximation, 34 x 139 rays, 4 Hz), configurable, 2D pipeline unchanged? | [REPORT.md](M7_lidar3d/REPORT.md) | 17/17 sim checks per scene (oracle: walls/floor < 0.01 mm); 2D evaluations reproduced file-identical |
 | [robot_viz](robot_viz/) | Robot geometry renders / motion video | – | `.glb` exports are regenerable and git-ignored |
 | [server](server/) | GPU server diagnostics (PhysX on GPU, ray caster, Vulkan) | [PHASE1_INSTALLATION_REPORT.md](server/PHASE1_INSTALLATION_REPORT.md) | rendering unavailable (`/dev/dri`); headless GPU physics works with the CUDA workaround |
 

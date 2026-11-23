@@ -5,6 +5,11 @@ the state at the END of the step (hooked into _get_dones, i.e. before any auto-r
 and finally exports each env's first episode to its own folder. Recording does not change the simulation: the clean
 LiDAR ranges are computed from the ray caster's hit points (the noise generator is not touched) and no state is
 written. Import after the Isaac Sim app has been launched.
+
+LiDAR layouts in lidar.npz (tools/episode_data.py):
+  * per_row  (2D sensor, schema 1.0 layout): one scan row per control step (observed + noise-free ranges, origin pose).
+  * per_scan (3D sensor): each ACQUIRED scan stored once (observed + noise-free ranges, sensor origin and base
+    orientation at acquisition) + row_scan_index mapping every control-step row to the scan in the observation.
 """
 from __future__ import annotations
 
@@ -34,6 +39,11 @@ class EpisodeRecorder:
         self.u = u = env_unwrapped
         self.corr = c = u.corr
         self.R = float(c.lidar.range_max)
+        self.NR = int(c.lidar.num_rays)                            # LiDAR block of obs["policy"] = [:NR]
+        self.per_scan = c.lidar.cfg.sensor_type != "lidar2d"
+        if self.per_scan:
+            self.alive = torch.ones(u.num_envs, dtype=torch.bool, device=u.device)   # env still in its first episode
+            self.scans = [[] for _ in range(u.num_envs)]           # per env: dicts of the acquired scans
         self.rows, self.steps = [], []
         self._end = None
         self._orig_dones = u._get_dones
@@ -48,15 +58,31 @@ class EpisodeRecorder:
 
     # ------------------------------------------------------------------ state capture
     def _lidar_clean(self):
-        """Noise-free ranges (N, B) from the ray caster hits, and the sensor origin (env-local x, y, yaw)."""
+        """Noise-free ranges (N, B) from the ray caster hits (None for the per-scan layout: taken at acquisition), and
+        the sensor origin (env-local x, y, yaw)."""
         lid = self.corr.lidar
         data = lid.rc.data                                         # updates the ray cast if outdated (no noise drawn)
         org = lid.origin_w
-        d = torch.linalg.norm(data.ray_hits_w - org.unsqueeze(1), dim=-1)
-        d = torch.where(torch.isfinite(d) & (d <= self.R), d, torch.full_like(d, self.R))
+        d = None
+        if not self.per_scan:
+            d = torch.linalg.norm(data.ray_hits_w - org.unsqueeze(1), dim=-1)
+            d = torch.where(torch.isfinite(d) & (d <= self.R), d, torch.full_like(d, self.R))
         _, _, yaw = euler_xyz_from_quat(data.quat_w)
         o = org - self.corr.origins
         return d, torch.stack([o[:, 0], o[:, 1], torch.remainder(yaw + math.pi, 2 * math.pi) - math.pi], 1)
+
+    def _capture(self, row: int, mask, obs, st):
+        """Per-scan layout: store the scans acquired at `row` by the envs in `mask` (still in their first episode)."""
+        idx = torch.nonzero(mask).squeeze(1)
+        if idx.numel() == 0:
+            return
+        u = self.u
+        observed = _np(obs["policy"][idx, :self.NR] * self.R)
+        clean = _np(u.scan_clean[idx] * self.R)                    # noise-free ranges of the same acquisition
+        org, q, t = _np(st["origin3"][idx]), _np(st["quat"][idx]), _np(u.scan_t[idx])
+        for j, e in enumerate(idx.cpu().tolist()):
+            self.scans[e].append({"row": row, "t": float(t[j]), "ranges": observed[j], "clean": clean[j],
+                                  "origin": org[j], "quat": q[j]})
 
     def _state(self):
         c, u = self.corr, self.u
@@ -64,9 +90,14 @@ class EpisodeRecorder:
         rd = c.robot.data
         clean, origin = self._lidar_clean()
         circ = c.obstacle_circles()
-        return {"x": p[:, 0], "y": p[:, 1], "yaw": yaw, "v": rd.root_link_lin_vel_b[:, 0], "w": rd.root_link_ang_vel_b[:, 2],
-                "goal_d": c.goal_distance(), "clear": c.footprint_clearance(), "clean": clean, "origin": origin,
-                "obst": circ, "act": c.cm.state.clone()}
+        st = {"x": p[:, 0], "y": p[:, 1], "yaw": yaw, "v": rd.root_link_lin_vel_b[:, 0], "w": rd.root_link_ang_vel_b[:, 2],
+              "goal_d": c.goal_distance(), "clear": c.footprint_clearance(), "clean": clean, "origin": origin,
+              "obst": circ, "act": c.cm.state.clone()}
+        if self.per_scan:                                          # full 3D sensor pose (env-local origin, base quat)
+            lid = c.lidar
+            st["origin3"] = lid.origin_w - c.origins
+            st["quat"] = lid.rc.data.quat_w
+        return st
 
     def _dones_hook(self):
         out = self._orig_dones()
@@ -80,7 +111,13 @@ class EpisodeRecorder:
     # ------------------------------------------------------------------ per-step records
     def record_reset(self, obs):
         st = self._state()
-        observed = obs["policy"][:, :40] * self.R
+        if self.per_scan:
+            self._capture(0, self.alive, obs, st)
+            self._origin_prev = st["origin"].clone()
+            self.rows.append(self._row(st, None, torch.ones_like(st["x"], dtype=torch.bool), torch.zeros_like(st["x"]),
+                                       st["origin"]))
+            return
+        observed = obs["policy"][:, :self.NR] * self.R
         self._origin_prev = st["origin"].clone()
         self.rows.append(self._row(st, observed, torch.ones_like(st["x"], dtype=torch.bool), torch.zeros_like(st["x"]),
                                    st["origin"]))
@@ -88,9 +125,14 @@ class EpisodeRecorder:
     def record_step(self, actions, rew, dones, ext, obs):
         u, st = self.u, self._end
         d = dones.bool()
-        observed = torch.where(d[:, None], torch.full_like(st["clean"], float("nan")), obs["policy"][:, :40] * self.R)
         fresh = (~d) & ((u.scan_t - u.ep_time).abs() < 1e-6)       # a scan was acquired at this step
         t_scan = torch.where(d, torch.full_like(st["x"], float("nan")), u.scan_t)
+        if self.per_scan:
+            self._capture(len(self.rows), fresh & self.alive, obs, st)
+            self.alive &= ~d
+            observed = None
+        else:
+            observed = torch.where(d[:, None], torch.full_like(st["clean"], float("nan")), obs["policy"][:, :self.NR] * self.R)
         origin = torch.where((fresh | d)[:, None], st["origin"], self._origin_prev)   # pose at acquisition of `ranges`
         self._origin_prev = torch.where(d[:, None], self._origin_prev, origin)   # reset envs restart from row 0 only
         self.rows.append(self._row(st, observed, fresh, t_scan, origin))
@@ -104,15 +146,16 @@ class EpisodeRecorder:
     def _row(self, st, observed, fresh, t_scan, origin):
         circ = st["obst"]
         return {"x": _np(st["x"]), "y": _np(st["y"]), "yaw": _np(st["yaw"]), "v": _np(st["v"]), "w": _np(st["w"]),
-                "goal_d": _np(st["goal_d"]), "clear": _np(st["clear"]), "clean": _np(st["clean"]),
-                "observed": _np(observed), "fresh": fresh.cpu().numpy(), "t_scan": _np(t_scan), "origin": _np(origin),
+                "goal_d": _np(st["goal_d"]), "clear": _np(st["clear"]),
+                "clean": None if st["clean"] is None else _np(st["clean"]),
+                "observed": None if observed is None else _np(observed), "fresh": fresh.cpu().numpy(), "t_scan": _np(t_scan), "origin": _np(origin),
                 "obst": None if circ is None else _np(circ)}
 
     # ------------------------------------------------------------------ metadata
     def static_metadata(self, cfg) -> dict:
         u, c = self.u, self.corr
         return build_static_metadata(cfg, c.cfg, c.lidar.cfg, c.scene_mod, u.step_dt, u.physics_dt, int(u.max_episode_length),
-                                     bool(c.has_baffles), c.obs_model is not None)
+                                     bool(c.has_baffles), c.obs_model is not None, scan_period=u.scan_period)
 
     def geometry(self, e: int) -> dict:
         ob = None if self.ob0 is None else {"active": self.ob0["active"][e], "path_y": self.ob0["path_y"][e]}
@@ -126,8 +169,8 @@ class EpisodeRecorder:
         """Write episode_NNNN/ for every env (its first episode, n_steps[e] control steps)."""
         u = self.u
         dt = u.step_dt
-        B = self.rows[0]["clean"].shape[1]
-        beam_ang = np.array(static_meta["lidar"]["beam_angles_rad"], dtype=np.float32)
+        B = self.NR
+        beam_ang = None if self.per_scan else np.array(static_meta["lidar"]["beam_angles_rad"], dtype=np.float32)
         for e, n in enumerate(n_steps):
             n = int(n)
             R = self.rows[:n + 1]
@@ -138,13 +181,22 @@ class EpisodeRecorder:
             traj = {"step": np.arange(n + 1), "t_sim": np.arange(n + 1) * dt, "x": x, "y": y, "yaw": col("yaw"),
                     "v_mps": col("v"), "w_radps": col("w"), "goal_distance_m": col("goal_d"), "clearance_m": col("clear"),
                     "distance_traveled_m": dist}
-            observed = np.stack([r["observed"][e] for r in R]).astype(np.float32)
-            clean = np.stack([r["clean"][e] for r in R]).astype(np.float32)
             fresh = col("fresh").astype(bool)
             t_scan = col("t_scan")
-            origin = np.stack([r["origin"][e] for r in R])
+            if self.per_scan:
+                lidar = self._scan_arrays(e, n, dt)
+                min_l = lidar["ranges"][lidar["row_scan_index"]].min(1)[1:]   # scan in the observation (terminal: last)
+            else:
+                observed = np.stack([r["observed"][e] for r in R]).astype(np.float32)
+                clean = np.stack([r["clean"][e] for r in R]).astype(np.float32)
+                origin = np.stack([r["origin"][e] for r in R])
+                min_l = np.where(np.isfinite(observed), observed, clean)[1:].min(1)    # observed scan; clean on the terminal row
+                lidar = {"t_sim": np.arange(n + 1) * dt, "ranges": observed, "ranges_clean": clean, "fresh": fresh,
+                         "beam_acquired": np.repeat(fresh[:, None], B, 1), "beam_t_acq": np.repeat(t_scan[:, None], B, 1),
+                         "origin_x": origin[:, 0], "origin_y": origin[:, 1], "origin_yaw": origin[:, 2],
+                         "beam_angle_rad": beam_ang, "range_max": np.float64(self.R),
+                         "mount_offset_xyz": np.array(static_meta["lidar"]["mount_offset_xyz_m"], dtype=np.float64)}
             rew = np.array([s["reward"][e] for s in S])
-            min_l = np.where(np.isfinite(observed), observed, clean)[1:].min(1)    # observed scan; clean on the terminal row
             oc = np.array([s["outcome"][e] for s in S])
             steps = {"step": np.arange(1, n + 1), "t_sim": np.arange(1, n + 1) * dt,
                      "action_v": np.array([s["action"][e, 0] for s in S]), "action_w": np.array([s["action"][e, 1] for s in S]),
@@ -156,11 +208,6 @@ class EpisodeRecorder:
                      "done": np.array([s["done"][e] for s in S]),
                      "outcome": np.array([OUTCOME_NAMES.get(int(o), "") if dn else "" for o, dn in
                                           zip(oc, [s["done"][e] for s in S])])}
-            lidar = {"t_sim": np.arange(n + 1) * dt, "ranges": observed, "ranges_clean": clean, "fresh": fresh,
-                     "beam_acquired": np.repeat(fresh[:, None], B, 1), "beam_t_acq": np.repeat(t_scan[:, None], B, 1),
-                     "origin_x": origin[:, 0], "origin_y": origin[:, 1], "origin_yaw": origin[:, 2],
-                     "beam_angle_rad": beam_ang, "range_max": np.float64(self.R),
-                     "mount_offset_xyz": np.array(static_meta["lidar"]["mount_offset_xyz_m"], dtype=np.float64)}
             if R[0]["obst"] is not None:
                 ob = np.stack([r["obst"][e] for r in R])                       # (rows, K, 3)
                 K = ob.shape[1]
@@ -178,18 +225,91 @@ class EpisodeRecorder:
                                 "acquired at physics tick t = uniform(lidar_noise_seed, t, b)"},
                     "timebase": "t_sim = simulated seconds since reset; trajectory / lidar / obstacles row k = after step k "
                                 "(row 0 = reset); steps row k = step k",
+                    **({"lidar_scans_note": LIDAR_SCANS_NOTE} if self.per_scan else {}),
                     "lidar_rows_note": "ranges = the observation the policy received after step k (row 0: reset observation; "
                                        "last row NaN: the terminal state is not observed); ranges_clean = noise-free ranges "
                                        "at the end of step k for every row; origin_* = sensor pose when `ranges` was acquired "
                                        "(terminal row: the pose of ranges_clean)"}
             ED.write_episode(f"{out_dir}/{ED.episode_dir_name(e)}", meta, self.geometry(e), traj, steps, lidar, obstacles)
 
+    def _scan_arrays(self, e: int, n: int, dt: float) -> dict:
+        """Per-scan lidar.npz arrays of env e (first episode, rows 0..n)."""
+        lc, lid = self.corr.lidar.cfg, self.corr.lidar
+        sc = [s for s in self.scans[e] if s["row"] <= n]
+        rows = np.array([s["row"] for s in sc], dtype=np.int64)
+        fresh = np.zeros(n + 1, dtype=bool)
+        fresh[rows] = True
+        row_scan = np.searchsorted(rows, np.arange(n + 1), side="right") - 1      # latest scan acquired at or before row k
+        gs = lc.grid_shape
+        return {"layout": np.array("per_scan"), "t_sim": np.arange(n + 1) * dt, "fresh": fresh, "row_scan_index": row_scan,
+                "scan_step": rows, "scan_t_sim": np.array([s["t"] for s in sc]),
+                "ranges": np.stack([s["ranges"] for s in sc]).astype(np.float32),
+                "ranges_clean": np.stack([s["clean"] for s in sc]).astype(np.float32),
+                "origin_xyz": np.stack([s["origin"] for s in sc]).astype(np.float64),
+                "base_quat_wxyz": np.stack([s["quat"] for s in sc]).astype(np.float64),
+                "azimuth_deg": np.asarray(lc.azimuths_deg, dtype=np.float64),
+                "elevation_deg": np.asarray(lc.elevations_deg if lc.elevations_deg is not None else [0.0] * self.NR,
+                                            dtype=np.float64),
+                "ray_dirs_s": _np(lid.dirs_s), "ray_dirs_b": _np(lid.dirs_b),
+                "grid_row": np.asarray(lc.grid_row if lc.grid_row is not None else [], dtype=np.int64),
+                "grid_col": np.asarray(lc.grid_col if lc.grid_col is not None else [], dtype=np.int64),
+                "grid_shape": np.asarray(gs if gs is not None else [], dtype=np.int64),
+                "mount_offset_xyz": np.asarray(lc.mount_pos, dtype=np.float64),
+                "mount_rpy_deg": np.asarray(lc.mount_rpy_deg, dtype=np.float64), "range_max": np.float64(self.R)}
+
 
 # ---------------------------------------------------------------------------------------------- shared builders
-def build_static_metadata(cfg, scene_cfg, lidar_cfg, scene_mod, step_dt, physics_dt, max_steps, has_baffles, has_obstacles):
+LIDAR_SCANS_NOTE = ("per-scan layout: ranges / ranges_clean (S, R) = acquired scans (observed with noise / noise-free), "
+                    "scan_step / scan_t_sim = control-step row and time of acquisition, origin_xyz / base_quat_wxyz = "
+                    "sensor origin (env-local) and base orientation at acquisition; row_scan_index[k] = scan in the "
+                    "observation after step k (terminal row: the last acquired scan, not observed); ray r points along "
+                    "R(base_quat_wxyz) @ ray_dirs_b[r] from origin_xyz; range image cell (grid_row[r], grid_col[r])")
+
+
+def _lidar_metadata(cfg, lc, scan_period) -> tuple:
+    """(lidar, sensing) metadata blocks; the 2D blocks are unchanged from schema 1.0."""
+    if lc.sensor_type == "lidar2d":
+        az = [math.radians(a) for a in lc.azimuths_deg]
+        lidar = {"type": "lidar2d", "num_beams": len(az), "beam_angles_rad": az, "range_max_m": lc.range_max,
+                 "range_min_m": lc.range_min, "mount_offset_xyz_m": list(lc.mount_pos), "ray_alignment": lc.ray_alignment,
+                 "noise": {"enabled": bool(cfg.lidar_noise), "model": "datasheet uniform: error ~ U(+-a(d) * d), then cap",
+                           "seeding": "per episode, acquisition physics tick and beam (see random_seeds)",
+                           "bands": [list(b) for b in lc.noise.bands]},
+                 "geometry_note": "beam b of lidar row k points at origin_yaw[k] + beam_angle_rad[b] from (origin_x, origin_y)[k]"}
+        sensing = {"mode": "fixed_rate", "period_s": float(scan_period), "beams_per_scan": len(az),
+                   "note": "lidar.npz: fresh = a scan was acquired at this step; beam_acquired / beam_t_acq give the "
+                           "per-beam acquisition flag and time (all beams at the scan time here). Adaptive temporal / "
+                           "spatial / spatiotemporal sensing varies these per beam (and may add an event log)."}
+        return lidar, sensing
+    nz = lc.noise
+    lidar = {"type": lc.sensor_type, "layout": "per_scan", "num_rays": lc.num_rays, "grid_shape": list(lc.grid_shape or []),
+             "ray_order": lc.ray_order, "range_max_m": lc.range_max, "range_min_m": lc.range_min,
+             "mount_offset_xyz_m": list(lc.mount_pos), "mount_rpy_deg": list(lc.mount_rpy_deg),
+             "rotation_convention": "REP-103: R = Rz(yaw) Ry(pitch) Rx(roll) (sensor -> base_link); pitch > 0 tilts the "
+                                    "sensor's forward axis down",
+             "ray_alignment": lc.ray_alignment, "include_floor": bool(lc.include_floor),
+             "azimuth_range_deg": [min(lc.azimuths_deg), max(lc.azimuths_deg)],
+             "elevation_range_deg": [min(lc.elevations_deg), max(lc.elevations_deg)] if lc.elevations_deg else [0.0, 0.0],
+             "config": cfg.lidar3d.to_dict() if lc.sensor_type == "lidar3d" else None,
+             "noise": {"enabled": bool(getattr(nz, "enabled", True)),
+                       "model": "additive Gaussian N(0, sigma^2) on rays with a return, clamped to [0, range_max]; "
+                                "no-return rays unchanged" if hasattr(nz, "sigma") else type(nz).__name__,
+                       "sigma_m": getattr(nz, "sigma", None),
+                       "seeding": "per episode, acquisition physics tick and ray (see random_seeds)"},
+             "geometry_note": "azimuth_deg / elevation_deg / ray_dirs_s in the sensor frame (x forward, y left, z up), "
+                              "ray_dirs_b in base_link (mount rotation applied); see lidar_scans_note"}
+    sensing = {"mode": "fixed_rate", "period_s": float(scan_period), "beams_per_scan": lc.num_rays,
+               "timing": "control-quantized: a scan is acquired at the first control instant at or after each due time "
+                         "(due times every period_s); all rays of a scan acquired simultaneously",
+               "note": "lidar.npz per-scan layout: fresh[k] = a scan was acquired at step k"}
+    return lidar, sensing
+
+
+def build_static_metadata(cfg, scene_cfg, lidar_cfg, scene_mod, step_dt, physics_dt, max_steps, has_baffles, has_obstacles,
+                          scan_period=None):
     """Setup shared by all episodes of an evaluation (robot, actuator, LiDAR, sensing, scene, rewards, DR)."""
     lc, sm = lidar_cfg, scene_mod
-    az = [math.radians(a) for a in lc.azimuths_deg]
+    lidar_meta, sensing_meta = _lidar_metadata(cfg, lc, cfg.lidar_period_s if scan_period is None else scan_period)
     meta = {
         "task": "navigation", "scene": scene_cfg.scene_name,
         "control": {"control_dt_s": step_dt, "physics_dt_s": physics_dt, "decimation": int(cfg.decimation),
@@ -200,16 +320,10 @@ def build_static_metadata(cfg, scene_cfg, lidar_cfg, scene_mod, step_dt, physics
                   "action": "a in [-1, 1]^2 -> command (a0 * v_max, a1 * w_max)"},
         "actuator": {"model": "calibrated command model (delay, first-order lag, gains, wheel saturation)",
                      **dataclasses.asdict(TB4_COMMAND_MODEL)},
-        "lidar": {"type": "lidar2d", "num_beams": len(az), "beam_angles_rad": az, "range_max_m": lc.range_max,
-                  "range_min_m": lc.range_min, "mount_offset_xyz_m": list(lc.mount_pos), "ray_alignment": lc.ray_alignment,
-                  "noise": {"enabled": bool(cfg.lidar_noise), "model": "datasheet uniform: error ~ U(+-a(d) * d), then cap",
-                            "seeding": "per episode, acquisition physics tick and beam (see random_seeds)",
-                            "bands": [list(b) for b in lc.noise.bands]},
-                  "geometry_note": "beam b of lidar row k points at origin_yaw[k] + beam_angle_rad[b] from (origin_x, origin_y)[k]"},
-        "sensing": {"mode": "fixed_rate", "period_s": float(cfg.lidar_period_s), "beams_per_scan": len(az),
-                    "note": "lidar.npz: fresh = a scan was acquired at this step; beam_acquired / beam_t_acq give the "
-                            "per-beam acquisition flag and time (all beams at the scan time here). Adaptive temporal / "
-                            "spatial / spatiotemporal sensing varies these per beam (and may add an event log)."},
+        "lidar": lidar_meta,
+        "sensing": sensing_meta,
+        "geometry_heights_m": {"wall": scene_cfg.wall_height, "baffle": scene_cfg.baffle_height,
+                               "moving_obstacle": scene_cfg.obstacle_height, "floor_z": 0.0},
         "terminations": {"goal_tolerance_m": cfg.goal_tolerance, "safety_margin_m": cfg.safety_margin,
                          "clearance": "footprint clearance = distance to the nearest wall / active obstacle - footprint radius"},
         "rewards": cfg.rewards.to_dict(),

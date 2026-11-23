@@ -56,3 +56,44 @@ class DatasheetUniformRangeNoise:
         else:
             u = torch.rand(d.shape, generator=self.gen, device=self.device) * 2.0 - 1.0
         return torch.clamp(d + u * e_max, 0.0, range_max)
+
+
+@dataclass
+class GaussianRangeNoiseCfg:
+    """Additive zero-mean Gaussian range noise (provisional 3D LiDAR model, to be replaced after characterization)."""
+    sigma: float = 0.01                   # m
+    enabled: bool = True
+    seed: int | None = None
+
+
+class GaussianRangeNoise:
+    """r = clip(d + sigma * z, 0, range_max) for rays with a return (no-return rays stay at range_max).
+    Keyed (reproducible) z: Box-Muller from crng.uniform(seed, tick, ray, 0 / 1)."""
+
+    def __init__(self, cfg: GaussianRangeNoiseCfg, device):
+        self.cfg, self.device = cfg, device
+        self.gen = torch.Generator(device=device)
+        if cfg.seed is not None:
+            self.gen.manual_seed(cfg.seed)
+        else:
+            self.gen.seed()
+
+    def __call__(self, d: torch.Tensor, hit: torch.Tensor, range_max: float, keys=None) -> torch.Tensor:
+        if not self.cfg.enabled or self.cfg.sigma <= 0:
+            return d
+        if keys is not None:
+            seed, tick = keys
+            ray = torch.arange(d.shape[-1], device=d.device).view(1, -1)
+            u1 = crng.uniform(seed.view(-1, 1), tick.view(-1, 1), ray, 0)
+            u2 = crng.uniform(seed.view(-1, 1), tick.view(-1, 1), ray, 1)
+            z = torch.sqrt(-2.0 * torch.log1p(-u1)) * torch.cos(2.0 * torch.pi * u2)   # log(1 - u1), u1 in [0, 1)
+        else:
+            z = torch.randn(d.shape, generator=self.gen, device=self.device)
+        return torch.where(hit, torch.clamp(d + self.cfg.sigma * z, 0.0, range_max), d)
+
+
+def make_range_noise(cfg, device):
+    """Noise model from its config type (DatasheetUniformRangeNoiseCfg | GaussianRangeNoiseCfg)."""
+    if isinstance(cfg, GaussianRangeNoiseCfg):
+        return GaussianRangeNoise(cfg, device)
+    return DatasheetUniformRangeNoise(cfg, device)

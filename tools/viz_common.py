@@ -84,3 +84,36 @@ def last_obstacle_xy(ep: dict, j: int):
     ok = np.isfinite(O["x"][:, j])
     i = int(np.where(ok)[0][-1]) if ok.any() else 0
     return float(O["x"][i, j]), float(O["y"][i, j])
+
+
+# --------------------------------------------------------------------------------------------- 3D LiDAR
+FLOOR_Z_TOL = 0.02          # m: 3D end points below this height are drawn as floor returns
+
+
+def scan3d_topdown(ep: dict, row: int, clean: bool = False):
+    """Per-scan (3D) episodes: top-down view of the scan in the observation at control step `row`.
+    Returns (origin (2,), xy (M, 2), z (M,), floor (M,) bool) of the rays with a return."""
+    sc = ED.lidar_scan(ep, max(ED.scan_index(ep, row), 0), clean)
+    p = sc["points"][sc["hit"]]
+    return sc["origin"][:2], p[:, :2], p[:, 2], p[:, 2] < FLOOR_Z_TOL
+
+
+def scan3d_colors(z, floor, zmax=0.6):
+    """RGBA per point: floor returns light grey, others coloured by height (0..zmax, plasma)."""
+    import matplotlib.cm as cm
+    c = cm.plasma(np.clip(z / zmax, 0, 1) * 0.9)
+    c[floor] = (0.6, 0.6, 0.6, 0.35)
+    return c
+
+
+def range_image_axes(ax, ep: dict, title="range image (row 0 = top, col 0 = left)"):
+    """Image artist for ED.range_image (call .set_data each frame)."""
+    L = ep["lidar"]
+    h, w = (int(v) for v in L["grid_shape"])
+    az, el = L["azimuth_deg"], L["elevation_deg"]
+    im = ax.imshow(np.full((h, w), np.nan), cmap="viridis_r", vmin=0, vmax=float(L["range_max"]), aspect="auto",
+                   interpolation="nearest", extent=(float(az.max()), float(az.min()), float(el.min()), float(el.max())))
+    ax.set_xlabel("azimuth [deg] (sensor frame, left = +)", fontsize=7); ax.set_ylabel("elev. [deg]", fontsize=7)
+    ax.tick_params(labelsize=6)
+    ax.set_title(title, fontsize=8)
+    return im

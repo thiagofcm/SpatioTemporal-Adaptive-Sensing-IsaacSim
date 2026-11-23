@@ -38,6 +38,8 @@ def spawn_static_primitive_group(prim_path: str, cfg: "StaticPrimitiveGroupCfg",
         UsdGeom.Xformable(cyl).AddTranslateOp().Set(Gf.Vec3d(cx, cy, height / 2.0))
         if cfg.collision:
             UsdPhysics.CollisionAPI.Apply(cyl.GetPrim())
+    if not cfg.visible:
+        UsdGeom.Imageable(root.GetPrim()).MakeInvisible()
     return root.GetPrim()
 
 

@@ -9,7 +9,7 @@ Single source of geometry: per-env wall tables (fixed walls + Z1-Z4 baffles, [cx
 obstacle model (per-env state, advanced every physics step) feed
   * the USD/PhysX scene (static walls; kinematic baffle bodies posed at reset; kinematic obstacle cylinders posed
     every physics step, parked below the floor when inactive),
-  * the ray-caster targets (walls static, baffles and obstacles tracked),
+  * the ray-caster targets (walls static, baffles and obstacles tracked; the ground plane for 3D sensors),
   * the analytic ground truth (footprint clearance, collisions) — independent of the sensor.
 Must be imported after the app is launched.
 """
@@ -39,7 +39,7 @@ from st_nav.scenes import corridor_static_random as S
 from st_nav.scenes import get_scene
 from st_nav.scenes._obstacle_motion import OBSTACLE_RADIUS, RandomPingPongObstacles
 from st_nav.scenes.spawners import StaticPrimitiveGroupCfg
-from st_nav.sensors.lidar2d import Lidar2D, Lidar2DCfg
+from st_nav.sensors.lidar import FLOOR_PRIM, RayLidar, RayLidarCfg
 
 FOOTPRINT_RADIUS = 0.177       # m, TB4 bumper (front); rear base is 0.164 m -> conservative by 13 mm at the rear
 SAFETY_MARGIN = 0.05           # m, reference margin (THRESHOLD_COLLISION 0.22 = 0.17 + 0.05)
@@ -61,7 +61,7 @@ class CorridorSceneCfg:
     wall_height: float = C.WALL_HEIGHT
     baffle_height: float = C.WALL_HEIGHT    # baffles are wall segments in the reference (same 0.6 m height)
     contact_force_threshold: float = 1.0    # N, horizontal contact force on base_link counted as physical contact
-    lidar: Lidar2DCfg = field(default_factory=Lidar2DCfg)
+    lidar: RayLidarCfg = field(default_factory=RayLidarCfg)   # 2D LiDAR preset by default; 3D via Lidar3DCfg
     seed: int = 0
     # ---- scene selection and moving obstacles (M6; reference flag names) ----
     scene_name: str = "corridor_static_random"   # st_nav.scenes registry: corridor_static_random | corridor_dynamic_chase_random
@@ -167,6 +167,13 @@ class CorridorScene:
                                                            track_mesh_transforms=True) for i in range(4 if self.has_baffles else 0)]
         targets += [MultiMeshRayCasterCfg.RaycastTargetCfg(prim_expr=f"{{ENV_REGEX_NS}}/OB{j + 1}", track_mesh_transforms=True)
                     for j in range(len(self.scene_mod.MOVING_OBSTACLES))]
+        if cfg.lidar.include_floor:                                # 3D sensors: the floor (global, shared by all envs)
+            half = math.ceil(math.sqrt(self.n)) * cfg.env_spacing / 2 + cfg.env_spacing + cfg.lidar.range_max + 1.0
+            sc.lidar_floor = AssetBaseCfg(
+                prim_path=FLOOR_PRIM, init_state=AssetBaseCfg.InitialStateCfg(pos=(0.0, 0.0, -0.01)),
+                spawn=StaticPrimitiveGroupCfg(boxes=[(0.0, 0.0, 2 * half, 2 * half, 0.01, 0.0)], collision=False,
+                                              visible=False))           # top face at z = 0, ray-cast only
+            targets.append(MultiMeshRayCasterCfg.RaycastTargetCfg(prim_expr=FLOOR_PRIM, track_mesh_transforms=False))
         self.lidar_cfg = cfg.lidar
         self.lidar_cfg.targets = targets
         sc.lidar = self.lidar_cfg.raycaster_cfg()
@@ -197,7 +204,7 @@ class CorridorScene:
             speed_ranges=getattr(sm, "OBSTACLE_SPEED_RANGES", None), y_dr=cfg.obstacle_y_dr,
             y_sampler=getattr(sm, "sample_obstacle_path_y", None), max_episode_s=cfg.max_episode_s) if specs else None
         self.wheel_ids, _ = self.robot.find_joints(["left_wheel_joint", "right_wheel_joint"], preserve_order=True)
-        self.lidar = Lidar2D(self.lidar_cfg, self.scene["lidar"], device)
+        self.lidar = RayLidar(self.lidar_cfg, self.scene["lidar"], device)
         self.contact = self.scene["contact"]
         self.cm = CommandModel(n, self.dt, TB4_GEOMETRY, TB4_COMMAND_MODEL, device=device)
         self.origins = self.scene.env_origins

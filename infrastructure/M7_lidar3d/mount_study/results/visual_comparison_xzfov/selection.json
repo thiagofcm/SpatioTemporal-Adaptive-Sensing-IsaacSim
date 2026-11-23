@@ -1,0 +1,121 @@
+{
+ "eval": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/eval/NAV03_chase-ob1ob2_dr/ref_chase_c10/2026-11-22_15-52-39_ppo_n4096_s42_model_500",
+ "episode": 56,
+ "row": 15,
+ "configs": {
+  "original M7: 0, 0.40, 5, 14": {
+   "x_m": 0.0,
+   "z_m": 0.3998,
+   "pitch_deg": 5.0,
+   "vfov_deg": 14.0
+  },
+  "R4: 0, 0.40, 6.75, 14": {
+   "x_m": 0.0,
+   "z_m": 0.4,
+   "pitch_deg": 6.75,
+   "vfov_deg": 14.0
+  },
+  "R1: 0, 0.50, 7.5, 14": {
+   "x_m": 0.0,
+   "z_m": 0.5,
+   "pitch_deg": 7.5,
+   "vfov_deg": 14.0
+  },
+  "B10: 0.086, 0.298, 4, 10": {
+   "x_m": 0.086,
+   "z_m": 0.298,
+   "pitch_deg": 4.0,
+   "vfov_deg": 10.0
+  },
+  "B8: 0.086, 0.298, 3.25, 8": {
+   "x_m": 0.086,
+   "z_m": 0.298,
+   "pitch_deg": 3.25,
+   "vfov_deg": 8.0
+  }
+ },
+ "frame": {
+  "original M7: 0, 0.40, 5, 14": {
+   "rays_on_OB1_OB2": [
+    1196,
+    1048
+   ],
+   "floor_pct": 22.196360558611932,
+   "wall_pct": 29.47524333474397,
+   "moving obstacle_pct": 47.482014388489205,
+   "escaping ray_pct": 0.8463817181548878
+  },
+  "R4: 0, 0.40, 6.75, 14": {
+   "rays_on_OB1_OB2": [
+    1202,
+    1042
+   ],
+   "floor_pct": 28.713499788404572,
+   "wall_pct": 23.80448582310622,
+   "moving obstacle_pct": 47.482014388489205,
+   "escaping ray_pct": 0.0
+  },
+  "R1: 0, 0.50, 7.5, 14": {
+   "rays_on_OB1_OB2": [
+    1205,
+    1039
+   ],
+   "floor_pct": 26.089716462124418,
+   "wall_pct": 26.428269149386374,
+   "moving obstacle_pct": 47.482014388489205,
+   "escaping ray_pct": 0.0
+  },
+  "B10: 0.086, 0.298, 4, 10": {
+   "rays_on_OB1_OB2": [
+    986,
+    1224
+   ],
+   "floor_pct": 22.280998730427424,
+   "wall_pct": 30.95641134151502,
+   "moving obstacle_pct": 46.76258992805755,
+   "escaping ray_pct": 0.0
+  },
+  "B8: 0.086, 0.298, 3.25, 8": {
+   "rays_on_OB1_OB2": [
+    986,
+    1224
+   ],
+   "floor_pct": 16.208209902666102,
+   "wall_pct": 37.02920016927634,
+   "moving obstacle_pct": 46.76258992805755,
+   "escaping ray_pct": 0.0
+  }
+ },
+ "episode_means": {
+  "original M7: 0, 0.40, 5, 14": {
+   "floor_pct": 17.626029093722494,
+   "wall_pct": 72.83659899940027,
+   "moving obstacle_pct": 9.365499300307139,
+   "escaping ray_pct": 0.171872606570103
+  },
+  "R4: 0, 0.40, 6.75, 14": {
+   "floor_pct": 25.640692786802678,
+   "wall_pct": 64.98342286113369,
+   "moving obstacle_pct": 9.37588435206364,
+   "escaping ray_pct": 0.0
+  },
+  "R1: 0, 0.50, 7.5, 14": {
+   "floor_pct": 20.205416323743602,
+   "wall_pct": 70.41311735887363,
+   "moving obstacle_pct": 9.38146631738276,
+   "escaping ray_pct": 0.0
+  },
+  "B10: 0.086, 0.298, 4, 10": {
+   "floor_pct": 17.501019033203608,
+   "wall_pct": 73.3446876565871,
+   "moving obstacle_pct": 9.154293310209285,
+   "escaping ray_pct": 0.0
+  },
+  "B8: 0.086, 0.298, 3.25, 8": {
+   "floor_pct": 11.38318504344846,
+   "wall_pct": 79.46615641445703,
+   "moving obstacle_pct": 9.150658542094508,
+   "escaping ray_pct": 0.0
+  }
+ }
+}

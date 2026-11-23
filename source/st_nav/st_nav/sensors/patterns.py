@@ -46,3 +46,6 @@ def reference_linspace_azimuths(num_beams: int = 40, max_rad: float = 6.28) -> l
     """The reference simplified environment's beams: linspace(0, 6.28, 40) incl. both ends (9.23 deg spacing; beam 39
     is 0.18 deg short of beam 0). Kept for comparison only; the approved design uses uniform 9 deg spacing."""
     return [math.degrees(i * max_rad / (num_beams - 1)) for i in range(num_beams)]
+
+
+from .ray_tables import RAY_ORDERS, grid_pattern, rpy_to_quat_wxyz  # noqa: E402,F401  (Kit-free)

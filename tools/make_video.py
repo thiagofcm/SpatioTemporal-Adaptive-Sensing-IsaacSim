@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Top-down MP4 of recorded evaluation episodes, reconstructed only from the episode folders (tools/episode_data.py):
 world geometry, robot footprint and heading, trail, LiDAR beams (drawn from the sensor pose at acquisition), moving
-obstacles, goal. Needs only numpy + matplotlib (+ ffmpeg); no st_nav, Isaac Lab or PyTorch.
+obstacles, goal. 3D LiDAR episodes (per-scan layout): the scan's 3D returns projected top-down (coloured by height,
+floor returns grey) and, for a single episode, the range image of the scan in the observation. Needs only numpy + matplotlib (+ ffmpeg); no st_nav, Isaac Lab or PyTorch.
 
     # one episode: map + timelines (speed, angular rate, clearance, goal distance) -> <episode_dir>/<episode>.mp4
     python tools/make_video.py <eval_dir>/episode_0025
@@ -51,8 +52,11 @@ def make_panel(ax, ep, lidar=True):
     V.draw_goal(ax, meta)
     V.setup_map(ax, geo, V.episode_title(meta) + f"\nstart {meta['start']['index']}  " +
                 (f"OB active {meta['moving_obstacles']['active']}" if "moving_obstacles" in meta else ""), fontsize=8)
+    is3d = ED.is_per_scan(ep)
     rays = LineCollection([], colors="tab:red", linewidths=0.6, alpha=0.55)
     ax.add_collection(rays)
+    pts = ax.scatter(np.zeros(0), np.zeros(0), s=1.5, zorder=3, linewidths=0) if is3d else None
+    zmax = float(meta.get("geometry_heights_m", {}).get("wall", 0.6))
     trail, = ax.plot([], [], color="tab:blue", lw=1.5)
     body, head = V.robot_artists(ax, meta)
     obs = V.obstacle_artists(ax, ep)
@@ -63,7 +67,11 @@ def make_panel(ax, ep, lidar=True):
     def update(k):
         s = min(k, n)
         set_rays = []
-        if lidar:
+        if lidar and is3d:
+            o, xy, z, floor = V.scan3d_topdown(ep, s)
+            pts.set_offsets(xy)
+            pts.set_facecolors(V.scan3d_colors(z, floor, zmax))
+        elif lidar:
             o, ends, hit = ED.lidar_points(ep, s)
             set_rays = [[tuple(o), tuple(e)] for e in ends]
         rays.set_segments(set_rays)
@@ -84,16 +92,22 @@ def render(eps, out, speed=2.0, lidar=True, dpi=100):
     frames = n_max + 1 + int(1.5 / dt)
     if single:
         ep = eps[0]
-        fig = plt.figure(figsize=(14, 7))
-        gs = fig.add_gridspec(4, 2, width_ratios=[1.15, 1])
+        img3d = lidar and ED.is_per_scan(ep) and len(ep["lidar"]["grid_shape"]) == 2
+        fig = plt.figure(figsize=(14, 8.5 if img3d else 7))
+        gs = fig.add_gridspec(4 + 2 * img3d, 2, width_ratios=[1.15, 1])
         ax_map = fig.add_subplot(gs[:, 0])
         upd = [make_panel(ax_map, ep, lidar)]
+        if img3d:
+            im = V.range_image_axes(fig.add_subplot(gs[0:2, 1]), ep)
+            fig.colorbar(im, ax=im.axes, fraction=0.03, pad=0.01).set_label("range [m]", fontsize=7)
+            n_ep = int(ep["meta"]["n_steps"])
+            upd.append(lambda k: im.set_data(ED.range_image(ep, max(ED.scan_index(ep, min(k, n_ep)), 0))))
         T, St = ep["traj"], ep["steps"]
         series = [("v_mps", "v [m/s]", St.get("cmd_v_mps")), ("w_radps", "w [rad/s]", St.get("cmd_w_radps")),
                   ("clearance_m", "clearance [m]", None), ("goal_distance_m", "goal distance [m]", None)]
         cursors = []
         for i, (k, lab, cmd) in enumerate(series):
-            a = fig.add_subplot(gs[i, 1])
+            a = fig.add_subplot(gs[i + 2 * img3d, 1])
             a.plot(T["t_sim"], T[k], color="tab:blue", lw=1, label="measured" if cmd is not None else None)
             if cmd is not None:
                 a.step(St["t_sim"], cmd, where="pre", color="k", lw=0.8, alpha=0.6, label="command")

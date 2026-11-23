@@ -1,0 +1,32 @@
+[isaacrun] 2026-11-22T20:18:58-05:00 host=ece-focus-xg01 gpu=4 cuda_shim=on timeout=5400
+[isaacrun] cwd=/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing
+[isaacrun] cmd=python infrastructure/M7_lidar3d/mount_study/scripts/mount_sweep.py --z 0.36 0.48 0.02 --pitch 0 16 0.25 --every 10 --n_random 500 --tag grid_a --worst_body_pitch
+[isaacrun] isaaclab_commit=c2277524
+static: 1979 poses (1479 trajectory, 500 random)
+dynamic: 2260 poses (1760 trajectory, 500 random)
+[1/455] z 0.360 pitch  0.00: floor  1.76 % escape  6.359 % no-return  6.36 % occluded 834 (1 s)
+[21/455] z 0.360 pitch  5.00: floor 13.26 % escape  0.010 % no-return  0.01 % occluded 2502 (25 s)
+[41/455] z 0.360 pitch 10.00: floor 36.72 % escape  0.000 % no-return  0.00 % occluded 4170 (49 s)
+[61/455] z 0.360 pitch 15.00: floor 63.74 % escape  0.000 % no-return  0.00 % occluded 4726 (73 s)
+[81/455] z 0.380 pitch  3.75: floor  7.87 % escape  0.518 % no-return  0.52 % occluded 0 (97 s)
+[101/455] z 0.380 pitch  8.75: floor 27.23 % escape  0.000 % no-return  0.00 % occluded 982 (121 s)
+[121/455] z 0.380 pitch 13.75: floor 54.03 % escape  0.000 % no-return  0.00 % occluded 2676 (145 s)
+[141/455] z 0.400 pitch  2.50: floor  4.28 % escape  2.198 % no-return  2.20 % occluded 0 (169 s)
+[161/455] z 0.400 pitch  7.50: floor 19.36 % escape  0.000 % no-return  0.00 % occluded 0 (193 s)
+[181/455] z 0.400 pitch 12.50: floor 44.15 % escape  0.000 % no-return  0.00 % occluded 0 (217 s)
+[201/455] z 0.420 pitch  1.25: floor  2.17 % escape  6.636 % no-return  6.64 % occluded 0 (241 s)
+[221/455] z 0.420 pitch  6.25: floor 12.98 % escape  0.000 % no-return  0.00 % occluded 0 (265 s)
+[241/455] z 0.420 pitch 11.25: floor 34.55 % escape  0.000 % no-return  0.00 % occluded 0 (289 s)
+[261/455] z 0.440 pitch  0.00: floor  0.95 % escape 14.551 % no-return 14.55 % occluded 0 (313 s)
+[281/455] z 0.440 pitch  5.00: floor  8.02 % escape  0.216 % no-return  0.22 % occluded 0 (336 s)
+[301/455] z 0.440 pitch 10.00: floor 25.93 % escape  0.000 % no-return  0.00 % occluded 0 (360 s)
+[321/455] z 0.440 pitch 15.00: floor 50.85 % escape  0.000 % no-return  0.00 % occluded 0 (384 s)
+[341/455] z 0.460 pitch  3.75: floor  4.67 % escape  1.848 % no-return  1.85 % occluded 0 (408 s)
+[361/455] z 0.460 pitch  8.75: floor 18.79 % escape  0.000 % no-return  0.00 % occluded 0 (432 s)
+[381/455] z 0.460 pitch 13.75: floor 41.59 % escape  0.000 % no-return  0.00 % occluded 0 (456 s)
+[401/455] z 0.480 pitch  2.50: floor  2.58 % escape  7.562 % no-return  7.56 % occluded 0 (480 s)
+[421/455] z 0.480 pitch  7.50: floor 12.87 % escape  0.000 % no-return  0.00 % occluded 0 (504 s)
+[441/455] z 0.480 pitch 12.50: floor 32.87 % escape  0.000 % no-return  0.00 % occluded 0 (528 s)
+[455/455] z 0.480 pitch 16.00: floor 49.79 % escape  0.000 % no-return  0.00 % occluded 0 (545 s)
+wrote /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/infrastructure/M7_lidar3d/mount_study/results/sweep_grid_a.csv
+[isaacrun] exit code 0

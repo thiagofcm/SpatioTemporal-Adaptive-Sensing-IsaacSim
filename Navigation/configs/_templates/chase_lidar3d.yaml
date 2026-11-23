@@ -1,0 +1,39 @@
+# Template for a navigation experiment with the 3D LiDAR in the dynamic corridor (moving OB1 / OB2). Copy to Navigation/configs/<ID>.yaml,
+# set exp_id (= file name, next free NAV number, see docs/EXPERIMENTS.md), create the card from
+# docs/templates/experiment_card.md and add the registry row. Never edit a config that already has runs.
+exp_id: NAV00_chase_lidar3d_template
+task: STNav-TB4-Corridor-v0
+run_name: null
+env:
+  scene.num_envs: 4096
+  scene_name: corridor_dynamic_chase_random
+  active_obstacles: [1, 2]
+  obstacle_presence_dr: false
+  obstacle_speed_dr: true
+  obstacle_y_dr: true
+  start_pose_dr: true
+  goals: [[-1.80, -1.70], [-2.00, -1.80], [-2.00, -2.00], [-2.20, -1.70], [-1.80, -2.10], [-2.20, -2.10]]
+  # --- sensor: fixed 3D LiDAR (Mirrorcle raster approximation; st_nav/sensors/lidar.py Lidar3DCfg). Values = defaults.
+  sensor: lidar3d                         # lidar2d (40-beam 2D LiDAR, default) | lidar3d
+  lidar3d.h_fov_deg: [-14.0, 14.0]        # azimuth FoV, sensor frame (left = +)
+  lidar3d.v_fov_deg: [-7.0, 7.0]          # elevation FoV (up = +)
+  lidar3d.cols: 139
+  lidar3d.rows: 34                        # 34 x 139 = 4726 rays; observation = 4726 ranges / range_max + 7 = 4733
+  lidar3d.placement: cell_center          # cell_center | endpoints
+  lidar3d.ray_order: row_major_top_left   # provisional; row_major_bottom_left | serpentine_top_left | column_major_top_left
+  lidar3d.ray_table: null                 # measured ray table (.csv / .npz: azimuth_deg, elevation_deg[, grid_row, grid_col]); replaces the grid
+  lidar3d.mount_pos: [0.0, 0.0, 0.3998]   # base_link [m]: centred on the TB4 top platform (top surface 0.3498 m), 5 cm above it
+  lidar3d.mount_rpy_deg: [0.0, 5.0, 0.0]  # roll, pitch, yaw (REP-103: pitch > 0 = tilted DOWN)
+  lidar3d.range_max: 12.0
+  lidar3d.noise_type: gaussian            # gaussian | none (env.lidar_noise=false also disables it)
+  lidar3d.noise_sigma: 0.01               # m, provisional
+  lidar3d.period_s: 0.25                  # 4 Hz, scans at control instants (existing scheduler)
+  lidar3d.include_floor: true             # ground plane is a ray-cast target
+  # --- object heights [m] (defaults unchanged from the 2D experiments)
+  wall_height: 0.6
+  baffle_height: 0.6
+  obstacle_height: 0.5
+agent:
+  seed: 42
+  max_iterations: 1500
+sweep: {}
