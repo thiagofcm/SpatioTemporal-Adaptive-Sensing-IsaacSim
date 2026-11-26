@@ -198,6 +198,53 @@ Best fixed rate by mean penalized return: 4 Hz for c < 0.035, 2 Hz for 0.035-0.3
 0.032 (-0.07, 0.12); 1 vs 4 Hz 0.154 (0.04, 0.26); 1 vs 2 Hz 0.382 (0.08, 0.65); 0.5 vs 4 Hz 0.61; 0.2 vs 4 Hz 0.71.
 Above ~0.6 the cost makes the crash-prone rates (0.5, 0.2 Hz: 14 % / 1 % success) outrank 4 Hz.
 
+## Sweep setup (2026-11-25)
+
+Frame costs [0.0, 0.1, 0.15, 0.2, 0.3, 0.4] (`--sweep_index` 0-5), one member per GPU 0-5 (GPUs 6-7 reserved for the
+spatiotemporal experiments), same seed (1) for all members: identical episode realizations across costs at the start.
+`update_chunk_envs` benchmark (3 iterations, 1024 envs, fast path; `runs/.../*_bench-chunk64`, `*_bench-chunk128`):
+chunk 64 update 9.1-9.7 s, peak 22.4 GB; chunk 128 update 6.6-6.8 s, peak 38.8 GB (first iteration, cuDNN autotuning;
+15.7 GB after) -> 128 chosen (~43 s per iteration, ~6,000 transitions / s). The chunk size changes the floating-point
+summation order only (unit-tested equal update), so runs with different chunk sizes are not bitwise identical. All six
+members run concurrently (2-iteration test on GPUs 0-5): 40-45 s per iteration, 38.8 GB peak per GPU -> ~8.5-9.5 h per
+member for 762 iterations. The trainer has no resume: a stopped run restarts from scratch (checkpoints every 25
+iterations are for evaluation).
+
+## Checkpoints, resume and logging (2026-11-25)
+
+* Iterations: ceil(200 M / 262,144) = 763 (200,015,872 steps). One checkpoint mechanism: `checkpoints/model_<iteration>.pt`
+  every 50 iterations (~36 min) and always after the last one (763), written atomically; each is the complete training
+  state, loaded both for evaluation (`model_state_dict` + the checkpoint's own `args`, `img_shape`, `fps_choices`) and
+  for resumption.
+* Resume (`--resume auto` = latest checkpoint of the newest run folder of this sweep member; or a run folder; or a
+  checkpoint file; same `--config` / `--sweep_index` / `--set`, checked against the checkpoint together with the NAV05
+  file hash). Restored exactly: sensing agent, Adam state (incl. step counts), iteration / global_step, Python / NumPy /
+  torch CPU and CUDA RNG states, the scene's per-env episode counters and start / goal generator. Reset: the simulation
+  (PhysX state cannot be saved): every env starts a new episode, LSTM states and the sensing state start as at the
+  beginning of training; new episodes continue each env's counter-based seed sequence (no realization repeated). Not
+  bitwise identical to an uninterrupted run (equivalent to truncating all episodes at the checkpoint); up to 50
+  iterations after the last checkpoint are recomputed. TensorBoard events after the resumed step are purged;
+  `resume/resumed_at_iteration` marks each resume; `params/resume_<date>.json` records it.
+* Test (`resume_test/`; 256 envs, 6 iterations, checkpoint every 2, crash during iteration 4 with iteration 3 already
+  logged): `--resume auto` and an explicit `model_00002.pt` of a copy both resumed at iteration 3 with the model restored
+  bitwise and 64 Adam steps, episode counters continued, identical through iteration 4 (simulator run-to-run variation
+  afterwards); 48 TensorBoard tags with one value per step for iterations 1-6 (the stale iteration-3 events purged);
+  checkpoints 2, 4, 6 (final); 192 Adam steps at the end; a finished run resumes to "nothing to do"; the final
+  checkpoint loads strictly into a fresh SensingAgent on CPU for evaluation.
+* TensorBoard: `config/frame_cost`, `config/budget`, `config/budget_penalty` (once, step 0); per iteration
+  `charts/episodic_return`, `episodic_length`, `mean_applied_fps` (per completed episode: mean of the rates applied at
+  its accepted scans, i.e. its causal decisions; averaged over the iteration's completed episodes that applied at least
+  one decision), `mean_frame_consumption` (charged frames per episode, reset scan excluded), `episode_frame_count`
+  (incl. reset scan),
+  `mean_nav_reward`, `episodic_nav_reward`, `episodic_frame_penalty`, `episodic_budget_penalty`, `budget_exceeded`,
+  `mean_obs_age_s`, `mean_reward_per_step`, `episodes`, `SPS`, `learning_rate`; `outcomes/*`; `rollout/*` (causal-tick
+  fraction, selected / applied action shares); `losses/*`; `perf/*`.
+
+**Evaluation tables.** TMP02 evaluations use the reference schema of `AdaptiveSensing/evaluation/metrics.py`
+(`episodes.csv`, protocol `summary.csv`; adaptive_return with the policy's training frame cost by default; mean_fps =
+rate in force averaged over control steps, i.e. TemporalSensing's `fps_inforce_sum / length`), as the regenerated TMP01
+tables, so fixed-rate and adaptive rows are directly comparable.
+
 ## Results
 
 Not trained yet.

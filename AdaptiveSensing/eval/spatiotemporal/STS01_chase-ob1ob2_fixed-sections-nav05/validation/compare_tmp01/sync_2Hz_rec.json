@@ -1,0 +1,14 @@
+{
+ "sts01": "AdaptiveSensing/eval/spatiotemporal/STS01_chase-ob1ob2_fixed-sections-nav05/validation/sync_2Hz_rec",
+ "tmp01": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/reproducibility/fixed2Hz_reruns/rerun1_gpu1",
+ "hz": 2.0,
+ "episodes": 100,
+ "episodes_csv_mismatch": {},
+ "sensing_mismatch": {},
+ "recordings": {
+  "files_differ": [],
+  "lidar_arrays_differ": [],
+  "composite_ne_tmp01_observation": []
+ },
+ "identical": true
+}

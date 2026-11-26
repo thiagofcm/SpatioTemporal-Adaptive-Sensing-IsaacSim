@@ -100,7 +100,14 @@ if args.fixed:
     R = {k: v.cpu().numpy() for k, v in res.items()}
     tdir = [args.compare_dir] if args.compare_dir else [
         os.path.join(ROOT, TMP01, x) for x in os.listdir(os.path.join(ROOT, TMP01)) if x.endswith(f"_fixed{hz:g}Hz")]
-    rows = list(csv.DictReader(open(os.path.join(tdir[0], "episodes.csv"))))
+    # per-episode reference values from the recordings' metadata.json (outcome, steps, return, scan-gate diagnostics),
+    # independent of the episodes.csv schema
+    rows = []
+    for i in range(n):
+        m = json.load(open(os.path.join(tdir[0], f"episode_{i:04d}", "metadata.json")))
+        rows.append({"outcome": m["outcome"], "n_steps": m["n_steps"], "episode_return": m["episode_return"],
+                     "success": str(bool(m["success"])), **{k: m["scan_gate"][k] for k in
+                     ("accepted_scans", "native_scans", "mean_obs_age_s", "max_obs_age_s")}})
     mism = {"outcome": 0, "n_steps": 0, "episode_return": 0, "accepted_scans": 0, "native_scans": 0,
             "mean_obs_age_s": 0, "max_obs_age_s": 0}
     for i, row in enumerate(rows):

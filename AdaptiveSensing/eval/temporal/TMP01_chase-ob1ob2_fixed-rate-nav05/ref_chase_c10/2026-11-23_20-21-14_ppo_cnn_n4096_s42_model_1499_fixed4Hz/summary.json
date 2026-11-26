@@ -104,5 +104,29 @@
   "launch_and_setup": 13.4,
   "episodes": 31.5,
   "total": 63.4
- }
+ },
+ "summary": {
+  "run_name": "2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed4Hz",
+  "mean_fps": 4.0,
+  "n_episodes": 100,
+  "success_rate": 0.76,
+  "mean_adaptive_return": 60.90164,
+  "std_adaptive_return": 44.73256430845878,
+  "mean_nav_return": 60.90164,
+  "std_nav_return": 44.73256430845878,
+  "mean_n_steps": 148.47,
+  "std_n_steps": 54.930766424654955,
+  "mean_final_goal_distance_m": 1.287801,
+  "mean_distance_traveled_m": 5.857060000000001,
+  "std_distance_traveled_m": 2.178837239538557,
+  "mean_frame_count": 118.6,
+  "std_frame_count": 43.945193138726786,
+  "n_success": 76,
+  "n_collision": 24,
+  "n_timeout": 0,
+  "policy_type": "fixed",
+  "frame_cost": 0.0,
+  "budget": 500
+ },
+ "tables_schema": "AdaptiveSensing/evaluation/metrics.py (reference schema); regenerated from the recordings by regenerate_eval_tables.py; previous tables in legacy_v1/"
 }

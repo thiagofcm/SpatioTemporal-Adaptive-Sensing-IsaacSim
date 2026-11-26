@@ -27,9 +27,19 @@ and held in between, so native intervals are 0.2 / 0.4 s), policy at 5 Hz. The r
 `next_sample_time += period` until it is past `t`. Forwarded scans replace `last_sampled_obs`; the policy receives
 `{"policy": the env's current navigation features, "lidar": last_sampled_obs}`.
 
-**Sensing metrics** (`episodes.csv`): counts include the reset scan; `measured_hz = (accepted_scans - 1) / duration`
-excludes it. The terminal state is never observed, so episodes that end between two forwarded scans make the measured
-rate lower than requested (strongly at 0.5 and 0.2 Hz, where most episodes end early in a collision).
+**Evaluation tables** (schema of the reference evaluator, `AdaptiveSensing/evaluation/metrics.py`; regenerated from the
+recordings on 2026-11-26 by `AdaptiveSensing/scripts/regenerate_eval_tables.py`, no simulation; previous tables in
+`legacy_v1/` of every evaluation and protocol folder): `episodes.csv` = episode, seed (counter-based episode seed),
+policy_type, fixed_fps, mean_fps (rate in force averaged over control steps = the fixed rate), success, outcome
+(success / collision / timeout; collision = safety violation incl. physical contact), collision_type (wall / obstacle),
+n_steps, adaptive_return (= nav_return here: frame_cost 0, budget 500 never reached), nav_return,
+episode_frame_count (incl. the reset scan), final_goal_distance_m, distance_traveled_m, final pose, start, goal,
+frame_cost, budget; protocol `summary.csv` = reference aggregation (means, population standard deviations). Sensing
+diagnostics (native / accepted scans, measured rate, intervals, observation age) are in every episode's
+`metadata.json` (`scan_gate`) and in `summary.json`. Counts include the reset scan; the terminal state is never
+observed, so episodes that end between two forwarded scans make the measured rate lower than requested (strongly at
+0.5 and 0.2 Hz, where most episodes end early in a collision). Collisions: mostly walls at 0.2 / 0.5 Hz (76 / 99,
+83 / 86), mostly the moving obstacles at 1-4 Hz (22 / 33, 24 / 25, 24 / 24).
 
 ## Commands
 

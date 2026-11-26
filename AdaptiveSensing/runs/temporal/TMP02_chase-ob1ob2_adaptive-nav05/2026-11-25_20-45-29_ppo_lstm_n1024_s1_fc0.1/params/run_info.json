@@ -1,0 +1,34 @@
+{
+ "exp_id": "TMP02_chase-ob1ob2_adaptive-nav05",
+ "task": "STNav-TB4-Corridor-Lidar3D-v0",
+ "run_name": "ppo_lstm_n1024_s1_fc0.1",
+ "command": [
+  "AdaptiveSensing/scripts/train_temporal_ppo.py",
+  "--headless",
+  "--config",
+  "AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml",
+  "--sweep_index",
+  "1"
+ ],
+ "host": "ece-focus-xg01",
+ "cuda_visible_devices": "1",
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "d7abde6827e141667054ab16ba2d15ee429b881a",
+  "branch": "main",
+  "dirty": true
+ },
+ "nav_checkpoint": {
+  "path": "Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt",
+  "sha256": "985570ae639b6b7bae4eb0337253d813a3ee72706acf60f1f0ad7a0f93413ebf"
+ },
+ "num_envs": 1024,
+ "num_steps": 256,
+ "batch_size": 262144,
+ "num_iterations": 763,
+ "versions": {
+  "rsl-rl-lib": "5.0.1",
+  "torch": "2.7.0+cu128",
+  "isaaclab": "0.54.4"
+ }
+}

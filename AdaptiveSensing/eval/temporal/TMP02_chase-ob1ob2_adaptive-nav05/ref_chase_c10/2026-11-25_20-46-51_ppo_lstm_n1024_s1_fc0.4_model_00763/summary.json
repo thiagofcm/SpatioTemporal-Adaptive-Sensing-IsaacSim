@@ -1,0 +1,83 @@
+{
+ "summary": {
+  "run_name": "2026-11-25_20-46-51_ppo_lstm_n1024_s1_fc0.4_model_00763",
+  "mean_fps": 1.1938408,
+  "n_episodes": 100,
+  "success_rate": 0.76,
+  "mean_adaptive_return": 48.33446,
+  "std_adaptive_return": 44.195657635432916,
+  "mean_nav_return": 60.25446,
+  "std_nav_return": 45.12692973633814,
+  "mean_n_steps": 153.84,
+  "std_n_steps": 53.58371394369749,
+  "mean_final_goal_distance_m": 1.3057400000000001,
+  "mean_distance_traveled_m": 6.04899,
+  "std_distance_traveled_m": 2.177366971803329,
+  "mean_frame_count": 30.8,
+  "std_frame_count": 11.533429672044653,
+  "n_success": 76,
+  "n_collision": 24,
+  "n_timeout": 0,
+  "policy_type": "adaptive",
+  "frame_cost": 0.4,
+  "budget": 500
+ },
+ "tables_schema": "AdaptiveSensing/evaluation/metrics.py (reference schema)",
+ "sensing_policy": {
+  "policy": "trained sensing policy, deterministic (argmax), LSTM reset per episode",
+  "checkpoint": "AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-46-51_ppo_lstm_n1024_s1_fc0.4/checkpoints/model_00763.pt",
+  "iteration": 763,
+  "global_step": 200015872,
+  "fps_choices": [
+   0.2,
+   0.5,
+   1.0,
+   2.0,
+   4.0
+  ],
+  "reset_hz": 4.0,
+  "frame_cost": 0.4,
+  "budget": 500,
+  "budget_penalty": 15.0,
+  "gate": "real-robot gate + set_target_fps (AdaptiveSensing/evaluation/scan_gate.py), decision at each control instant gates that instant's native scan (temporal_sensing.py)",
+  "native_lidar_period_s": 0.25,
+  "control_dt_s": 0.2,
+  "physics_dt_s": 0.01
+ },
+ "outcomes": {
+  "goal": 76,
+  "physical_collision": 0,
+  "safety_violation": 24,
+  "timeout": 0,
+  "running": 0
+ },
+ "sensing": {
+  "measured_hz_pooled": 0.9685387415496619,
+  "native_hz_pooled": 3.9615834633385334,
+  "accepted_scans_total": 3080,
+  "charged_frames_total": 2980,
+  "applied_decisions_by_fps": {
+   "0.2": 228,
+   "0.5": 324,
+   "1": 391,
+   "2": 1394,
+   "4": 643
+  },
+  "obs_age_s_mean": 1.091038293031721,
+  "obs_age_s_max": 4.8
+ },
+ "min_clearance_m_mean_min": [
+  0.08551399999999999,
+  0.0121
+ ],
+ "checks": {
+  "max_start_placement_err_m": 1.5078915112098912e-06,
+  "max_goal_err": 0.0,
+  "adaptive_return_vs_reward_sum_max_diff": 0.0004981079101611385
+ },
+ "timing_s": {
+  "launch_and_setup": 6.2,
+  "episodes": 30.6,
+  "total": 44.4
+ }
+}

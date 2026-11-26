@@ -15,8 +15,26 @@ Lab env and its NAV05 reward, rates {0.2, 0.5, 1, 2, 4} Hz with native 4 Hz LiDA
 A config with a sweep runs one member per process (--sweep_index i: i-th combination of the sweep lists, in YAML
 order, last key fastest). Output: AdaptiveSensing/runs/temporal/<ID>/<date>_<run_name>[_<tag>]/ (TensorBoard events,
 checkpoints/, params/).
+
+Checkpoints: checkpoints/model_<iteration>.pt every checkpoint_interval iterations and always after the last
+iteration, written atomically. Each is the complete training state and serves both evaluation (model_state_dict) and
+resumption. Number of iterations = ceil(total_timesteps / (num_envs * num_steps)).
+
+Resume after a crash / restart: the same command plus --resume <run folder | checkpoint file | auto> (auto: the newest
+run folder of this sweep member; a folder: its latest checkpoint). Training continues in the same run folder:
+  restored exactly  sensing agent, Adam state (incl. learning rate), iteration / global_step, Python / NumPy / torch
+                    CPU and CUDA RNG states, the per-env episode counters and the start / goal generator of the scene
+                    (new episodes continue each env's sequence of counter-based episode seeds: no episode realization
+                    is repeated);
+  reset             the simulation: Isaac Lab / PhysX state cannot be saved, so every env starts a new episode at the
+                    resume (as if all episodes had been truncated at the checkpoint); LSTM states start at zero and the
+                    sensing state (gate, rate 4 Hz, counters) at its reset values, exactly as at the start of training.
+  => not bitwise identical to an uninterrupted run (the interrupted episodes are cut short and the following episodes
+     start at different times), statistically equivalent; the episodes in progress at the crash are not logged.
+TensorBoard: the run's events after the resumed step are purged (purge_step), so no step is logged twice.
 """
 import argparse
+import glob
 import itertools
 import json
 import os
@@ -65,7 +83,7 @@ class Args:
     cnn_stride: int = 2
     cnn_projection_dim: int = 128
     update_chunk_envs: int = 64             # envs per gradient-accumulation chunk (memory only; same update)
-    checkpoint_interval: int = 25           # iterations
+    checkpoint_interval: int = 50           # iterations between checkpoints (the last iteration is always saved)
 
 
 def make_args(d: dict) -> Args:
@@ -84,6 +102,8 @@ p.add_argument("--sweep_index", type=int, default=None)
 p.add_argument("--set", action="append", default=[], metavar="SECTION.PATH=VALUE")
 p.add_argument("--run_tag", default=None)
 p.add_argument("--out_root", default=None)
+p.add_argument("--resume", default=None, metavar="RUN_DIR|CHECKPOINT|auto",
+               help="continue a run from its most recent saved state (same --config / --sweep_index / --set)")
 AppLauncher.add_app_launcher_args(p)
 cli = p.parse_args()
 exp = X.load_config(cli.config)
@@ -137,15 +157,43 @@ env_cfg.seed = args.seed
 env_cfg.sim.device = cli.device
 N, T = env_cfg.scene.num_envs, args.num_steps
 batch_size = N * T
-num_iterations = args.num_iterations or args.total_timesteps // batch_size
+num_iterations = args.num_iterations or -(-args.total_timesteps // batch_size)    # ceil: at least total_timesteps
 if N % args.num_minibatches:
     raise SystemExit("num_envs must be divisible by num_minibatches")
 nav_ck = args.nav_checkpoint if os.path.isabs(args.nav_checkpoint) else os.path.join(X.REPO_ROOT, args.nav_checkpoint)
 run_name = exp.get("run_name") or f"ppo_lstm_n{N}_s{args.seed}_fc{args.frame_cost:g}"
 run_name += f"_{cli.run_tag}" if cli.run_tag else ""
 root = cli.out_root or str(X.paths(exp_id)["runs"])
-log_dir = os.path.join(root, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{run_name}")
-print(f"[TMP-TRAIN] {exp_id} {member or ''} -> {log_dir}", flush=True)
+env_overrides = {**exp["env"], **sets["env"]}
+resume_ck = None
+if cli.resume:
+    def _states(d):
+        c = sorted(glob.glob(os.path.join(d, "checkpoints", "model_*.pt")))
+        return [(torch_load_meta(f), f) for f in c]
+
+    def torch_load_meta(f):
+        import torch as _t
+        return int(_t.load(f, map_location="cpu", weights_only=False)["iteration"])
+
+    target = cli.resume
+    if target == "auto":
+        cands = sorted(d for d in glob.glob(os.path.join(root, f"*_{run_name}")) if os.path.isdir(d))
+        cands = [d for d in cands if _states(d)]
+        if not cands:
+            raise SystemExit(f"--resume auto: no run folder *_{run_name} with checkpoints in {root}")
+        target = cands[-1]
+    if os.path.isdir(target):
+        st = _states(target)
+        if not st:
+            raise SystemExit(f"--resume: no checkpoint in {target}/checkpoints")
+        resume_ck = max(st)[1]
+    else:
+        resume_ck = target
+    log_dir = os.path.dirname(os.path.dirname(os.path.abspath(resume_ck)))
+else:
+    log_dir = os.path.join(root, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{run_name}")
+print(f"[TMP-TRAIN] {exp_id} {member or ''} -> {log_dir}" + (f" (resume from {resume_ck})" if resume_ck else ""),
+      flush=True)
 
 random.seed(args.seed)
 np.random.seed(args.seed)
@@ -173,25 +221,41 @@ nav_ids = {id(q) for q in nav.parameters()}
 assert not any(id(q) in nav_ids for g in optimizer.param_groups for q in g["params"]), "NAV05 in the optimizer"
 
 # ---- run folder
-os.makedirs(os.path.join(log_dir, "checkpoints"), exist_ok=True)
-dump_yaml(os.path.join(log_dir, "params", "env.yaml"), env_cfg)
 with open(nav_ck, "rb") as fh:
     nav_sha = hashlib.sha256(fh.read()).hexdigest()
-with open(os.path.join(log_dir, "params", "config.yaml"), "w") as f:
-    X.yaml.safe_dump({"source": os.path.relpath(os.path.abspath(cli.config), X.REPO_ROOT), **exp,
-                      "sweep_member": {"index": cli.sweep_index, "values": member} if member else None,
-                      "set": {s: v for s, v in X.parse_set(cli.set).items() if v},
-                      "agent_resolved": asdict(args)}, f, sort_keys=False)
-with open(os.path.join(log_dir, "params", "model.txt"), "w") as f:
-    f.write(f"sensing agent: {sum(q.numel() for q in agent.parameters())} trainable parameters\n{agent}\n")
-with open(os.path.join(log_dir, "params", "run_info.json"), "w") as f:
-    json.dump({"exp_id": exp_id, "task": task, "run_name": run_name, "command": sys.argv, "host": socket.gethostname(),
-               "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"), "repo": X.git_state(X.REPO_ROOT),
-               "nav_checkpoint": {"path": args.nav_checkpoint, "sha256": nav_sha},
-               "num_envs": N, "num_steps": T, "batch_size": batch_size, "num_iterations": num_iterations,
-               "versions": {k: version(k) for k in ("rsl-rl-lib", "torch", "isaaclab")}}, f, indent=1)
-writer = SummaryWriter(log_dir)
-writer.add_text("hyperparameters", "|param|value|\n|-|-|\n" + "\n".join(f"|{k}|{v}|" for k, v in asdict(args).items()))
+ck = None
+if resume_ck:
+    ck = torch.load(resume_ck, map_location=device, weights_only=False)
+    if "rng" not in ck or "env_state" not in ck:
+        raise SystemExit(f"{resume_ck} is not a resumable checkpoint (saved before resume support)")
+    diff = {k: (ck["args"].get(k), v) for k, v in asdict(args).items() if ck["args"].get(k) != v}
+    if diff or ck.get("env_overrides") != env_overrides or ck.get("exp_id") != exp_id:
+        raise SystemExit(f"--resume: settings differ from the checkpoint (agent {diff}; env overrides equal: "
+                         f"{ck.get('env_overrides') == env_overrides}); use the run's --config / --sweep_index / --set")
+    if ck["nav_checkpoint"]["sha256"] != nav_sha:
+        raise SystemExit("--resume: the NAV05 checkpoint file changed since the run started")
+if resume_ck is None:
+    os.makedirs(os.path.join(log_dir, "checkpoints"), exist_ok=True)
+    dump_yaml(os.path.join(log_dir, "params", "env.yaml"), env_cfg)
+    with open(os.path.join(log_dir, "params", "config.yaml"), "w") as f:
+        X.yaml.safe_dump({"source": os.path.relpath(os.path.abspath(cli.config), X.REPO_ROOT), **exp,
+                          "sweep_member": {"index": cli.sweep_index, "values": member} if member else None,
+                          "set": {s: v for s, v in X.parse_set(cli.set).items() if v},
+                          "agent_resolved": asdict(args)}, f, sort_keys=False)
+    with open(os.path.join(log_dir, "params", "model.txt"), "w") as f:
+        f.write(f"sensing agent: {sum(q.numel() for q in agent.parameters())} trainable parameters\n{agent}\n")
+    with open(os.path.join(log_dir, "params", "run_info.json"), "w") as f:
+        json.dump({"exp_id": exp_id, "task": task, "run_name": run_name, "command": sys.argv, "host": socket.gethostname(),
+                   "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"), "repo": X.git_state(X.REPO_ROOT),
+                   "nav_checkpoint": {"path": args.nav_checkpoint, "sha256": nav_sha},
+                   "num_envs": N, "num_steps": T, "batch_size": batch_size, "num_iterations": num_iterations,
+                   "versions": {k: version(k) for k in ("rsl-rl-lib", "torch", "isaaclab")}}, f, indent=1)
+    writer = SummaryWriter(log_dir)
+    writer.add_text("hyperparameters", "|param|value|\n|-|-|\n" + "\n".join(f"|{k}|{v}|" for k, v in asdict(args).items()))
+    for k in ("frame_cost", "budget", "budget_penalty"):                 # run constants, logged once
+        writer.add_scalar(f"config/{k}", float(getattr(args, k)), 0)
+else:
+    writer = SummaryWriter(log_dir, purge_step=int(ck["global_step"]) + 1)   # drop events logged after the checkpoint
 
 # ---- storage (GPU): images of the held scan are stored raw; the CNN is re-run with gradients in the update
 f32 = dict(dtype=torch.float32, device=device)
@@ -200,34 +264,76 @@ buf = {"img": torch.zeros((T, N) + img_shape, **f32), "aux": torch.zeros((T, N, 
        "rewards": torch.zeros((T, N), **f32), "dones": torch.zeros((T, N), **f32),
        "values": torch.zeros((T, N), **f32), "masks": torch.zeros((T, N), **f32)}
 ep_buf = {k: torch.zeros((T, N), **f32) for k in ("return", "nav_return", "frame_cost_sum", "budget_penalty_sum",
-                                                  "length", "frames", "causal", "fps_inforce_sum", "fps_selected_sum",
-                                                  "fps_applied_sum", "age_ticks_sum", "budget_exceeded", "outcome")}
+                                                  "length", "frames", "causal", "fps_applied_sum", "age_ticks_sum",
+                                                  "budget_exceeded", "outcome")}
 ep_done = torch.zeros((T, N), dtype=torch.bool, device=device)
 print(f"[TMP-TRAIN] setup {time.time() - t0:.0f} s; {N} envs x {T} steps = {batch_size} per iteration, "
       f"{num_iterations} iterations; image buffer {buf['img'].numel() * 4 / 1e9:.2f} GB; sensing agent "
       f"{sum(q.numel() for q in agent.parameters())} parameters", flush=True)
 
+start_iteration, global_step = 1, 0
+if ck is not None:
+    agent.load_state_dict(ck["model_state_dict"])
+    optimizer.load_state_dict(ck["optimizer_state_dict"])
+    start_iteration, global_step = int(ck["iteration"]) + 1, int(ck["global_step"])
+    # scene randomness: per-env episode counters (counter-based episode seeds) and the start / goal generator, then a
+    # reset of every env so that the next episodes continue each env's sequence
+    saved_count = ck["env_state"]["episode_count"].to(device)
+    u.corr.episode_count.copy_(saved_count)
+    u.corr.gen.set_state(ck["env_state"]["gen_state"].cpu())
+    env.reset()
+    counters_continue = bool(torch.equal(u.corr.episode_count, saved_count + 1))   # next episode of every env
+    if not counters_continue:
+        raise SystemExit("--resume: episode counters did not continue after the env reset")
+    ok = all(torch.equal(a, b) for a, b in zip(agent.state_dict().values(), ck["model_state_dict"].values()))
+    with open(os.path.join(log_dir, "params", f"resume_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"), "w") as f:
+        json.dump({"checkpoint": os.path.relpath(os.path.abspath(resume_ck), X.REPO_ROOT), "iteration": start_iteration - 1,
+                   "global_step": global_step, "model_restored_bitwise": ok,
+                   "optimizer_steps_restored": int(next(iter(optimizer.state.values()))["step"]) if optimizer.state else 0,
+                   "episode_counters_continue": counters_continue,
+                   "episode_count_restored_min_max": [int(saved_count.min()), int(saved_count.max())], "command": sys.argv,
+                   "host": socket.gethostname(), "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+                   "repo": X.git_state(X.REPO_ROOT), "env": "reset (every env starts a new episode; episode counters "
+                   "and start/goal generator restored)"}, f, indent=1)
+    print(f"[TMP-TRAIN] resumed at iteration {start_iteration} (global_step {global_step}); model restored bitwise: {ok}",
+          flush=True)
 img, aux = sense.reset()
 next_img, next_aux = img.clone(), aux.clone()
 next_done = torch.zeros(N, **f32)
 next_lstm_state = agent.initial_state(N, device)
-global_step, start_time = 0, time.time()
+if ck is not None:                                     # RNG streams last, after every reset that might draw from them
+    random.setstate(ck["rng"]["python"])
+    np.random.set_state(ck["rng"]["numpy"])
+    torch.set_rng_state(ck["rng"]["torch_cpu"].cpu())
+    torch.cuda.set_rng_state(ck["rng"]["torch_cuda"].cpu(), device)
+    if start_iteration <= num_iterations:
+        writer.add_scalar("resume/resumed_at_iteration", start_iteration - 1, global_step)
+start_time, start_step = time.time(), global_step
 dt_phys = u.physics_dt
 
 
 def save_checkpoint(iteration):
+    """Complete training state (evaluation and resumption); written atomically."""
     path = os.path.join(log_dir, "checkpoints", f"model_{iteration:05d}.pt")
-    torch.save({"model_state_dict": agent.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
-                "args": asdict(args), "global_step": global_step, "iteration": iteration,
-                "next_lstm_state_h": next_lstm_state[0].cpu(), "next_lstm_state_c": next_lstm_state[1].cpu(),
-                "fps_choices": args.fps_choices, "img_shape": list(img_shape),
-                "obs_layout": ["image (held scan)", "fps_ratio", "obs_age_ratio", "frame_ratio"],
-                "max_obs_interval_steps": sense.max_obs_interval, "budget": args.budget, "frame_cost": args.frame_cost,
-                "nav_checkpoint": {"path": args.nav_checkpoint, "sha256": nav_sha}, "exp_id": exp_id}, path)
+    state = {"model_state_dict": agent.state_dict(), "optimizer_state_dict": optimizer.state_dict(),
+             "args": asdict(args), "global_step": global_step, "iteration": iteration, "num_iterations": num_iterations,
+             "next_lstm_state_h": next_lstm_state[0].cpu(), "next_lstm_state_c": next_lstm_state[1].cpu(),
+             "fps_choices": args.fps_choices, "img_shape": list(img_shape),
+             "obs_layout": ["image (held scan)", "fps_ratio", "obs_age_ratio", "frame_ratio"],
+             "max_obs_interval_steps": sense.max_obs_interval, "budget": args.budget, "frame_cost": args.frame_cost,
+             "nav_checkpoint": {"path": args.nav_checkpoint, "sha256": nav_sha}, "exp_id": exp_id,
+             "env_overrides": env_overrides, "sweep_member": member,
+             "rng": {"python": random.getstate(), "numpy": np.random.get_state(), "torch_cpu": torch.get_rng_state(),
+                     "torch_cuda": torch.cuda.get_rng_state(device)},
+             "env_state": {"episode_count": u.corr.episode_count.cpu(), "gen_state": u.corr.gen.get_state()}}
+    torch.save(state, path + ".tmp")
+    os.replace(path + ".tmp", path)
     return path
 
 
-for iteration in range(1, num_iterations + 1):
+if start_iteration > num_iterations:
+    print(f"[TMP-TRAIN] nothing to do: the checkpoint is at iteration {start_iteration - 1} of {num_iterations}", flush=True)
+for iteration in range(start_iteration, num_iterations + 1):
     torch.cuda.reset_peak_memory_stats(device)
     t_it = time.time()
     initial_lstm_state = (next_lstm_state[0].clone(), next_lstm_state[1].clone())
@@ -285,7 +391,7 @@ for iteration in range(1, num_iterations + 1):
     W("losses/clipfrac", torch.stack(clipfracs).mean())
     W("losses/explained_variance", explained_var)
     W("losses/grad_norm_last", stats["grad_norm"])
-    sps = int(global_step / (time.time() - start_time))
+    sps = int((global_step - start_step) / (time.time() - start_time))
     W("charts/SPS", sps)
     m = buf["masks"]
     W("rollout/causal_tick_fraction", m.mean())
@@ -300,8 +406,6 @@ for iteration in range(1, num_iterations + 1):
         W("charts/episodes", n_ep)
         W("charts/episodic_return", E["return"].mean())
         W("charts/episodic_length", L.mean())
-        W("charts/mean_chosen_fps", (E["fps_inforce_sum"] / L).mean())        # reference: rate in force per tick
-        W("charts/mean_selected_fps", (E["fps_selected_sum"] / L).mean())
         W("charts/mean_applied_fps", (E["fps_applied_sum"][E["causal"] > 0] / E["causal"][E["causal"] > 0]).mean()
           if bool((E["causal"] > 0).any()) else 0.0)
         W("charts/mean_nav_reward", (E["nav_return"] / L).mean())
@@ -310,9 +414,9 @@ for iteration in range(1, num_iterations + 1):
         W("charts/episodic_budget_penalty", -E["budget_penalty_sum"].mean())
         W("charts/episode_frame_count", E["frames"].mean())
         W("charts/budget_exceeded", E["budget_exceeded"].mean())
-        W("charts/measured_hz", ((E["frames"] - 1) / (L * u.step_dt)).mean())
         W("charts/mean_obs_age_s", (E["age_ticks_sum"] / L).mean() * dt_phys)
-        W("charts/causal_decisions_per_episode", E["causal"].mean())
+        W("charts/mean_frame_consumption", E["causal"].mean())           # charged frames (reset scan excluded)
+        W("charts/mean_reward_per_step", (E["return"] / L).mean())
         for code, name in OUTCOME_NAMES.items():
             W(f"outcomes/{name}", (E["outcome"] == code).float().mean())
     W("perf/rollout_s", t_roll)
@@ -323,10 +427,10 @@ for iteration in range(1, num_iterations + 1):
           f"update {t_upd:.1f} s mem {mem_roll:.1f}/{mem_peak:.1f} GB episodes {n_ep}"
           + (f" return {float(E['return'].mean()):.2f} success {float((E['outcome'] == 1).float().mean()):.2f}"
              f" frames {float(E['frames'].mean()):.1f}" if n_ep else ""), flush=True)
-    if iteration % args.checkpoint_interval == 0:
+    if iteration % args.checkpoint_interval == 0 or iteration == num_iterations:
         print(f"  checkpoint -> {save_checkpoint(iteration)}", flush=True)
 
-path = save_checkpoint(num_iterations)
+path = os.path.join(log_dir, "checkpoints", f"model_{num_iterations:05d}.pt")
 nav_same = all(torch.equal(v, nav_params_before[k]) for k, v in nav.state_dict().items())
 with open(os.path.join(log_dir, "params", "final_checks.json"), "w") as f:
     json.dump({"nav05_state_unchanged": nav_same, "final_checkpoint": path, "global_step": global_step}, f, indent=1)

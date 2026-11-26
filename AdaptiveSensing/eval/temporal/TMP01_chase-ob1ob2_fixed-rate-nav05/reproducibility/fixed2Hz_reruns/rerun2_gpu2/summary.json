@@ -104,5 +104,29 @@
   "launch_and_setup": 16.4,
   "episodes": 33.4,
   "total": 60.0
- }
+ },
+ "summary": {
+  "run_name": "rerun2_gpu2",
+  "mean_fps": 2.0,
+  "n_episodes": 100,
+  "success_rate": 0.75,
+  "mean_adaptive_return": 59.04767000000002,
+  "std_adaptive_return": 46.29815284653482,
+  "mean_nav_return": 59.04767000000002,
+  "std_nav_return": 46.29815284653482,
+  "mean_n_steps": 151.93,
+  "std_n_steps": 54.16442651778009,
+  "mean_final_goal_distance_m": 1.358883,
+  "mean_distance_traveled_m": 5.941430000000001,
+  "std_distance_traveled_m": 2.178485644914834,
+  "mean_frame_count": 61.09,
+  "std_frame_count": 21.668915524317317,
+  "n_success": 75,
+  "n_collision": 25,
+  "n_timeout": 0,
+  "policy_type": "fixed",
+  "frame_cost": 0.0,
+  "budget": 500
+ },
+ "tables_schema": "AdaptiveSensing/evaluation/metrics.py (reference schema); regenerated from the recordings by regenerate_eval_tables.py; previous tables in legacy_v1/"
 }

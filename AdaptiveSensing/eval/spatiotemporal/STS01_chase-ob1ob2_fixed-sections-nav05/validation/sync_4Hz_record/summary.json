@@ -1,0 +1,130 @@
+{
+ "checkpoint": "Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt",
+ "episodes": 100,
+ "goal": [
+  -2.0,
+  -2.0
+ ],
+ "timeout_s": 70.0,
+ "start_seeds": [
+  4000,
+  4099
+ ],
+ "section_hz": [
+  4.0,
+  4.0,
+  4.0
+ ],
+ "sections": {
+  "names": [
+   "left",
+   "center",
+   "right"
+  ],
+  "columns": [
+   [
+    0,
+    46
+   ],
+   [
+    46,
+    93
+   ],
+   [
+    93,
+    139
+   ]
+  ],
+  "n_columns": [
+   46,
+   47,
+   46
+  ],
+  "image_columns": 139,
+  "rays": [
+   1564,
+   1598,
+   1564
+  ],
+  "total_rays": 4726,
+  "weights": [
+   0.33093525179856115,
+   0.3381294964028777,
+   0.33093525179856115
+  ],
+  "column_order": "column 0 = leftmost (largest azimuth); sections left to right",
+  "fse": "full-scan equivalents = rays acquired (reset scan included) / total_rays = sum_s w_s n_s"
+ },
+ "success_rate": 0.76,
+ "outcomes": {
+  "success": 76,
+  "collision": 24,
+  "timeout": 0
+ },
+ "fse_mean_std": [
+  118.6,
+  43.945193138726786
+ ],
+ "checks": {
+  "max_start_placement_err_m": 1.5078915112098912e-06,
+  "max_goal_err": 0.0,
+  "sensing": {
+   "literal_accept_mismatch": 0,
+   "literal_deadline_mismatch": 0,
+   "literal_last_mismatch": 0,
+   "literal_counter_mismatch": 0,
+   "image_section_mismatch": 0,
+   "image_scan_not_in_history": 0,
+   "untouched_columns_changed": 0,
+   "native_interval_violations": 0,
+   "forward_without_new_scan": 0,
+   "composite_ne_native_all4hz": 0,
+   "nav_features_not_current": 0,
+   "reset_composite_ne_native": 0,
+   "native_intervals_ticks": [
+    20,
+    40
+   ]
+  },
+  "pass": true
+ },
+ "timing_s": {
+  "launch_and_setup": 15.5,
+  "episodes": 32.1,
+  "total": 70.5
+ },
+ "summary": {
+  "run_name": "sync_4Hz_record",
+  "mean_fps": 4.0,
+  "n_episodes": 100,
+  "success_rate": 0.76,
+  "mean_adaptive_return": 60.90164,
+  "std_adaptive_return": 44.73256430845878,
+  "mean_nav_return": 60.90164,
+  "std_nav_return": 44.73256430845878,
+  "mean_n_steps": 148.47,
+  "std_n_steps": 54.930766424654955,
+  "mean_final_goal_distance_m": 1.287801,
+  "mean_distance_traveled_m": 5.857060000000001,
+  "std_distance_traveled_m": 2.178837239538557,
+  "mean_frame_count": 118.6,
+  "std_frame_count": 43.945193138726786,
+  "n_success": 76,
+  "n_collision": 24,
+  "n_timeout": 0,
+  "policy_type": "fixed_sections",
+  "frame_cost": 0.0,
+  "budget": 500,
+  "hz_left": 4.0,
+  "hz_center": 4.0,
+  "hz_right": 4.0,
+  "mean_acq_left": 118.6,
+  "mean_acq_center": 118.6,
+  "mean_acq_right": 118.6,
+  "mean_fse_success": 140.8421052631579,
+  "mean_obs_age_s": 0.04032,
+  "max_obs_age_s": 0.2,
+  "config": "4-4-4"
+ },
+ "tables_schema": "AdaptiveSensing/evaluation/section_metrics.py"
+}

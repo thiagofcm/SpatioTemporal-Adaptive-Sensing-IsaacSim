@@ -14,10 +14,12 @@ environment and the policy:
     bin/isaacrun -g 0 -- python AdaptiveSensing/scripts/evaluate_fixed_rate.py --headless --fixed 2
 
 Output: AdaptiveSensing/eval/temporal/<exp_id>/<protocol>/<run>_<checkpoint>_fixed<hz>Hz/ (the evaluate_3d.py files;
-episodes.csv and summary.json add the sensing columns; steps.csv scan_fresh and lidar.npz = FORWARDED scans).
+episodes.csv and the protocol summary.csv in the reference schema (AdaptiveSensing/evaluation/metrics.py; adaptive_return
+with --frame_cost, default 0, and --budget); the sensing diagnostics (native / accepted scans, measured rate, intervals,
+observation age) are in every episode's metadata.json (scan_gate) and in summary.json; steps.csv scan_fresh and
+lidar.npz = FORWARDED scans).
 """
 import argparse
-import csv
 import json
 import math
 import os
@@ -48,6 +50,9 @@ p.add_argument("--start_seed", type=int, default=None)
 p.add_argument("--goal", type=float, nargs=2, default=None)
 p.add_argument("--timeout_s", type=float, default=None)
 p.add_argument("--seed", type=int, default=42)
+p.add_argument("--frame_cost", type=float, default=0.0, help="sensing cost per charged frame in adaptive_return")
+p.add_argument("--budget", type=int, default=500, help="frame budget of adaptive_return (TMP02 value)")
+p.add_argument("--budget_penalty", type=float, default=15.0)
 p.add_argument("--out_dir", default=None)
 p.add_argument("--overwrite", action="store_true")
 p.add_argument("--fast_path", default="none", help="env performance fast path: none | all | comma-separated items (st_nav.envs.corridor_scene.FAST_PATH_ITEMS); same results, faster")
@@ -88,6 +93,7 @@ from st_nav.scenes import corridor_static_random as S  # noqa: E402
 from st_nav.tasks.nav2d.agents.rsl_rl_ppo_cnn_cfg import CorridorNavCNNPPORunnerCfg  # noqa: E402
 from st_nav.tasks.nav2d.corridor_env import OUTCOME_NAMES  # noqa: E402
 from st_nav.tasks.nav2d.corridor_env_lidar3d_cfg import CorridorNavLidar3DEnvCfg  # noqa: E402
+from AdaptiveSensing.evaluation import metrics as M  # noqa: E402
 from AdaptiveSensing.evaluation.scan_gate import FixedRateScanGate  # noqa: E402
 from Navigation.evaluation.recorder import EpisodeRecorder  # noqa: E402
 from tools import episode_data as ED  # noqa: E402
@@ -274,10 +280,6 @@ for i in range(n):
                  "max_interval_s": round(SE["int_max"][i] * dtp, 4) if nf > 1 else None,
                  "mean_obs_age_s": round(SE["age_sum"][i] * dtp / R["steps"][i], 4) if R["steps"][i] > 0 else None,
                  "max_obs_age_s": round(SE["age_max"][i] * dtp, 4)})
-with open(os.path.join(out_dir, "episodes.csv"), "w", newline="") as f:
-    w = csv.DictWriter(f, fieldnames=list(rows[0]))
-    w.writeheader()
-    w.writerows(rows)
 policy_name = os.path.basename(os.path.normpath(out_dir))
 
 
@@ -306,6 +308,19 @@ def episode_meta(e, row):
 
 static_meta = rec.static_metadata(cfg)
 rec.export(out_dir, R["steps"], rows, static_meta, episode_meta)
+# episodes.csv (reference schema) from the evaluation values and the written recordings (terminal pose, collision type)
+table = []
+for r in rows:
+    epd = os.path.join(out_dir, f"episode_{r['episode']:04d}")
+    seed_ep = json.load(open(os.path.join(epd, "metadata.json")))["random_seeds"]["episode_seed"]
+    table.append(M.episode_row(epd, episode=r["episode"], seed=seed_ep, policy_type="fixed", fixed_fps=args.fixed,
+                               mean_fps=args.fixed, env_outcome=r["outcome"], n_steps=r["n_steps"],
+                               nav_return=r["episode_return"], frame_count=r["accepted_scans"],
+                               final_goal_distance_m=r["final_goal_distance_m"], distance_traveled_m=r["distance_traveled_m"],
+                               start=(r["start_x"], r["start_y"], r["start_theta"]), goal=(r["goal_x"], r["goal_y"]),
+                               frame_cost=args.frame_cost, budget=args.budget, budget_penalty=args.budget_penalty,
+                               footprint_radius=float(corr.cfg.footprint_radius)))
+M.write_episodes(os.path.join(out_dir, "episodes.csv"), table)
 ED.write_json(os.path.join(out_dir, "world_geometry.json"), rec.fixed_geometry())
 succ = np.array([r["success"] for r in rows])
 oc_counts = {name: int(sum(r["outcome"] == name for r in rows)) for name in list(OUTCOME_NAMES.values()) + ["running"]}
@@ -350,13 +365,9 @@ S_ = {"checkpoint": args.checkpoint, "episodes": n, "goal": list(args.goal), "ti
       "checks": {"max_start_placement_err_m": chk_start, "max_offset_vs_reference_err": chk_layout, "max_goal_err": chk_goal,
                  "sensing": chk},
       "timing_s": {"launch_and_setup": round(t_setup, 1), "episodes": round(t_eval, 1), "total": round(time.time() - t_start, 1)}}
+S_["summary"] = M.summarize(table, policy_name)             # reference schema (= this run's summary.csv row)
+S_["tables_schema"] = "AdaptiveSensing/evaluation/metrics.py (reference schema)"
 json.dump(S_, open(os.path.join(out_dir, "summary.json"), "w"), indent=1)
-ED.update_protocol_summary(os.path.dirname(os.path.normpath(out_dir)), {
-    "policy": policy_name, "checkpoint": S_["checkpoint"], "requested_hz": args.fixed,
-    "measured_hz": round(sensing_summary["measured_hz_pooled"], 4), "obs_age_s_mean": round(sensing_summary["obs_age_s_mean"], 4),
-    "obs_age_s_max": sensing_summary["obs_age_s_max"], "episodes": n, "success_rate": S_["success_rate"],
-    **{f"n_{k}": v for k, v in oc_counts.items() if k != "running"}, "return_mean": S_["return_mean_std"][0],
-    "success_duration_s_mean": S_["success_duration_s_mean_std"][0], "min_clearance_m_mean": S_["min_clearance_m_mean_min"][0],
-    "min_clearance_m_min": S_["min_clearance_m_mean_min"][1]})
+M.update_summary_csv(os.path.join(os.path.dirname(os.path.normpath(out_dir)), "summary.csv"), S_["summary"])
 print("[EVAL]", json.dumps(S_), flush=True)
 os._exit(0)

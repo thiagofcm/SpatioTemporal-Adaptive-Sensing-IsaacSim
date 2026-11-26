@@ -1,0 +1,41 @@
+{
+ "checkpoint": "AdaptiveSensing/eval/temporal/TMP02_chase-ob1ob2_adaptive-nav05/resume_test/runs/2026-11-25_20-26-39_ppo_lstm_n256_s1_fc0.1_resumetest/checkpoints/model_00002.pt",
+ "iteration": 2,
+ "global_step": 131072,
+ "model_restored_bitwise": true,
+ "optimizer_steps_restored": 64,
+ "episode_counters_continue": true,
+ "episode_count_restored_min_max": [
+  5,
+  18
+ ],
+ "command": [
+  "AdaptiveSensing/scripts/train_temporal_ppo.py",
+  "--headless",
+  "--config",
+  "AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml",
+  "--sweep_index",
+  "1",
+  "--set",
+  "env.scene.num_envs=256",
+  "--set",
+  "agent.num_iterations=6",
+  "--set",
+  "agent.checkpoint_interval=2",
+  "--out_root",
+  "AdaptiveSensing/eval/temporal/TMP02_chase-ob1ob2_adaptive-nav05/resume_test/runs",
+  "--run_tag",
+  "resumetest",
+  "--resume",
+  "auto"
+ ],
+ "host": "ece-focus-xg01",
+ "cuda_visible_devices": "0",
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "d7abde6827e141667054ab16ba2d15ee429b881a",
+  "branch": "main",
+  "dirty": true
+ },
+ "env": "reset (every env starts a new episode; episode counters and start/goal generator restored)"
+}

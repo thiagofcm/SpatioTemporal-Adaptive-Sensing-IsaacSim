@@ -132,6 +132,13 @@ class TemporalSensing:
 
     # ------------------------------------------------------------------------------------------------ one tick
     def step(self, action: torch.Tensor):
+        """One control tick: gate the scan of this instant with `action`, then navigate and step the env."""
+        self.gate_step(action)
+        return self.advance()
+
+    def gate_step(self, action: torch.Tensor) -> torch.Tensor:
+        """First half of a tick: the sensing action selected at this instant gates the native scan of this instant
+        (accept / discard, set_target_fps on acceptance). Returns the accepted mask."""
         g, u = self.gate, self.u
         a = action.long()
         self.steps_since += 1
@@ -140,6 +147,13 @@ class TemporalSensing:
         self.steps_since = torch.where(fwd, torch.zeros_like(self.steps_since), self.steps_since)
         first = (g.n_forward > self.budget) & ~self.budget_applied
         self.budget_applied |= first
+        self._tick = (a, new, fwd, first)
+        return fwd
+
+    def advance(self):
+        """Second half of a tick: NAV05 on the held scan, env step, sensing reward, episode bookkeeping and resets."""
+        g, u = self.gate, self.u
+        a, new, fwd, first = self._tick
         age = g.ticks(u.ep_time) - g.last_forward                         # age of the held scan NAV05 receives
         nav_obs = self.obs.clone(recurse=False)
         nav_obs["lidar"] = g.last_obs
@@ -156,7 +170,7 @@ class TemporalSensing:
         A["budget_penalty_sum"] += self.budget_penalty * first_f
         A["length"] += 1
         A["causal"] += fwd_f
-        A["fps_inforce_sum"] += g.hz_in_force().float()                  # reference charts/mean_chosen_fps
+        A["fps_inforce_sum"] += g.hz_in_force().float()                  # reference mean_fps: rate in force per tick
         A["fps_selected_sum"] += self.fps_t[a]
         A["fps_applied_sum"] += self.fps_t[a] * fwd_f
         A["age_ticks_sum"] += age.float()
@@ -167,8 +181,10 @@ class TemporalSensing:
         A["outcome"] = extras["outcome"].float() if "outcome" in extras else torch.zeros_like(r_env)
         A["time_out"] = extras["time_outs"].float() if "time_outs" in extras else torch.zeros_like(r_env)
         episode = {k: v.clone() for k, v in A.items()}                    # valid where done
+        gate_end = {"last_forward": g.last_forward.clone(), "int_min": g.int_min.clone(), "int_max": g.int_max.clone()}
         info = {"mask": fwd_f, "new": new, "budget_first": first, "r_env": r_env, "episode": episode,
-                "fps_in_force": g.hz_in_force().float(), "age_ticks": age}
+                "fps_in_force": g.hz_in_force().float(), "age_ticks": age, "gate_end": gate_end,
+                "nav_action": nav_act, "dones": dones, "extras": extras}
         # episode ends: the reset observation starts the next episode (frame 1, reset rate, not charged)
         g.reset(d, obs["lidar"], u.scan_t)
         self.steps_since = torch.where(d, torch.zeros_like(self.steps_since), self.steps_since)

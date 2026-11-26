@@ -7,7 +7,7 @@
   "4Hz": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed4Hz"
  },
  "episodes": 100,
- "convention": "charged = accepted_scans - 1 (reset scan not charged; scan at the episode-end instant never gated; a scan accepted on the last control step is charged) = TMP02",
+ "convention": "charged = episode_frame_count - 1 (reset scan not charged; scan at the episode-end instant never gated; a scan accepted on the last control step is charged) = TMP02",
  "costs": [
   0.0,
   0.025,

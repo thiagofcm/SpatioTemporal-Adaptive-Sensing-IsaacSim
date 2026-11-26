@@ -7,13 +7,14 @@
 # instant (real-robot deadline gate + set_target_fps re-anchoring); actions without an accepted scan are discarded
 # and masked out of the policy loss. Sensing reward = NAV05 env reward - frame_cost per accepted scan - one-time
 # budget_penalty when the episode's frame count first exceeds budget (500: unreachable, at most 281 frames per 70 s).
-# Scale: 1024 envs x 256 steps (262,144 transitions per iteration), 200 M steps (762 iterations); 8 minibatches of
+# Scale: 1024 envs x 256 steps (262,144 transitions per iteration), 763 iterations = 200,015,872 steps; 8 minibatches of
 # 128 envs. Env fast path on (bitwise-equivalent performance items, validated: see the TMP02 card).
 # Sensing policy: NAV05 CNN architecture (random init, trained) + 3 ratios -> Linear 64 Tanh -> LSTM 64 -> actor/critic.
 #
 # The env section is NAV05's (scene, DR, sensor, reward) except num_envs; the trainer refuses to run if the settings
 # that define NAV05's input (sensor, image layout, normalizations, timing) differ from NAV05's training run.
 #
+# Resume a member: the same command + --resume auto (latest checkpoint; see AdaptiveSensing/scripts/train_temporal_ppo.py).
 # Train one sweep member:  bin/isaacrun -g <gpu> -- python AdaptiveSensing/scripts/train_temporal_ppo.py --headless \
 #     --config AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml --sweep_index <i>
 exp_id: TMP02_chase-ob1ob2_adaptive-nav05
@@ -75,7 +76,7 @@ agent:                              # sensing policy + recurrent PPO (names as t
   budget_penalty: 15.0              # reference value; inactive with budget 500
   seed: 1                           # reference
   torch_deterministic: true
-  total_timesteps: 200000000        # 1024 x 256 = 262,144 per iteration -> 762 iterations
+  total_timesteps: 200000000        # 1024 x 256 = 262,144 per iteration -> ceil = 763 iterations (200,015,872 steps)
   num_iterations: 0                 # 0: total_timesteps // (num_envs * num_steps)
   num_steps: 256                    # rollout length per env (reference 1024 with 32 envs)
   learning_rate: 3.0e-4
@@ -96,8 +97,8 @@ agent:                              # sensing policy + recurrent PPO (names as t
   cnn_kernel: 3
   cnn_stride: 2
   cnn_projection_dim: 128
-  update_chunk_envs: 64             # gradient accumulation over env chunks (memory only; same update)
-  checkpoint_interval: 25           # iterations (~6.6 M steps)
+  update_chunk_envs: 128            # one pass per 128-env minibatch (benchmarked vs 64: faster, peak 38.8 GB)
+  checkpoint_interval: 50           # iterations between checkpoints (~13 M steps, ~36 min); the last iteration always
 
 sweep:
-  agent.frame_cost: [0.0]           # values to be decided
+  agent.frame_cost: [0.0, 0.1, 0.15, 0.2, 0.3, 0.4]   # chosen from the fixed-rate calibration (TMP02 card); --sweep_index 0-5

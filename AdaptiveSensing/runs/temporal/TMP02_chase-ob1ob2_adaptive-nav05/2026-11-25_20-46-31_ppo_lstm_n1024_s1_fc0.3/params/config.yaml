@@ -1,0 +1,161 @@
+source: AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml
+exp_id: TMP02_chase-ob1ob2_adaptive-nav05
+task: STNav-TB4-Corridor-Lidar3D-v0
+run_name: null
+env:
+  scene.num_envs: 1024
+  fast_path:
+  - all
+  episode_length_s: 70.0
+  scene_name: corridor_dynamic_chase_random
+  active_obstacles:
+  - 1
+  - 2
+  wall_height: 0.6
+  baffle_height: 0.6
+  obstacle_height: 0.5
+  obstacle_presence_dr: false
+  obstacle_speed_dr: true
+  obstacle_y_dr: true
+  obstacle_radius_dr: false
+  start_pose_dr: true
+  goals:
+  - - -1.8
+    - -1.7
+  - - -2.0
+    - -1.8
+  - - -2.0
+    - -2.0
+  - - -2.2
+    - -1.7
+  - - -1.8
+    - -2.1
+  - - -2.2
+    - -2.1
+  lidar_noise: true
+  sensor: lidar3d
+  obs_layout: image
+  lidar3d.mount_pos:
+  - 0.0
+  - 0.0
+  - 0.4
+  lidar3d.mount_rpy_deg:
+  - 0.0
+  - 6.75
+  - 0.0
+  lidar3d.h_fov_deg:
+  - -14.0
+  - 14.0
+  lidar3d.v_fov_deg:
+  - -7.0
+  - 7.0
+  lidar3d.cols: 139
+  lidar3d.rows: 34
+  lidar3d.placement: cell_center
+  lidar3d.ray_order: row_major_top_left
+  lidar3d.range_max: 12.0
+  lidar3d.noise_type: gaussian
+  lidar3d.noise_sigma: 0.01
+  lidar3d.period_s: 0.25
+  lidar3d.include_floor: true
+  goal_distance_norm: 7.0
+  goal_tolerance: 0.2
+  safety_margin: 0.05
+  rewards.progress_scale: 10.0
+  rewards.proximity_scale: 1.0
+  rewards.proximity_clearance: 0.15
+  rewards.time_penalty_per_s: 0.1
+  rewards.goal_reward: 30.0
+  rewards.collision_penalty: 30.0
+  rewards.timeout_penalty: 0.0
+agent:
+  nav_checkpoint: Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt
+  fps_choices:
+  - 0.2
+  - 0.5
+  - 1.0
+  - 2.0
+  - 4.0
+  frame_cost: 0.0
+  budget: 500
+  budget_penalty: 15.0
+  seed: 1
+  torch_deterministic: true
+  total_timesteps: 200000000
+  num_iterations: 0
+  num_steps: 256
+  learning_rate: 0.0003
+  anneal_lr: false
+  gamma: 0.99
+  gae_lambda: 0.98
+  num_minibatches: 8
+  update_epochs: 4
+  norm_adv: true
+  clip_coef: 0.2
+  clip_vloss: true
+  ent_coef: 0.05
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  target_kl: null
+  lstm_hidden_size: 64
+  cnn_channels:
+  - 16
+  - 32
+  - 64
+  cnn_kernel: 3
+  cnn_stride: 2
+  cnn_projection_dim: 128
+  update_chunk_envs: 128
+  checkpoint_interval: 50
+sweep:
+  agent.frame_cost:
+  - 0.0
+  - 0.1
+  - 0.15
+  - 0.2
+  - 0.3
+  - 0.4
+sweep_member:
+  index: 4
+  values:
+    agent.frame_cost: 0.3
+set: {}
+agent_resolved:
+  nav_checkpoint: Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt
+  fps_choices:
+  - 0.2
+  - 0.5
+  - 1.0
+  - 2.0
+  - 4.0
+  frame_cost: 0.3
+  budget: 500
+  budget_penalty: 15.0
+  seed: 1
+  torch_deterministic: true
+  total_timesteps: 200000000
+  num_iterations: 0
+  num_steps: 256
+  learning_rate: 0.0003
+  anneal_lr: false
+  gamma: 0.99
+  gae_lambda: 0.98
+  num_minibatches: 8
+  update_epochs: 4
+  norm_adv: true
+  clip_coef: 0.2
+  clip_vloss: true
+  ent_coef: 0.05
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  target_kl: null
+  lstm_hidden_size: 64
+  cnn_channels:
+  - 16
+  - 32
+  - 64
+  cnn_kernel: 3
+  cnn_stride: 2
+  cnn_projection_dim: 128
+  update_chunk_envs: 128
+  checkpoint_interval: 50

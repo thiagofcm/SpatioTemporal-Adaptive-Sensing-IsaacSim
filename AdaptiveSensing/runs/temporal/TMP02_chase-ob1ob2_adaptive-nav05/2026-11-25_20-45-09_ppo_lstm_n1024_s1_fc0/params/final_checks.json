@@ -1,0 +1,5 @@
+{
+ "nav05_state_unchanged": true,
+ "final_checkpoint": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-09_ppo_lstm_n1024_s1_fc0/checkpoints/model_00763.pt",
+ "global_step": 200015872
+}

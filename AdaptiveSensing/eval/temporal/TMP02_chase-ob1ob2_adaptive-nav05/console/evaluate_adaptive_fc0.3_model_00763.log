@@ -1,0 +1,157 @@
+[isaacrun] 2026-11-26T11:39:34-05:00 host=ece-focus-xg01 gpu=4 cuda_shim=on timeout=none
+[isaacrun] cwd=/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing
+[isaacrun] cmd=python AdaptiveSensing/scripts/evaluate_adaptive.py --headless --checkpoint AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-46-31_ppo_lstm_n1024_s1_fc0.3/checkpoints/model_00763.pt
+[isaacrun] isaaclab_commit=c2277524
+[isaacrun] log=/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/logs/launcher/20261126_113934_gpu4_evaluate_adaptive.log
+Loading user config located at: '/md127/home/UFAD/tcuevasmestanza/.conda/envs/env_isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /md127/home/UFAD/tcuevasmestanza/.conda/envs/env_isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20261126_113934.log
+2026-11-26T16:39:34Z [139ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-11-26T16:39:35Z [650ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-11-26T16:39:35Z [772ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-11-26T16:39:35Z [783ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-11-26T16:39:43Z [8,628ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-11-26T16:39:43Z [8,628ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-11-26T16:39:43Z [8,628ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+2026-11-26T16:39:47Z [12,728ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,728ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,730ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,730ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,735ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,735ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,738ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,738ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,743ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,743ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,745ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,745ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T16:39:47Z [12,752ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.178.04    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 1466d055.. |
+|     |                                  |        |     |            | 1         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 65457ff4.. |
+|     |                                  |        |     |            | 23        |            |
+|---------------------------------------------------------------------------------------------|
+| 2   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 00fe96a9.. |
+|     |                                  |        |     |            | 41        |            |
+|---------------------------------------------------------------------------------------------|
+| 3   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 4273bbfc.. |
+|     |                                  |        |     |            | 61        |            |
+|---------------------------------------------------------------------------------------------|
+| 4   | NVIDIA RTX A6000                 | Yes: 0 |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 4a2a69dd.. |
+|     |                                  |        |     |            | 81        |            |
+|---------------------------------------------------------------------------------------------|
+| 5   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 0ce81f5d.. |
+|     |                                  |        |     |            | a1        |            |
+|---------------------------------------------------------------------------------------------|
+| 6   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+[INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /md127/home/UFAD/tcuevasmestanza/isaac_lab/IsaacLab_Fork/apps/isaaclab.python.headless.kit
+
+[36m======================================================================================[0m
+[36m[1m[INFO][IsaacLab]: Logging to file: /tmp/isaaclab/logs/isaaclab_2026-11-26_11-39-50.log[0m
+[36m======================================================================================[0m
+
+[33m11:39:50 [simulation_context.py] WARNING: The `enable_external_forces_every_iteration` parameter in the PhysxCfg is set to False. If you are experiencing noisy velocities, consider enabling this flag. You may need to slightly increase the number of velocity iterations (setting it to 1 or 2 rather than 0), together with this flag, to improve the accuracy of velocity updates.[0m
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.01
+	Rendering step-size   : 0.2
+	Environment step-size : 0.2
+[INFO]: Time taken for scene creation : 1.349413 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 100
+	Environment spacing   : 7.0
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : False
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+[INFO]: Time taken for simulation start : 2.969839 seconds
+[INFO]: Completed setting up the environment...
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['lidar', 'policy']
+	 critic :  ['lidar', 'policy']
+--------------------------------------------------------------------------------
+Actor Model: LidarCNNModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=135, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=2, bias=True)
+  )
+  (cnns): ModuleDict(
+    (lidar): ProjectedCNN(
+      (0): CNN(
+        (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+        (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2))
+        (5): ReLU()
+        (6): Flatten(start_dim=1, end_dim=-1)
+      )
+      (1): Linear(in_features=3072, out_features=128, bias=True)
+      (2): ReLU()
+    )
+  )
+)
+Critic Model: LidarCNNModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (mlp): MLP(
+    (0): Linear(in_features=135, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (cnns): ModuleDict(
+    (lidar): ProjectedCNN(
+      (0): CNN(
+        (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+        (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2))
+        (5): ReLU()
+        (6): Flatten(start_dim=1, end_dim=-1)
+      )
+      (1): Linear(in_features=3072, out_features=128, bias=True)
+      (2): ReLU()
+    )
+  )
+)
+[EVAL-ADAPTIVE] {"summary": {"run_name": "2026-11-25_20-46-31_ppo_lstm_n1024_s1_fc0.3_model_00763", "mean_fps": 1.13165442, "n_episodes": 100, "success_rate": 0.8, "mean_adaptive_return": 55.47163, "std_adaptive_return": 40.8345990370066, "mean_nav_return": 64.49563, "std_nav_return": 42.034035593469966, "mean_n_steps": 160.11, "std_n_steps": 53.46847575908631, "mean_final_goal_distance_m": 1.1068939999999998, "mean_distance_traveled_m": 6.27506, "std_distance_traveled_m": 2.068158068523777, "mean_frame_count": 31.08, "std_frame_count": 10.130824250770516, "n_success": 80, "n_collision": 20, "n_timeout": 0, "policy_type": "adaptive", "frame_cost": 0.3, "budget": 500}, "sensing": {"measured_hz_pooled": 0.9393541939916307, "native_hz_pooled": 3.9638373618137526, "accepted_scans_total": 3108, "charged_frames_total": 3008, "applied_decisions_by_fps": {"0.2": 217, "0.5": 226, "1": 913, "2": 1265, "4": 387}, "obs_age_s_mean": 1.0417730747611016, "obs_age_s_max": 4.8}, "checks": {"max_start_placement_err_m": 1.5078915112098912e-06, "max_goal_err": 0.0, "adaptive_return_vs_reward_sum_max_diff": 0.0005078735351560226}}
+[isaacrun] exit code 0

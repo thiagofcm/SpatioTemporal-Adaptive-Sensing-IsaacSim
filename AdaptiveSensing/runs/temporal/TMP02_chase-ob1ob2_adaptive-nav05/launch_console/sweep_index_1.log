@@ -1,0 +1,939 @@
+nohup: ignoring input
+[isaacrun] 2026-11-25T20:45:20-05:00 host=ece-focus-xg01 gpu=1 cuda_shim=on timeout=none
+[isaacrun] cwd=/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing
+[isaacrun] cmd=python AdaptiveSensing/scripts/train_temporal_ppo.py --headless --config AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml --sweep_index 1
+[isaacrun] isaaclab_commit=c2277524
+Loading user config located at: '/md127/home/UFAD/tcuevasmestanza/.conda/envs/env_isaaclab/lib/python3.11/site-packages/isaacsim/kit/data/Kit/Isaac-Sim/5.1/user.config.json'
+[Info] [carb] Logging to file: /md127/home/UFAD/tcuevasmestanza/.conda/envs/env_isaaclab/lib/python3.11/site-packages/isaacsim/kit/logs/Kit/Isaac-Sim/5.1/kit_20261125_204521.log
+2026-11-26T01:45:21Z [126ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-11-26T01:45:21Z [576ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-11-26T01:45:21Z [710ms] [Warning] [carb] Acquiring non optional plugin interface which is not listed as dependency: [omni::physx::IPhysxBenchmarks v1.0] (plugin: <default plugin>), by client: omni.physics.physx.plugin. Add it to CARB_PLUGIN_IMPL_DEPS() macro of a client.
+2026-11-26T01:45:21Z [721ms] [Warning] [omni.isaac.dynamic_control] omni.isaac.dynamic_control is deprecated as of Isaac Sim 4.5. No action is needed from end-users.
+2026-11-26T01:45:26Z [5,439ms] [Warning] [carb.cudainterop.plugin] CUDA_VISIBLE_DEVICES environment variable is set.
+2026-11-26T01:45:26Z [5,439ms] [Warning] [carb.cudainterop.plugin] Note CUDA device enumeration and Omniverse device enumeration are different.
+2026-11-26T01:45:26Z [5,439ms] [Warning] [carb.cudainterop.plugin] Setting CUDA_VISIBLE_DEVICES can lead to undesired behavior or crashes.
+2026-11-26T01:45:27Z [6,356ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,356ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,358ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,358ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,359ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,359ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,359ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,359ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,360ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,360ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,361ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,361ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Skipping NVIDIA GPU due CUDA being in bad state: NVIDIA RTX A6000
+2026-11-26T01:45:27Z [6,362ms] [Warning] [gpu.foundation.plugin] Please restart your system if CUDA is known to work in your system.
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 580.178.04    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 1466d055.. |
+|     |                                  |        |     |            | 1         |            |
+|---------------------------------------------------------------------------------------------|
+| 1   | NVIDIA RTX A6000                 | Yes: 0 |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 65457ff4.. |
+|     |                                  |        |     |            | 23        |            |
+|---------------------------------------------------------------------------------------------|
+| 2   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 00fe96a9.. |
+|     |                                  |        |     |            | 41        |            |
+|---------------------------------------------------------------------------------------------|
+| 3   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 4273bbfc.. |
+|     |                                  |        |     |            | 61        |            |
+|---------------------------------------------------------------------------------------------|
+| 4   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 4a2a69dd.. |
+|     |                                  |        |     |            | 81        |            |
+|---------------------------------------------------------------------------------------------|
+| 5   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | 0ce81f5d.. |
+|     |                                  |        |     |            | a1        |            |
+|---------------------------------------------------------------------------------------------|
+| 6   | NVIDIA RTX A6000                 |        |     | 49386   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2230      | a2671377.. |
+|     |                                  | [INFO][AppLauncher]: Using device: cuda:0
+[INFO][AppLauncher]: Loading experience file: /md127/home/UFAD/tcuevasmestanza/isaac_lab/IsaacLab_Fork/apps/isaaclab.python.headless.kit
+[TMP-TRAIN] TMP02_chase-ob1ob2_adaptive-nav05 {'agent.frame_cost': 0.1} -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1
+
+[36m======================================================================================[0m
+[36m[1m[INFO][IsaacLab]: Logging to file: /tmp/isaaclab/logs/isaaclab_2026-11-25_20-45-30.log[0m
+[36m======================================================================================[0m
+
+[33m20:45:30 [simulation_context.py] WARNING: The `enable_external_forces_every_iteration` parameter in the PhysxCfg is set to False. If you are experiencing noisy velocities, consider enabling this flag. You may need to slightly increase the number of velocity iterations (setting it to 1 or 2 rather than 0), together with this flag, to improve the accuracy of velocity updates.[0m
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 1
+	Physics step-size     : 0.01
+	Rendering step-size   : 0.2
+	Environment step-size : 0.2
+[INFO]: Time taken for scene creation : 4.806360 seconds
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 1024
+	Environment spacing   : 7.0
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : False
+[INFO]: Starting the simulation. This may take a few seconds. Please wait...
+[INFO]: Time taken for simulation start : 24.110669 seconds
+[INFO]: Completed setting up the environment...
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['lidar', 'policy']
+	 critic :  ['lidar', 'policy']
+--------------------------------------------------------------------------------
+Actor Model: LidarCNNModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=135, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=2, bias=True)
+  )
+  (cnns): ModuleDict(
+    (lidar): ProjectedCNN(
+      (0): CNN(
+        (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+        (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2))
+        (5): ReLU()
+        (6): Flatten(start_dim=1, end_dim=-1)
+      )
+      (1): Linear(in_features=3072, out_features=128, bias=True)
+      (2): ReLU()
+    )
+  )
+)
+Critic Model: LidarCNNModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (mlp): MLP(
+    (0): Linear(in_features=135, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (cnns): ModuleDict(
+    (lidar): ProjectedCNN(
+      (0): CNN(
+        (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+        (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2))
+        (5): ReLU()
+        (6): Flatten(start_dim=1, end_dim=-1)
+      )
+      (1): Linear(in_features=3072, out_features=128, bias=True)
+      (2): ReLU()
+    )
+  )
+)
+[TMP-TRAIN] setup 31 s; 1024 envs x 256 steps = 262144 per iteration, 763 iterations; image buffer 4.96 GB; sensing agent 475398 parameters
+iteration=1/763 global_step=262144 SPS=5528 rollout 36.6 s update 10.7 s mem 6.8/38.8 GB episodes 5333 return -19.87 success 0.02 frames 6.1
+iteration=2/763 global_step=524288 SPS=5700 rollout 37.2 s update 7.2 s mem 6.4/15.7 GB episodes 5302 return -15.46 success 0.07 frames 7.3
+iteration=3/763 global_step=786432 SPS=5869 rollout 34.7 s update 7.2 s mem 6.4/15.7 GB episodes 5043 return -14.86 success 0.08 frames 8.1
+iteration=4/763 global_step=1048576 SPS=5968 rollout 34.5 s update 7.2 s mem 6.4/15.7 GB episodes 4676 return -13.13 success 0.09 frames 9.5
+iteration=5/763 global_step=1310720 SPS=6024 rollout 34.6 s update 7.2 s mem 6.4/15.7 GB episodes 4333 return -10.90 success 0.11 frames 10.7
+iteration=6/763 global_step=1572864 SPS=6077 rollout 34.0 s update 7.1 s mem 6.4/15.7 GB episodes 3922 return -8.08 success 0.14 frames 12.3
+iteration=7/763 global_step=1835008 SPS=6123 rollout 33.7 s update 7.1 s mem 6.4/15.7 GB episodes 3580 return -4.66 success 0.18 frames 14.4
+iteration=8/763 global_step=2097152 SPS=6152 rollout 34.0 s update 7.1 s mem 6.4/15.7 GB episodes 3015 return 2.51 success 0.25 frames 18.1
+iteration=9/763 global_step=2359296 SPS=6179 rollout 33.7 s update 7.1 s mem 6.4/15.7 GB episodes 2795 return 6.03 success 0.28 frames 20.5
+iteration=10/763 global_step=2621440 SPS=6187 rollout 34.3 s update 7.5 s mem 6.4/15.7 GB episodes 2650 return 11.50 success 0.34 frames 22.7
+iteration=11/763 global_step=2883584 SPS=6203 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 2468 return 15.22 success 0.37 frames 24.8
+iteration=12/763 global_step=3145728 SPS=6219 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 2340 return 19.37 success 0.41 frames 26.9
+iteration=13/763 global_step=3407872 SPS=6232 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 2171 return 23.63 success 0.46 frames 29.4
+iteration=14/763 global_step=3670016 SPS=6244 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 2075 return 30.07 success 0.52 frames 31.9
+iteration=15/763 global_step=3932160 SPS=6252 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 2041 return 29.16 success 0.51 frames 33.1
+iteration=16/763 global_step=4194304 SPS=6260 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1904 return 35.73 success 0.58 frames 37.1
+iteration=17/763 global_step=4456448 SPS=6268 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1923 return 37.39 success 0.60 frames 38.6
+iteration=18/763 global_step=4718592 SPS=6277 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1913 return 37.80 success 0.60 frames 39.6
+iteration=19/763 global_step=4980736 SPS=6283 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1857 return 41.38 success 0.64 frames 42.0
+iteration=20/763 global_step=5242880 SPS=6289 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1834 return 42.66 success 0.65 frames 42.7
+iteration=21/763 global_step=5505024 SPS=6292 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1732 return 46.04 success 0.69 frames 45.6
+iteration=22/763 global_step=5767168 SPS=6295 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1807 return 44.21 success 0.67 frames 45.1
+iteration=23/763 global_step=6029312 SPS=6299 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1768 return 44.17 success 0.67 frames 45.3
+iteration=24/763 global_step=6291456 SPS=6303 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1780 return 46.24 success 0.69 frames 47.3
+iteration=25/763 global_step=6553600 SPS=6306 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1746 return 46.50 success 0.69 frames 47.7
+iteration=26/763 global_step=6815744 SPS=6309 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1808 return 44.83 success 0.67 frames 45.6
+iteration=27/763 global_step=7077888 SPS=6312 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1711 return 47.20 success 0.70 frames 45.7
+iteration=28/763 global_step=7340032 SPS=6308 rollout 35.4 s update 6.8 s mem 6.4/15.7 GB episodes 1714 return 47.89 success 0.70 frames 45.7
+iteration=29/763 global_step=7602176 SPS=6311 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1764 return 48.20 success 0.70 frames 44.3
+iteration=30/763 global_step=7864320 SPS=6304 rollout 36.0 s update 6.8 s mem 6.4/15.7 GB episodes 1771 return 46.40 success 0.69 frames 43.2
+iteration=31/763 global_step=8126464 SPS=6301 rollout 35.3 s update 6.8 s mem 6.4/15.7 GB episodes 1759 return 46.92 success 0.69 frames 42.9
+iteration=32/763 global_step=8388608 SPS=6305 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1738 return 49.43 success 0.71 frames 43.6
+iteration=33/763 global_step=8650752 SPS=6308 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1753 return 46.18 success 0.68 frames 42.4
+iteration=34/763 global_step=8912896 SPS=6311 rollout 34.1 s update 6.9 s mem 6.4/15.7 GB episodes 1725 return 47.41 success 0.69 frames 42.6
+iteration=35/763 global_step=9175040 SPS=6313 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1737 return 48.69 success 0.70 frames 42.1
+iteration=36/763 global_step=9437184 SPS=6315 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1759 return 48.49 success 0.70 frames 42.0
+iteration=37/763 global_step=9699328 SPS=6316 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1729 return 47.53 success 0.69 frames 42.2
+iteration=38/763 global_step=9961472 SPS=6318 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1708 return 51.16 success 0.73 frames 42.8
+iteration=39/763 global_step=10223616 SPS=6320 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1705 return 48.70 success 0.70 frames 41.7
+iteration=40/763 global_step=10485760 SPS=6322 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1709 return 48.71 success 0.70 frames 41.5
+iteration=41/763 global_step=10747904 SPS=6324 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1698 return 48.45 success 0.70 frames 42.3
+iteration=42/763 global_step=11010048 SPS=6325 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1684 return 49.21 success 0.71 frames 42.9
+iteration=43/763 global_step=11272192 SPS=6326 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1723 return 50.31 success 0.72 frames 43.2
+iteration=44/763 global_step=11534336 SPS=6328 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1720 return 49.43 success 0.71 frames 43.9
+iteration=45/763 global_step=11796480 SPS=6330 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1711 return 48.38 success 0.70 frames 42.7
+iteration=46/763 global_step=12058624 SPS=6331 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1695 return 51.00 success 0.73 frames 42.6
+iteration=47/763 global_step=12320768 SPS=6333 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1714 return 50.74 success 0.73 frames 43.4
+iteration=48/763 global_step=12582912 SPS=6334 rollout 34.0 s update 7.0 s mem 6.4/15.7 GB episodes 1707 return 48.90 success 0.71 frames 43.8
+iteration=49/763 global_step=12845056 SPS=6335 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1671 return 51.29 success 0.73 frames 43.8
+iteration=50/763 global_step=13107200 SPS=6337 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1710 return 50.24 success 0.72 frames 42.3
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00050.pt
+iteration=51/763 global_step=13369344 SPS=6337 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1733 return 48.38 success 0.70 frames 41.1
+iteration=52/763 global_step=13631488 SPS=6338 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1699 return 48.73 success 0.70 frames 41.8
+iteration=53/763 global_step=13893632 SPS=6339 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1692 return 50.36 success 0.72 frames 42.0
+iteration=54/763 global_step=14155776 SPS=6340 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1689 return 49.32 success 0.71 frames 41.8
+iteration=55/763 global_step=14417920 SPS=6340 rollout 34.1 s update 6.9 s mem 6.4/15.7 GB episodes 1690 return 48.15 success 0.70 frames 42.6
+iteration=56/763 global_step=14680064 SPS=6341 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1698 return 50.70 success 0.72 frames 42.0
+iteration=57/763 global_step=14942208 SPS=6342 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1691 return 50.47 success 0.72 frames 42.0
+iteration=58/763 global_step=15204352 SPS=6342 rollout 34.3 s update 6.9 s mem 6.4/15.7 GB episodes 1664 return 51.36 success 0.73 frames 42.1
+iteration=59/763 global_step=15466496 SPS=6342 rollout 34.2 s update 7.0 s mem 6.4/15.7 GB episodes 1719 return 49.49 success 0.71 frames 41.5
+iteration=60/763 global_step=15728640 SPS=6343 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1700 return 48.64 success 0.70 frames 41.7
+iteration=61/763 global_step=15990784 SPS=6344 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1721 return 48.67 success 0.70 frames 40.8
+iteration=62/763 global_step=16252928 SPS=6344 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1707 return 49.45 success 0.71 frames 42.1
+iteration=63/763 global_step=16515072 SPS=6345 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1660 return 49.86 success 0.71 frames 42.3
+iteration=64/763 global_step=16777216 SPS=6346 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1685 return 51.78 success 0.73 frames 42.7
+iteration=65/763 global_step=17039360 SPS=6347 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1712 return 49.57 success 0.71 frames 42.4
+iteration=66/763 global_step=17301504 SPS=6348 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1650 return 52.91 success 0.74 frames 43.4
+iteration=67/763 global_step=17563648 SPS=6348 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1669 return 50.82 success 0.72 frames 42.7
+iteration=68/763 global_step=17825792 SPS=6349 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1675 return 52.10 success 0.73 frames 43.6
+iteration=69/763 global_step=18087936 SPS=6350 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1699 return 51.45 success 0.73 frames 43.2
+iteration=70/763 global_step=18350080 SPS=6351 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1687 return 48.92 success 0.70 frames 43.1
+iteration=71/763 global_step=18612224 SPS=6353 rollout 33.6 s update 6.8 s mem 6.4/15.7 GB episodes 1696 return 50.91 success 0.72 frames 44.0
+iteration=72/763 global_step=18874368 SPS=6353 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1653 return 51.11 success 0.73 frames 45.1
+iteration=73/763 global_step=19136512 SPS=6354 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1668 return 52.23 success 0.74 frames 44.7
+iteration=74/763 global_step=19398656 SPS=6354 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1687 return 52.24 success 0.74 frames 44.5
+iteration=75/763 global_step=19660800 SPS=6355 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1715 return 48.58 success 0.70 frames 44.0
+iteration=76/763 global_step=19922944 SPS=6354 rollout 34.9 s update 6.8 s mem 6.4/15.7 GB episodes 1710 return 51.56 success 0.73 frames 44.0
+iteration=77/763 global_step=20185088 SPS=6354 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1666 return 51.59 success 0.73 frames 45.8
+iteration=78/763 global_step=20447232 SPS=6354 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1672 return 52.78 success 0.74 frames 46.5
+iteration=79/763 global_step=20709376 SPS=6355 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1630 return 53.54 success 0.75 frames 46.1
+iteration=80/763 global_step=20971520 SPS=6355 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 52.59 success 0.74 frames 45.5
+iteration=81/763 global_step=21233664 SPS=6356 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1681 return 51.88 success 0.73 frames 44.6
+iteration=82/763 global_step=21495808 SPS=6355 rollout 34.7 s update 6.8 s mem 6.4/15.7 GB episodes 1686 return 52.38 success 0.74 frames 44.8
+iteration=83/763 global_step=21757952 SPS=6354 rollout 34.7 s update 6.8 s mem 6.4/15.7 GB episodes 1714 return 50.28 success 0.72 frames 43.7
+iteration=84/763 global_step=22020096 SPS=6355 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1689 return 51.91 success 0.73 frames 43.6
+iteration=85/763 global_step=22282240 SPS=6356 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1649 return 52.42 success 0.74 frames 44.5
+iteration=86/763 global_step=22544384 SPS=6356 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1681 return 51.36 success 0.73 frames 44.4
+iteration=87/763 global_step=22806528 SPS=6356 rollout 34.2 s update 7.0 s mem 6.4/15.7 GB episodes 1704 return 51.00 success 0.72 frames 42.2
+iteration=88/763 global_step=23068672 SPS=6354 rollout 35.5 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 51.29 success 0.73 frames 42.8
+iteration=89/763 global_step=23330816 SPS=6352 rollout 35.6 s update 6.9 s mem 6.4/15.7 GB episodes 1706 return 50.86 success 0.72 frames 43.1
+iteration=90/763 global_step=23592960 SPS=6348 rollout 36.3 s update 6.8 s mem 6.4/15.7 GB episodes 1655 return 51.71 success 0.73 frames 42.3
+iteration=91/763 global_step=23855104 SPS=6345 rollout 36.3 s update 6.8 s mem 6.4/15.7 GB episodes 1693 return 48.93 success 0.70 frames 41.3
+iteration=92/763 global_step=24117248 SPS=6342 rollout 36.0 s update 6.8 s mem 6.4/15.7 GB episodes 1698 return 50.53 success 0.72 frames 41.5
+iteration=93/763 global_step=24379392 SPS=6341 rollout 35.2 s update 6.8 s mem 6.4/15.7 GB episodes 1679 return 50.60 success 0.72 frames 41.8
+iteration=94/763 global_step=24641536 SPS=6342 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1679 return 50.23 success 0.72 frames 42.0
+iteration=95/763 global_step=24903680 SPS=6342 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 51.96 success 0.73 frames 42.2
+iteration=96/763 global_step=25165824 SPS=6343 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1654 return 53.08 success 0.74 frames 41.9
+iteration=97/763 global_step=25427968 SPS=6343 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1683 return 51.72 success 0.73 frames 42.6
+iteration=98/763 global_step=25690112 SPS=6344 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1702 return 48.36 success 0.70 frames 42.1
+iteration=99/763 global_step=25952256 SPS=6344 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 50.43 success 0.71 frames 42.1
+iteration=100/763 global_step=26214400 SPS=6344 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1673 return 51.64 success 0.73 frames 42.4
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00100.pt
+iteration=101/763 global_step=26476544 SPS=6344 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1667 return 52.67 success 0.74 frames 42.8
+iteration=102/763 global_step=26738688 SPS=6345 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1679 return 50.12 success 0.72 frames 42.3
+iteration=103/763 global_step=27000832 SPS=6345 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1674 return 53.17 success 0.74 frames 42.7
+iteration=104/763 global_step=27262976 SPS=6345 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1665 return 52.30 success 0.74 frames 42.7
+iteration=105/763 global_step=27525120 SPS=6346 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1656 return 54.51 success 0.76 frames 42.7
+iteration=106/763 global_step=27787264 SPS=6346 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1676 return 51.04 success 0.72 frames 42.1
+iteration=107/763 global_step=28049408 SPS=6347 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1695 return 52.88 success 0.74 frames 42.4
+iteration=108/763 global_step=28311552 SPS=6347 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1635 return 53.58 success 0.75 frames 42.8
+iteration=109/763 global_step=28573696 SPS=6348 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1669 return 51.83 success 0.73 frames 43.7
+iteration=110/763 global_step=28835840 SPS=6348 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1664 return 52.60 success 0.74 frames 44.7
+iteration=111/763 global_step=29097984 SPS=6348 rollout 34.2 s update 7.0 s mem 6.4/15.7 GB episodes 1704 return 49.86 success 0.71 frames 42.5
+iteration=112/763 global_step=29360128 SPS=6348 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1680 return 51.94 success 0.73 frames 42.1
+iteration=113/763 global_step=29622272 SPS=6347 rollout 34.9 s update 6.8 s mem 6.4/15.7 GB episodes 1676 return 52.11 success 0.73 frames 42.8
+iteration=114/763 global_step=29884416 SPS=6347 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1666 return 51.11 success 0.72 frames 42.5
+iteration=115/763 global_step=30146560 SPS=6347 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1666 return 51.52 success 0.73 frames 43.2
+iteration=116/763 global_step=30408704 SPS=6347 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1700 return 49.47 success 0.71 frames 41.9
+iteration=117/763 global_step=30670848 SPS=6347 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1668 return 52.70 success 0.74 frames 43.4
+iteration=118/763 global_step=30932992 SPS=6347 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1688 return 51.58 success 0.73 frames 42.0
+iteration=119/763 global_step=31195136 SPS=6347 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 50.60 success 0.72 frames 42.9
+iteration=120/763 global_step=31457280 SPS=6347 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1671 return 53.54 success 0.75 frames 43.7
+iteration=121/763 global_step=31719424 SPS=6347 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1649 return 53.32 success 0.75 frames 42.9
+iteration=122/763 global_step=31981568 SPS=6347 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1676 return 50.37 success 0.72 frames 42.1
+iteration=123/763 global_step=32243712 SPS=6347 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1676 return 52.21 success 0.74 frames 42.9
+iteration=124/763 global_step=32505856 SPS=6347 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1690 return 51.17 success 0.73 frames 43.5
+iteration=125/763 global_step=32768000 SPS=6346 rollout 34.7 s update 7.0 s mem 6.4/15.7 GB episodes 1666 return 52.48 success 0.74 frames 43.3
+iteration=126/763 global_step=33030144 SPS=6346 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 53.00 success 0.74 frames 43.6
+iteration=127/763 global_step=33292288 SPS=6345 rollout 35.4 s update 6.7 s mem 6.4/15.7 GB episodes 1721 return 51.02 success 0.72 frames 42.8
+iteration=128/763 global_step=33554432 SPS=6345 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1681 return 51.68 success 0.73 frames 42.3
+iteration=129/763 global_step=33816576 SPS=6345 rollout 34.6 s update 6.7 s mem 6.4/15.7 GB episodes 1685 return 50.16 success 0.71 frames 42.5
+iteration=130/763 global_step=34078720 SPS=6345 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1660 return 52.02 success 0.73 frames 42.7
+iteration=131/763 global_step=34340864 SPS=6345 rollout 34.6 s update 6.7 s mem 6.4/15.7 GB episodes 1663 return 53.39 success 0.75 frames 43.8
+iteration=132/763 global_step=34603008 SPS=6345 rollout 34.8 s update 6.7 s mem 6.4/15.7 GB episodes 1656 return 54.07 success 0.75 frames 44.0
+iteration=133/763 global_step=34865152 SPS=6344 rollout 35.2 s update 6.7 s mem 6.4/15.7 GB episodes 1655 return 53.12 success 0.75 frames 43.4
+iteration=134/763 global_step=35127296 SPS=6344 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1644 return 54.15 success 0.76 frames 43.5
+iteration=135/763 global_step=35389440 SPS=6344 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 53.89 success 0.75 frames 44.6
+iteration=136/763 global_step=35651584 SPS=6344 rollout 34.5 s update 7.0 s mem 6.4/15.7 GB episodes 1694 return 53.07 success 0.75 frames 43.5
+iteration=137/763 global_step=35913728 SPS=6344 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1666 return 52.27 success 0.74 frames 43.5
+iteration=138/763 global_step=36175872 SPS=6344 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 53.51 success 0.75 frames 44.6
+iteration=139/763 global_step=36438016 SPS=6344 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 53.63 success 0.75 frames 43.9
+iteration=140/763 global_step=36700160 SPS=6345 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1653 return 54.85 success 0.76 frames 44.6
+iteration=141/763 global_step=36962304 SPS=6345 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1664 return 53.59 success 0.75 frames 44.6
+iteration=142/763 global_step=37224448 SPS=6345 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1645 return 53.52 success 0.75 frames 43.3
+iteration=143/763 global_step=37486592 SPS=6346 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1663 return 51.80 success 0.73 frames 42.2
+iteration=144/763 global_step=37748736 SPS=6346 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1670 return 53.65 success 0.75 frames 41.7
+iteration=145/763 global_step=38010880 SPS=6346 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1654 return 54.55 success 0.76 frames 42.1
+iteration=146/763 global_step=38273024 SPS=6346 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1652 return 55.58 success 0.77 frames 42.6
+iteration=147/763 global_step=38535168 SPS=6346 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1683 return 54.31 success 0.76 frames 43.1
+iteration=148/763 global_step=38797312 SPS=6346 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1632 return 52.92 success 0.74 frames 42.7
+iteration=149/763 global_step=39059456 SPS=6346 rollout 34.4 s update 7.0 s mem 6.4/15.7 GB episodes 1688 return 52.29 success 0.74 frames 43.2
+iteration=150/763 global_step=39321600 SPS=6346 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1602 return 54.71 success 0.76 frames 44.4
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00150.pt
+iteration=151/763 global_step=39583744 SPS=6346 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 55.95 success 0.77 frames 44.2
+iteration=152/763 global_step=39845888 SPS=6346 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1684 return 52.10 success 0.73 frames 42.9
+iteration=153/763 global_step=40108032 SPS=6346 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 54.62 success 0.76 frames 42.2
+iteration=154/763 global_step=40370176 SPS=6346 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1667 return 51.52 success 0.73 frames 41.9
+iteration=155/763 global_step=40632320 SPS=6345 rollout 35.1 s update 6.7 s mem 6.4/15.7 GB episodes 1711 return 52.18 success 0.73 frames 42.0
+iteration=156/763 global_step=40894464 SPS=6345 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1657 return 51.64 success 0.73 frames 41.5
+iteration=157/763 global_step=41156608 SPS=6345 rollout 34.7 s update 6.8 s mem 6.4/15.7 GB episodes 1640 return 53.47 success 0.75 frames 41.3
+iteration=158/763 global_step=41418752 SPS=6346 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1687 return 53.07 success 0.74 frames 41.6
+iteration=159/763 global_step=41680896 SPS=6346 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1649 return 52.35 success 0.74 frames 42.2
+iteration=160/763 global_step=41943040 SPS=6346 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1632 return 55.51 success 0.77 frames 43.7
+iteration=161/763 global_step=42205184 SPS=6346 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 54.59 success 0.76 frames 43.8
+iteration=162/763 global_step=42467328 SPS=6346 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 55.52 success 0.77 frames 42.5
+iteration=163/763 global_step=42729472 SPS=6346 rollout 34.7 s update 7.0 s mem 6.4/15.7 GB episodes 1683 return 53.68 success 0.75 frames 41.6
+iteration=164/763 global_step=42991616 SPS=6346 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1670 return 52.02 success 0.73 frames 40.9
+iteration=165/763 global_step=43253760 SPS=6346 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 54.48 success 0.75 frames 41.6
+iteration=166/763 global_step=43515904 SPS=6346 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1681 return 53.02 success 0.74 frames 41.4
+iteration=167/763 global_step=43778048 SPS=6346 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1665 return 53.24 success 0.74 frames 42.4
+iteration=168/763 global_step=44040192 SPS=6346 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1651 return 54.84 success 0.76 frames 42.3
+iteration=169/763 global_step=44302336 SPS=6346 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1681 return 53.34 success 0.75 frames 41.1
+iteration=170/763 global_step=44564480 SPS=6345 rollout 35.8 s update 6.8 s mem 6.4/15.7 GB episodes 1672 return 53.65 success 0.75 frames 40.6
+iteration=171/763 global_step=44826624 SPS=6343 rollout 36.2 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 54.88 success 0.76 frames 41.0
+iteration=172/763 global_step=45088768 SPS=6341 rollout 36.3 s update 6.8 s mem 6.4/15.7 GB episodes 1607 return 54.86 success 0.76 frames 42.9
+iteration=173/763 global_step=45350912 SPS=6340 rollout 36.2 s update 6.8 s mem 6.4/15.7 GB episodes 1670 return 53.44 success 0.75 frames 42.7
+iteration=174/763 global_step=45613056 SPS=6339 rollout 35.4 s update 7.0 s mem 6.4/15.7 GB episodes 1629 return 53.26 success 0.74 frames 43.1
+iteration=175/763 global_step=45875200 SPS=6337 rollout 36.7 s update 6.8 s mem 6.4/15.7 GB episodes 1681 return 53.65 success 0.75 frames 43.3
+iteration=176/763 global_step=46137344 SPS=6335 rollout 36.8 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 55.00 success 0.76 frames 43.6
+iteration=177/763 global_step=46399488 SPS=6334 rollout 36.2 s update 6.8 s mem 6.4/15.7 GB episodes 1628 return 54.16 success 0.75 frames 42.4
+iteration=178/763 global_step=46661632 SPS=6331 rollout 37.0 s update 6.8 s mem 6.4/15.7 GB episodes 1613 return 55.00 success 0.76 frames 43.0
+iteration=179/763 global_step=46923776 SPS=6329 rollout 37.0 s update 6.8 s mem 6.4/15.7 GB episodes 1697 return 54.27 success 0.75 frames 41.9
+iteration=180/763 global_step=47185920 SPS=6327 rollout 36.9 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 54.83 success 0.76 frames 41.9
+iteration=181/763 global_step=47448064 SPS=6325 rollout 37.0 s update 6.8 s mem 6.4/15.7 GB episodes 1655 return 53.45 success 0.75 frames 42.5
+iteration=182/763 global_step=47710208 SPS=6323 rollout 36.8 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 55.36 success 0.77 frames 43.0
+iteration=183/763 global_step=47972352 SPS=6321 rollout 36.8 s update 6.8 s mem 6.4/15.7 GB episodes 1665 return 52.95 success 0.74 frames 42.2
+iteration=184/763 global_step=48234496 SPS=6320 rollout 36.6 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 52.57 success 0.74 frames 42.6
+iteration=185/763 global_step=48496640 SPS=6318 rollout 36.4 s update 6.8 s mem 6.4/15.7 GB episodes 1656 return 53.92 success 0.75 frames 42.3
+iteration=186/763 global_step=48758784 SPS=6318 rollout 35.1 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 53.71 success 0.75 frames 41.6
+iteration=187/763 global_step=49020928 SPS=6318 rollout 34.0 s update 7.0 s mem 6.4/15.7 GB episodes 1666 return 55.86 success 0.77 frames 42.1
+iteration=188/763 global_step=49283072 SPS=6319 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1675 return 52.52 success 0.74 frames 42.0
+iteration=189/763 global_step=49545216 SPS=6319 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1620 return 54.93 success 0.76 frames 42.3
+iteration=190/763 global_step=49807360 SPS=6320 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1681 return 55.03 success 0.76 frames 41.9
+iteration=191/763 global_step=50069504 SPS=6320 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1618 return 54.12 success 0.75 frames 42.0
+iteration=192/763 global_step=50331648 SPS=6321 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1640 return 54.69 success 0.76 frames 42.1
+iteration=193/763 global_step=50593792 SPS=6321 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1653 return 54.24 success 0.76 frames 41.5
+iteration=194/763 global_step=50855936 SPS=6322 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1611 return 55.08 success 0.76 frames 42.5
+iteration=195/763 global_step=51118080 SPS=6322 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1627 return 57.71 success 0.79 frames 44.1
+iteration=196/763 global_step=51380224 SPS=6323 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1648 return 56.60 success 0.78 frames 43.2
+iteration=197/763 global_step=51642368 SPS=6323 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1658 return 53.75 success 0.75 frames 41.6
+iteration=198/763 global_step=51904512 SPS=6323 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1665 return 53.66 success 0.75 frames 41.4
+iteration=199/763 global_step=52166656 SPS=6324 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1614 return 55.16 success 0.76 frames 42.4
+iteration=200/763 global_step=52428800 SPS=6324 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1648 return 54.48 success 0.76 frames 43.9
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00200.pt
+iteration=201/763 global_step=52690944 SPS=6324 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1676 return 54.51 success 0.76 frames 42.9
+iteration=202/763 global_step=52953088 SPS=6325 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1658 return 55.58 success 0.77 frames 42.3
+iteration=203/763 global_step=53215232 SPS=6325 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 53.89 success 0.75 frames 42.7
+iteration=204/763 global_step=53477376 SPS=6325 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1622 return 53.67 success 0.74 frames 41.8
+iteration=205/763 global_step=53739520 SPS=6325 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1649 return 54.99 success 0.76 frames 41.8
+iteration=206/763 global_step=54001664 SPS=6326 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1628 return 55.30 success 0.76 frames 41.4
+iteration=207/763 global_step=54263808 SPS=6325 rollout 35.5 s update 6.9 s mem 6.4/15.7 GB episodes 1667 return 55.89 success 0.77 frames 40.3
+iteration=208/763 global_step=54525952 SPS=6324 rollout 35.5 s update 6.8 s mem 6.4/15.7 GB episodes 1614 return 56.78 success 0.78 frames 40.7
+iteration=209/763 global_step=54788096 SPS=6323 rollout 36.2 s update 6.9 s mem 6.4/15.7 GB episodes 1589 return 57.69 success 0.79 frames 41.9
+iteration=210/763 global_step=55050240 SPS=6322 rollout 36.4 s update 6.8 s mem 6.4/15.7 GB episodes 1656 return 54.62 success 0.76 frames 42.0
+iteration=211/763 global_step=55312384 SPS=6321 rollout 35.9 s update 6.7 s mem 6.4/15.7 GB episodes 1651 return 56.77 success 0.78 frames 42.5
+iteration=212/763 global_step=55574528 SPS=6320 rollout 35.3 s update 6.7 s mem 6.4/15.7 GB episodes 1639 return 54.11 success 0.75 frames 42.3
+iteration=213/763 global_step=55836672 SPS=6320 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 55.38 success 0.76 frames 42.0
+iteration=214/763 global_step=56098816 SPS=6321 rollout 34.3 s update 7.0 s mem 6.4/15.7 GB episodes 1639 return 55.41 success 0.76 frames 41.9
+iteration=215/763 global_step=56360960 SPS=6321 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 55.05 success 0.76 frames 41.3
+iteration=216/763 global_step=56623104 SPS=6321 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 54.98 success 0.76 frames 41.1
+iteration=217/763 global_step=56885248 SPS=6321 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1697 return 53.20 success 0.74 frames 41.1
+iteration=218/763 global_step=57147392 SPS=6322 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1621 return 56.33 success 0.77 frames 41.6
+iteration=219/763 global_step=57409536 SPS=6322 rollout 34.2 s update 6.9 s mem 6.4/15.7 GB episodes 1628 return 56.63 success 0.77 frames 42.1
+iteration=220/763 global_step=57671680 SPS=6322 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.01 success 0.76 frames 42.5
+iteration=221/763 global_step=57933824 SPS=6322 rollout 34.3 s update 6.9 s mem 6.4/15.7 GB episodes 1644 return 55.55 success 0.77 frames 41.8
+iteration=222/763 global_step=58195968 SPS=6322 rollout 34.2 s update 6.9 s mem 6.4/15.7 GB episodes 1635 return 56.30 success 0.77 frames 41.6
+iteration=223/763 global_step=58458112 SPS=6323 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 56.23 success 0.77 frames 41.1
+iteration=224/763 global_step=58720256 SPS=6323 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1642 return 56.01 success 0.77 frames 42.4
+iteration=225/763 global_step=58982400 SPS=6322 rollout 36.0 s update 6.9 s mem 6.4/15.7 GB episodes 1625 return 56.19 success 0.77 frames 43.1
+iteration=226/763 global_step=59244544 SPS=6321 rollout 35.5 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.94 success 0.77 frames 43.0
+iteration=227/763 global_step=59506688 SPS=6322 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1597 return 58.48 success 0.80 frames 43.5
+iteration=228/763 global_step=59768832 SPS=6322 rollout 34.2 s update 7.0 s mem 6.4/15.7 GB episodes 1646 return 54.95 success 0.76 frames 43.0
+iteration=229/763 global_step=60030976 SPS=6322 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1606 return 57.48 success 0.79 frames 43.3
+iteration=230/763 global_step=60293120 SPS=6322 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 55.45 success 0.77 frames 42.6
+iteration=231/763 global_step=60555264 SPS=6322 rollout 34.4 s update 6.9 s mem 6.4/15.7 GB episodes 1671 return 53.00 success 0.74 frames 41.4
+iteration=232/763 global_step=60817408 SPS=6322 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1623 return 56.40 success 0.77 frames 41.6
+iteration=233/763 global_step=61079552 SPS=6321 rollout 36.9 s update 6.8 s mem 6.4/15.7 GB episodes 1674 return 55.14 success 0.76 frames 41.0
+iteration=234/763 global_step=61341696 SPS=6319 rollout 38.1 s update 6.9 s mem 6.4/15.7 GB episodes 1641 return 55.08 success 0.76 frames 40.3
+iteration=235/763 global_step=61603840 SPS=6316 rollout 37.8 s update 6.8 s mem 6.4/15.7 GB episodes 1626 return 54.94 success 0.76 frames 40.9
+iteration=236/763 global_step=61865984 SPS=6315 rollout 37.6 s update 6.7 s mem 6.4/15.7 GB episodes 1677 return 54.30 success 0.75 frames 40.9
+iteration=237/763 global_step=62128128 SPS=6313 rollout 37.4 s update 6.6 s mem 6.4/15.7 GB episodes 1657 return 54.25 success 0.75 frames 41.1
+iteration=238/763 global_step=62390272 SPS=6311 rollout 37.4 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 55.74 success 0.77 frames 42.2
+iteration=239/763 global_step=62652416 SPS=6310 rollout 36.7 s update 7.1 s mem 6.4/15.7 GB episodes 1658 return 56.07 success 0.77 frames 42.7
+iteration=240/763 global_step=62914560 SPS=6308 rollout 36.5 s update 6.8 s mem 6.4/15.7 GB episodes 1626 return 53.47 success 0.74 frames 41.4
+iteration=241/763 global_step=63176704 SPS=6307 rollout 36.6 s update 6.8 s mem 6.4/15.7 GB episodes 1651 return 54.77 success 0.76 frames 41.3
+iteration=242/763 global_step=63438848 SPS=6306 rollout 36.4 s update 6.8 s mem 6.4/15.7 GB episodes 1683 return 52.92 success 0.74 frames 40.0
+iteration=243/763 global_step=63700992 SPS=6306 rollout 34.9 s update 7.0 s mem 6.4/15.7 GB episodes 1621 return 55.82 success 0.77 frames 41.0
+iteration=244/763 global_step=63963136 SPS=6306 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1610 return 56.03 success 0.77 frames 42.0
+iteration=245/763 global_step=64225280 SPS=6307 rollout 34.1 s update 6.9 s mem 6.4/15.7 GB episodes 1634 return 57.39 success 0.79 frames 42.8
+iteration=246/763 global_step=64487424 SPS=6307 rollout 33.7 s update 6.9 s mem 6.4/15.7 GB episodes 1619 return 55.93 success 0.77 frames 41.5
+iteration=247/763 global_step=64749568 SPS=6307 rollout 35.2 s update 6.9 s mem 6.4/15.7 GB episodes 1644 return 55.63 success 0.77 frames 42.2
+iteration=248/763 global_step=65011712 SPS=6307 rollout 33.9 s update 7.0 s mem 6.4/15.7 GB episodes 1635 return 54.28 success 0.75 frames 41.6
+iteration=249/763 global_step=65273856 SPS=6308 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1653 return 54.69 success 0.76 frames 41.7
+iteration=250/763 global_step=65536000 SPS=6308 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1597 return 58.26 success 0.79 frames 42.5
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00250.pt
+iteration=251/763 global_step=65798144 SPS=6308 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1628 return 57.02 success 0.78 frames 41.3
+iteration=252/763 global_step=66060288 SPS=6309 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1670 return 54.63 success 0.76 frames 41.5
+iteration=253/763 global_step=66322432 SPS=6309 rollout 34.0 s update 7.0 s mem 6.4/15.7 GB episodes 1642 return 54.53 success 0.76 frames 41.2
+iteration=254/763 global_step=66584576 SPS=6309 rollout 34.4 s update 7.0 s mem 6.4/15.7 GB episodes 1611 return 56.55 success 0.77 frames 41.8
+iteration=255/763 global_step=66846720 SPS=6309 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1669 return 55.02 success 0.76 frames 41.2
+iteration=256/763 global_step=67108864 SPS=6310 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1632 return 54.36 success 0.76 frames 41.2
+iteration=257/763 global_step=67371008 SPS=6310 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1644 return 55.34 success 0.76 frames 40.7
+iteration=258/763 global_step=67633152 SPS=6311 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1645 return 56.78 success 0.78 frames 40.3
+iteration=259/763 global_step=67895296 SPS=6311 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1671 return 53.95 success 0.75 frames 39.4
+iteration=260/763 global_step=68157440 SPS=6311 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 53.98 success 0.75 frames 40.3
+iteration=261/763 global_step=68419584 SPS=6311 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1595 return 57.23 success 0.78 frames 41.1
+iteration=262/763 global_step=68681728 SPS=6312 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1687 return 53.19 success 0.74 frames 40.3
+iteration=263/763 global_step=68943872 SPS=6312 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1606 return 56.23 success 0.77 frames 41.6
+iteration=264/763 global_step=69206016 SPS=6312 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1637 return 56.40 success 0.77 frames 41.6
+iteration=265/763 global_step=69468160 SPS=6312 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 56.89 success 0.78 frames 42.1
+iteration=266/763 global_step=69730304 SPS=6313 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1713 return 52.60 success 0.74 frames 40.4
+iteration=267/763 global_step=69992448 SPS=6313 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 54.58 success 0.76 frames 40.9
+iteration=268/763 global_step=70254592 SPS=6313 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1615 return 55.85 success 0.77 frames 40.8
+iteration=269/763 global_step=70516736 SPS=6314 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1650 return 56.00 success 0.77 frames 40.6
+iteration=270/763 global_step=70778880 SPS=6314 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1655 return 54.07 success 0.75 frames 39.8
+iteration=271/763 global_step=71041024 SPS=6315 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1608 return 57.01 success 0.78 frames 40.4
+iteration=272/763 global_step=71303168 SPS=6315 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 54.12 success 0.75 frames 40.5
+iteration=273/763 global_step=71565312 SPS=6315 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1665 return 54.19 success 0.75 frames 39.9
+iteration=274/763 global_step=71827456 SPS=6316 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1608 return 56.78 success 0.78 frames 40.9
+iteration=275/763 global_step=72089600 SPS=6316 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1661 return 54.28 success 0.75 frames 40.4
+iteration=276/763 global_step=72351744 SPS=6316 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1641 return 54.67 success 0.76 frames 40.7
+iteration=277/763 global_step=72613888 SPS=6317 rollout 34.0 s update 7.0 s mem 6.4/15.7 GB episodes 1633 return 57.17 success 0.78 frames 41.9
+iteration=278/763 global_step=72876032 SPS=6317 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.83 success 0.77 frames 41.3
+iteration=279/763 global_step=73138176 SPS=6317 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1640 return 56.99 success 0.78 frames 41.0
+iteration=280/763 global_step=73400320 SPS=6318 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.35 success 0.76 frames 40.9
+iteration=281/763 global_step=73662464 SPS=6318 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1645 return 54.09 success 0.75 frames 40.4
+iteration=282/763 global_step=73924608 SPS=6318 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1639 return 56.35 success 0.77 frames 41.4
+iteration=283/763 global_step=74186752 SPS=6319 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1642 return 56.14 success 0.77 frames 41.2
+iteration=284/763 global_step=74448896 SPS=6319 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1640 return 54.29 success 0.75 frames 41.2
+iteration=285/763 global_step=74711040 SPS=6319 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 57.23 success 0.78 frames 41.7
+iteration=286/763 global_step=74973184 SPS=6319 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1621 return 56.39 success 0.77 frames 42.2
+iteration=287/763 global_step=75235328 SPS=6320 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 55.12 success 0.76 frames 42.2
+iteration=288/763 global_step=75497472 SPS=6320 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1640 return 53.49 success 0.75 frames 41.6
+iteration=289/763 global_step=75759616 SPS=6321 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1672 return 54.26 success 0.75 frames 40.4
+iteration=290/763 global_step=76021760 SPS=6321 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 55.51 success 0.76 frames 40.8
+iteration=291/763 global_step=76283904 SPS=6321 rollout 33.9 s update 7.0 s mem 6.4/15.7 GB episodes 1673 return 55.09 success 0.76 frames 39.8
+iteration=292/763 global_step=76546048 SPS=6322 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1627 return 55.36 success 0.76 frames 39.9
+iteration=293/763 global_step=76808192 SPS=6322 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 55.93 success 0.77 frames 39.8
+iteration=294/763 global_step=77070336 SPS=6322 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 55.52 success 0.77 frames 41.1
+iteration=295/763 global_step=77332480 SPS=6323 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1691 return 54.61 success 0.75 frames 40.7
+iteration=296/763 global_step=77594624 SPS=6323 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1651 return 54.70 success 0.76 frames 41.0
+iteration=297/763 global_step=77856768 SPS=6323 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1600 return 56.84 success 0.78 frames 42.0
+iteration=298/763 global_step=78118912 SPS=6323 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1660 return 54.91 success 0.76 frames 40.7
+iteration=299/763 global_step=78381056 SPS=6324 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1644 return 54.43 success 0.75 frames 39.9
+iteration=300/763 global_step=78643200 SPS=6324 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1686 return 52.89 success 0.74 frames 40.2
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00300.pt
+iteration=301/763 global_step=78905344 SPS=6324 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1612 return 57.08 success 0.78 frames 41.3
+iteration=302/763 global_step=79167488 SPS=6325 rollout 33.8 s update 7.0 s mem 6.4/15.7 GB episodes 1645 return 54.32 success 0.75 frames 40.0
+iteration=303/763 global_step=79429632 SPS=6325 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 54.06 success 0.75 frames 39.9
+iteration=304/763 global_step=79691776 SPS=6325 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1646 return 56.27 success 0.77 frames 40.4
+iteration=305/763 global_step=79953920 SPS=6325 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 56.87 success 0.78 frames 40.3
+iteration=306/763 global_step=80216064 SPS=6326 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1657 return 53.78 success 0.75 frames 39.3
+iteration=307/763 global_step=80478208 SPS=6326 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1664 return 53.73 success 0.75 frames 38.8
+iteration=308/763 global_step=80740352 SPS=6326 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1621 return 56.36 success 0.77 frames 39.1
+iteration=309/763 global_step=81002496 SPS=6327 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1658 return 56.44 success 0.77 frames 40.1
+iteration=310/763 global_step=81264640 SPS=6327 rollout 33.9 s update 6.6 s mem 6.4/15.7 GB episodes 1615 return 55.58 success 0.76 frames 39.6
+iteration=311/763 global_step=81526784 SPS=6327 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1667 return 54.62 success 0.76 frames 39.6
+iteration=312/763 global_step=81788928 SPS=6328 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1632 return 55.36 success 0.76 frames 40.2
+iteration=313/763 global_step=82051072 SPS=6328 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1626 return 55.82 success 0.77 frames 40.0
+iteration=314/763 global_step=82313216 SPS=6328 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1644 return 57.08 success 0.78 frames 40.2
+iteration=315/763 global_step=82575360 SPS=6329 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1641 return 54.82 success 0.76 frames 40.2
+iteration=316/763 global_step=82837504 SPS=6329 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 56.92 success 0.78 frames 40.7
+iteration=317/763 global_step=83099648 SPS=6329 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1642 return 55.98 success 0.77 frames 40.3
+iteration=318/763 global_step=83361792 SPS=6329 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1616 return 56.98 success 0.78 frames 40.7
+iteration=319/763 global_step=83623936 SPS=6330 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1626 return 56.52 success 0.77 frames 41.2
+iteration=320/763 global_step=83886080 SPS=6330 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1639 return 55.28 success 0.76 frames 40.8
+iteration=321/763 global_step=84148224 SPS=6330 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1620 return 58.01 success 0.79 frames 40.7
+iteration=322/763 global_step=84410368 SPS=6331 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1653 return 57.28 success 0.78 frames 42.1
+iteration=323/763 global_step=84672512 SPS=6331 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1650 return 55.46 success 0.77 frames 41.6
+iteration=324/763 global_step=84934656 SPS=6331 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1599 return 56.17 success 0.77 frames 41.6
+iteration=325/763 global_step=85196800 SPS=6331 rollout 34.7 s update 6.7 s mem 6.4/15.7 GB episodes 1616 return 57.59 success 0.78 frames 41.9
+iteration=326/763 global_step=85458944 SPS=6331 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1638 return 57.77 success 0.79 frames 41.4
+iteration=327/763 global_step=85721088 SPS=6331 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 57.37 success 0.78 frames 40.2
+iteration=328/763 global_step=85983232 SPS=6332 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 55.21 success 0.76 frames 39.8
+iteration=329/763 global_step=86245376 SPS=6332 rollout 34.2 s update 6.9 s mem 6.4/15.7 GB episodes 1602 return 56.83 success 0.78 frames 40.5
+iteration=330/763 global_step=86507520 SPS=6332 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1651 return 55.94 success 0.77 frames 40.2
+iteration=331/763 global_step=86769664 SPS=6332 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 55.93 success 0.77 frames 40.4
+iteration=332/763 global_step=87031808 SPS=6332 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1663 return 55.22 success 0.76 frames 40.8
+iteration=333/763 global_step=87293952 SPS=6332 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 56.25 success 0.77 frames 41.2
+iteration=334/763 global_step=87556096 SPS=6333 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1635 return 55.67 success 0.77 frames 40.4
+iteration=335/763 global_step=87818240 SPS=6333 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1628 return 56.65 success 0.78 frames 41.1
+iteration=336/763 global_step=88080384 SPS=6333 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1678 return 55.05 success 0.76 frames 39.4
+iteration=337/763 global_step=88342528 SPS=6333 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1617 return 57.36 success 0.78 frames 40.5
+iteration=338/763 global_step=88604672 SPS=6334 rollout 33.6 s update 6.8 s mem 6.4/15.7 GB episodes 1650 return 56.37 success 0.77 frames 39.3
+iteration=339/763 global_step=88866816 SPS=6334 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 57.18 success 0.78 frames 39.3
+iteration=340/763 global_step=89128960 SPS=6334 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1639 return 54.60 success 0.76 frames 38.8
+iteration=341/763 global_step=89391104 SPS=6334 rollout 33.7 s update 6.9 s mem 6.4/15.7 GB episodes 1651 return 53.92 success 0.75 frames 39.0
+iteration=342/763 global_step=89653248 SPS=6335 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1643 return 56.25 success 0.77 frames 39.9
+iteration=343/763 global_step=89915392 SPS=6335 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 54.84 success 0.76 frames 40.0
+iteration=344/763 global_step=90177536 SPS=6335 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1646 return 55.18 success 0.76 frames 39.2
+iteration=345/763 global_step=90439680 SPS=6335 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1606 return 55.23 success 0.76 frames 40.0
+iteration=346/763 global_step=90701824 SPS=6335 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1661 return 56.51 success 0.78 frames 41.4
+iteration=347/763 global_step=90963968 SPS=6336 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1646 return 55.97 success 0.77 frames 41.4
+iteration=348/763 global_step=91226112 SPS=6336 rollout 33.7 s update 6.9 s mem 6.4/15.7 GB episodes 1630 return 55.26 success 0.76 frames 40.2
+iteration=349/763 global_step=91488256 SPS=6336 rollout 33.9 s update 7.0 s mem 6.4/15.7 GB episodes 1642 return 56.13 success 0.77 frames 40.1
+iteration=350/763 global_step=91750400 SPS=6336 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1644 return 55.06 success 0.76 frames 39.9
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00350.pt
+iteration=351/763 global_step=92012544 SPS=6336 rollout 34.3 s update 6.9 s mem 6.4/15.7 GB episodes 1639 return 57.22 success 0.78 frames 40.4
+iteration=352/763 global_step=92274688 SPS=6337 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 56.26 success 0.77 frames 40.2
+iteration=353/763 global_step=92536832 SPS=6337 rollout 33.9 s update 7.0 s mem 6.4/15.7 GB episodes 1652 return 54.58 success 0.76 frames 40.0
+iteration=354/763 global_step=92798976 SPS=6337 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1618 return 57.78 success 0.79 frames 39.9
+iteration=355/763 global_step=93061120 SPS=6337 rollout 34.9 s update 6.7 s mem 6.4/15.7 GB episodes 1639 return 57.23 success 0.78 frames 39.5
+iteration=356/763 global_step=93323264 SPS=6337 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1622 return 55.74 success 0.77 frames 38.9
+iteration=357/763 global_step=93585408 SPS=6337 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1658 return 56.02 success 0.77 frames 38.8
+iteration=358/763 global_step=93847552 SPS=6337 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1622 return 56.07 success 0.77 frames 40.2
+iteration=359/763 global_step=94109696 SPS=6338 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1679 return 53.13 success 0.74 frames 40.2
+iteration=360/763 global_step=94371840 SPS=6338 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1635 return 55.39 success 0.76 frames 40.3
+iteration=361/763 global_step=94633984 SPS=6338 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1666 return 54.73 success 0.76 frames 40.3
+iteration=362/763 global_step=94896128 SPS=6338 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1643 return 55.00 success 0.76 frames 39.8
+iteration=363/763 global_step=95158272 SPS=6339 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1616 return 55.70 success 0.77 frames 40.0
+iteration=364/763 global_step=95420416 SPS=6339 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1647 return 57.83 success 0.79 frames 40.2
+iteration=365/763 global_step=95682560 SPS=6339 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1669 return 54.96 success 0.76 frames 40.3
+iteration=366/763 global_step=95944704 SPS=6339 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1633 return 53.91 success 0.75 frames 40.5
+iteration=367/763 global_step=96206848 SPS=6340 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1641 return 55.47 success 0.77 frames 40.0
+iteration=368/763 global_step=96468992 SPS=6340 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 55.48 success 0.77 frames 39.8
+iteration=369/763 global_step=96731136 SPS=6340 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 54.22 success 0.75 frames 39.4
+iteration=370/763 global_step=96993280 SPS=6339 rollout 35.8 s update 6.7 s mem 6.4/15.7 GB episodes 1663 return 56.13 success 0.77 frames 39.5
+iteration=371/763 global_step=97255424 SPS=6339 rollout 36.2 s update 6.8 s mem 6.4/15.7 GB episodes 1645 return 57.66 success 0.79 frames 39.7
+iteration=372/763 global_step=97517568 SPS=6339 rollout 34.1 s update 6.6 s mem 6.4/15.7 GB episodes 1626 return 56.28 success 0.77 frames 40.1
+iteration=373/763 global_step=97779712 SPS=6339 rollout 34.0 s update 6.6 s mem 6.4/15.7 GB episodes 1625 return 55.96 success 0.77 frames 40.2
+iteration=374/763 global_step=98041856 SPS=6339 rollout 34.1 s update 6.6 s mem 6.4/15.7 GB episodes 1598 return 58.21 success 0.79 frames 40.3
+iteration=375/763 global_step=98304000 SPS=6340 rollout 34.1 s update 6.6 s mem 6.4/15.7 GB episodes 1622 return 57.21 success 0.78 frames 39.2
+iteration=376/763 global_step=98566144 SPS=6340 rollout 34.1 s update 6.6 s mem 6.4/15.7 GB episodes 1645 return 55.77 success 0.77 frames 39.7
+iteration=377/763 global_step=98828288 SPS=6340 rollout 33.9 s update 6.6 s mem 6.4/15.7 GB episodes 1629 return 56.91 success 0.78 frames 39.9
+iteration=378/763 global_step=99090432 SPS=6341 rollout 33.9 s update 6.6 s mem 6.4/15.7 GB episodes 1626 return 56.00 success 0.77 frames 39.3
+iteration=379/763 global_step=99352576 SPS=6341 rollout 33.9 s update 6.6 s mem 6.4/15.7 GB episodes 1669 return 56.02 success 0.77 frames 38.8
+iteration=380/763 global_step=99614720 SPS=6341 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1627 return 55.17 success 0.76 frames 39.8
+iteration=381/763 global_step=99876864 SPS=6341 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1715 return 52.59 success 0.74 frames 38.5
+iteration=382/763 global_step=100139008 SPS=6341 rollout 34.0 s update 6.6 s mem 6.4/15.7 GB episodes 1628 return 54.14 success 0.75 frames 39.2
+iteration=383/763 global_step=100401152 SPS=6342 rollout 34.3 s update 6.6 s mem 6.4/15.7 GB episodes 1654 return 55.10 success 0.76 frames 39.9
+iteration=384/763 global_step=100663296 SPS=6342 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1637 return 56.32 success 0.78 frames 40.6
+iteration=385/763 global_step=100925440 SPS=6342 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1630 return 56.93 success 0.78 frames 40.6
+iteration=386/763 global_step=101187584 SPS=6342 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1603 return 56.71 success 0.78 frames 41.2
+iteration=387/763 global_step=101449728 SPS=6342 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1646 return 56.65 success 0.78 frames 40.8
+iteration=388/763 global_step=101711872 SPS=6342 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1646 return 55.85 success 0.77 frames 40.7
+iteration=389/763 global_step=101974016 SPS=6343 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1661 return 54.00 success 0.75 frames 39.5
+iteration=390/763 global_step=102236160 SPS=6343 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1617 return 58.60 success 0.80 frames 40.9
+iteration=391/763 global_step=102498304 SPS=6343 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1653 return 55.51 success 0.77 frames 40.4
+iteration=392/763 global_step=102760448 SPS=6343 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 54.48 success 0.76 frames 39.9
+iteration=393/763 global_step=103022592 SPS=6343 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1623 return 57.57 success 0.78 frames 40.1
+iteration=394/763 global_step=103284736 SPS=6343 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1654 return 55.84 success 0.77 frames 39.1
+iteration=395/763 global_step=103546880 SPS=6343 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1617 return 55.26 success 0.76 frames 39.7
+iteration=396/763 global_step=103809024 SPS=6343 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 54.12 success 0.75 frames 38.8
+iteration=397/763 global_step=104071168 SPS=6344 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1632 return 56.81 success 0.78 frames 39.5
+iteration=398/763 global_step=104333312 SPS=6344 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1649 return 56.95 success 0.78 frames 39.3
+iteration=399/763 global_step=104595456 SPS=6344 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1651 return 55.88 success 0.77 frames 39.2
+iteration=400/763 global_step=104857600 SPS=6344 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1633 return 55.61 success 0.77 frames 39.2
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00400.pt
+iteration=401/763 global_step=105119744 SPS=6344 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1659 return 55.36 success 0.76 frames 39.5
+iteration=402/763 global_step=105381888 SPS=6344 rollout 35.3 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 56.20 success 0.77 frames 40.2
+iteration=403/763 global_step=105644032 SPS=6343 rollout 35.3 s update 6.8 s mem 6.4/15.7 GB episodes 1669 return 54.08 success 0.75 frames 39.6
+iteration=404/763 global_step=105906176 SPS=6343 rollout 35.1 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.92 success 0.77 frames 39.7
+iteration=405/763 global_step=106168320 SPS=6343 rollout 35.4 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 55.83 success 0.77 frames 39.1
+iteration=406/763 global_step=106430464 SPS=6343 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 54.49 success 0.75 frames 38.9
+iteration=407/763 global_step=106692608 SPS=6343 rollout 34.3 s update 7.1 s mem 6.4/15.7 GB episodes 1647 return 55.66 success 0.77 frames 39.8
+iteration=408/763 global_step=106954752 SPS=6342 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1656 return 56.03 success 0.77 frames 39.0
+iteration=409/763 global_step=107216896 SPS=6342 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 54.31 success 0.75 frames 38.7
+iteration=410/763 global_step=107479040 SPS=6342 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 55.87 success 0.77 frames 39.0
+iteration=411/763 global_step=107741184 SPS=6343 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1616 return 55.49 success 0.77 frames 38.9
+iteration=412/763 global_step=108003328 SPS=6343 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1689 return 54.10 success 0.75 frames 39.0
+iteration=413/763 global_step=108265472 SPS=6343 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1606 return 55.83 success 0.77 frames 39.1
+iteration=414/763 global_step=108527616 SPS=6342 rollout 36.7 s update 7.0 s mem 6.4/15.7 GB episodes 1609 return 55.19 success 0.76 frames 39.5
+iteration=415/763 global_step=108789760 SPS=6341 rollout 36.9 s update 6.9 s mem 6.4/15.7 GB episodes 1669 return 55.82 success 0.77 frames 39.3
+iteration=416/763 global_step=109051904 SPS=6341 rollout 34.7 s update 6.7 s mem 6.4/15.7 GB episodes 1637 return 55.83 success 0.77 frames 39.6
+iteration=417/763 global_step=109314048 SPS=6340 rollout 35.0 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 55.74 success 0.77 frames 39.8
+iteration=418/763 global_step=109576192 SPS=6341 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1635 return 55.90 success 0.77 frames 39.0
+iteration=419/763 global_step=109838336 SPS=6341 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1674 return 55.92 success 0.77 frames 39.1
+iteration=420/763 global_step=110100480 SPS=6341 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1605 return 56.27 success 0.77 frames 39.4
+iteration=421/763 global_step=110362624 SPS=6341 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1667 return 56.00 success 0.77 frames 39.7
+iteration=422/763 global_step=110624768 SPS=6341 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1632 return 56.04 success 0.77 frames 40.3
+iteration=423/763 global_step=110886912 SPS=6341 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1660 return 55.70 success 0.77 frames 39.8
+iteration=424/763 global_step=111149056 SPS=6341 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1615 return 56.15 success 0.77 frames 40.8
+iteration=425/763 global_step=111411200 SPS=6341 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1640 return 55.85 success 0.77 frames 39.7
+iteration=426/763 global_step=111673344 SPS=6341 rollout 36.2 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 56.54 success 0.77 frames 39.2
+iteration=427/763 global_step=111935488 SPS=6340 rollout 35.7 s update 6.8 s mem 6.4/15.7 GB episodes 1628 return 57.03 success 0.78 frames 39.6
+iteration=428/763 global_step=112197632 SPS=6340 rollout 35.5 s update 6.9 s mem 6.4/15.7 GB episodes 1650 return 55.23 success 0.76 frames 39.3
+iteration=429/763 global_step=112459776 SPS=6340 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1611 return 56.97 success 0.78 frames 39.5
+iteration=430/763 global_step=112721920 SPS=6340 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1649 return 54.54 success 0.75 frames 39.0
+iteration=431/763 global_step=112984064 SPS=6340 rollout 33.8 s update 7.1 s mem 6.4/15.7 GB episodes 1665 return 56.51 success 0.77 frames 39.3
+iteration=432/763 global_step=113246208 SPS=6340 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1631 return 56.71 success 0.77 frames 39.9
+iteration=433/763 global_step=113508352 SPS=6340 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1622 return 55.60 success 0.76 frames 38.7
+iteration=434/763 global_step=113770496 SPS=6340 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 55.88 success 0.77 frames 39.0
+iteration=435/763 global_step=114032640 SPS=6340 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 56.70 success 0.77 frames 38.8
+iteration=436/763 global_step=114294784 SPS=6340 rollout 35.6 s update 6.8 s mem 6.4/15.7 GB episodes 1587 return 56.88 success 0.78 frames 39.8
+iteration=437/763 global_step=114556928 SPS=6339 rollout 35.9 s update 7.0 s mem 6.4/15.7 GB episodes 1635 return 55.28 success 0.76 frames 38.9
+iteration=438/763 global_step=114819072 SPS=6339 rollout 35.7 s update 6.8 s mem 6.4/15.7 GB episodes 1654 return 56.67 success 0.78 frames 38.9
+iteration=439/763 global_step=115081216 SPS=6339 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 54.76 success 0.76 frames 39.0
+iteration=440/763 global_step=115343360 SPS=6339 rollout 34.7 s update 6.8 s mem 6.4/15.7 GB episodes 1678 return 55.59 success 0.76 frames 38.1
+iteration=441/763 global_step=115605504 SPS=6338 rollout 35.4 s update 6.9 s mem 6.4/15.7 GB episodes 1612 return 55.63 success 0.76 frames 38.5
+iteration=442/763 global_step=115867648 SPS=6338 rollout 34.8 s update 6.9 s mem 6.4/15.7 GB episodes 1624 return 56.08 success 0.77 frames 38.3
+iteration=443/763 global_step=116129792 SPS=6338 rollout 34.3 s update 7.0 s mem 6.4/15.7 GB episodes 1683 return 54.57 success 0.76 frames 39.5
+iteration=444/763 global_step=116391936 SPS=6338 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1624 return 56.10 success 0.77 frames 39.6
+iteration=445/763 global_step=116654080 SPS=6338 rollout 35.2 s update 7.0 s mem 6.4/15.7 GB episodes 1619 return 55.69 success 0.77 frames 39.4
+iteration=446/763 global_step=116916224 SPS=6338 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 58.44 success 0.79 frames 40.8
+iteration=447/763 global_step=117178368 SPS=6338 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 56.04 success 0.77 frames 39.4
+iteration=448/763 global_step=117440512 SPS=6338 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 56.35 success 0.77 frames 39.9
+iteration=449/763 global_step=117702656 SPS=6338 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1601 return 55.72 success 0.77 frames 39.1
+iteration=450/763 global_step=117964800 SPS=6338 rollout 35.3 s update 6.8 s mem 6.4/15.7 GB episodes 1642 return 56.90 success 0.78 frames 38.8
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00450.pt
+iteration=451/763 global_step=118226944 SPS=6338 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1641 return 55.92 success 0.77 frames 39.6
+iteration=452/763 global_step=118489088 SPS=6338 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1616 return 56.78 success 0.78 frames 39.8
+iteration=453/763 global_step=118751232 SPS=6337 rollout 35.6 s update 6.8 s mem 6.4/15.7 GB episodes 1675 return 54.69 success 0.75 frames 38.5
+iteration=454/763 global_step=119013376 SPS=6337 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 56.95 success 0.78 frames 39.2
+iteration=455/763 global_step=119275520 SPS=6337 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1671 return 55.05 success 0.76 frames 38.4
+iteration=456/763 global_step=119537664 SPS=6337 rollout 35.1 s update 7.1 s mem 6.4/15.7 GB episodes 1634 return 55.90 success 0.77 frames 39.3
+iteration=457/763 global_step=119799808 SPS=6337 rollout 35.3 s update 6.8 s mem 6.4/15.7 GB episodes 1606 return 56.67 success 0.77 frames 39.1
+iteration=458/763 global_step=120061952 SPS=6336 rollout 36.4 s update 6.7 s mem 6.4/15.7 GB episodes 1650 return 55.77 success 0.77 frames 39.0
+iteration=459/763 global_step=120324096 SPS=6336 rollout 35.0 s update 6.9 s mem 6.4/15.7 GB episodes 1645 return 57.01 success 0.78 frames 39.5
+iteration=460/763 global_step=120586240 SPS=6336 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1645 return 55.73 success 0.77 frames 39.6
+iteration=461/763 global_step=120848384 SPS=6336 rollout 34.2 s update 6.9 s mem 6.4/15.7 GB episodes 1639 return 56.82 success 0.78 frames 39.0
+iteration=462/763 global_step=121110528 SPS=6336 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 55.73 success 0.77 frames 38.6
+iteration=463/763 global_step=121372672 SPS=6336 rollout 34.7 s update 6.9 s mem 6.4/15.7 GB episodes 1624 return 57.29 success 0.78 frames 39.2
+iteration=464/763 global_step=121634816 SPS=6336 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 56.17 success 0.77 frames 38.5
+iteration=465/763 global_step=121896960 SPS=6335 rollout 35.5 s update 6.9 s mem 6.4/15.7 GB episodes 1627 return 56.28 success 0.77 frames 38.5
+iteration=466/763 global_step=122159104 SPS=6335 rollout 35.1 s update 6.8 s mem 6.4/15.7 GB episodes 1597 return 57.47 success 0.78 frames 39.5
+iteration=467/763 global_step=122421248 SPS=6335 rollout 35.0 s update 6.7 s mem 6.4/15.7 GB episodes 1650 return 57.53 success 0.78 frames 39.0
+iteration=468/763 global_step=122683392 SPS=6334 rollout 35.9 s update 6.6 s mem 6.4/15.7 GB episodes 1612 return 55.99 success 0.77 frames 38.5
+iteration=469/763 global_step=122945536 SPS=6334 rollout 35.0 s update 6.9 s mem 6.4/15.7 GB episodes 1626 return 57.39 success 0.78 frames 38.8
+iteration=470/763 global_step=123207680 SPS=6334 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1615 return 57.78 success 0.79 frames 39.7
+iteration=471/763 global_step=123469824 SPS=6334 rollout 34.7 s update 6.7 s mem 6.4/15.7 GB episodes 1621 return 57.04 success 0.78 frames 39.6
+iteration=472/763 global_step=123731968 SPS=6334 rollout 35.2 s update 6.9 s mem 6.4/15.7 GB episodes 1580 return 57.10 success 0.78 frames 39.7
+iteration=473/763 global_step=123994112 SPS=6333 rollout 36.4 s update 6.9 s mem 6.4/15.7 GB episodes 1666 return 55.74 success 0.77 frames 39.0
+iteration=474/763 global_step=124256256 SPS=6333 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1656 return 56.78 success 0.78 frames 39.4
+iteration=475/763 global_step=124518400 SPS=6333 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1617 return 56.75 success 0.78 frames 40.2
+iteration=476/763 global_step=124780544 SPS=6333 rollout 34.5 s update 6.9 s mem 6.4/15.7 GB episodes 1671 return 55.82 success 0.77 frames 39.4
+iteration=477/763 global_step=125042688 SPS=6333 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1605 return 56.57 success 0.77 frames 39.5
+iteration=478/763 global_step=125304832 SPS=6333 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1631 return 56.23 success 0.77 frames 39.4
+iteration=479/763 global_step=125566976 SPS=6333 rollout 35.7 s update 6.7 s mem 6.4/15.7 GB episodes 1626 return 58.22 success 0.79 frames 40.1
+iteration=480/763 global_step=125829120 SPS=6333 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1647 return 55.65 success 0.77 frames 39.0
+iteration=481/763 global_step=126091264 SPS=6333 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1599 return 56.00 success 0.77 frames 38.9
+iteration=482/763 global_step=126353408 SPS=6333 rollout 34.8 s update 6.6 s mem 6.4/15.7 GB episodes 1638 return 56.35 success 0.77 frames 39.1
+iteration=483/763 global_step=126615552 SPS=6333 rollout 34.4 s update 7.0 s mem 6.4/15.7 GB episodes 1655 return 55.47 success 0.76 frames 38.9
+iteration=484/763 global_step=126877696 SPS=6333 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 54.65 success 0.76 frames 39.3
+iteration=485/763 global_step=127139840 SPS=6333 rollout 34.6 s update 6.7 s mem 6.4/15.7 GB episodes 1632 return 57.12 success 0.78 frames 39.3
+iteration=486/763 global_step=127401984 SPS=6333 rollout 34.9 s update 6.7 s mem 6.4/15.7 GB episodes 1649 return 56.87 success 0.78 frames 38.9
+iteration=487/763 global_step=127664128 SPS=6333 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 54.70 success 0.76 frames 38.3
+iteration=488/763 global_step=127926272 SPS=6333 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1659 return 55.60 success 0.76 frames 37.9
+iteration=489/763 global_step=128188416 SPS=6333 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 56.90 success 0.78 frames 39.3
+iteration=490/763 global_step=128450560 SPS=6333 rollout 35.1 s update 6.7 s mem 6.4/15.7 GB episodes 1616 return 56.62 success 0.77 frames 39.0
+iteration=491/763 global_step=128712704 SPS=6333 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1648 return 57.31 success 0.78 frames 38.9
+iteration=492/763 global_step=128974848 SPS=6333 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1617 return 56.41 success 0.77 frames 38.0
+iteration=493/763 global_step=129236992 SPS=6333 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1621 return 55.53 success 0.76 frames 38.7
+iteration=494/763 global_step=129499136 SPS=6333 rollout 34.4 s update 6.9 s mem 6.4/15.7 GB episodes 1640 return 56.69 success 0.78 frames 39.6
+iteration=495/763 global_step=129761280 SPS=6334 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1637 return 56.74 success 0.77 frames 38.9
+iteration=496/763 global_step=130023424 SPS=6334 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1637 return 55.55 success 0.76 frames 38.5
+iteration=497/763 global_step=130285568 SPS=6334 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1649 return 55.74 success 0.77 frames 38.5
+iteration=498/763 global_step=130547712 SPS=6334 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1607 return 54.92 success 0.76 frames 38.6
+iteration=499/763 global_step=130809856 SPS=6334 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 57.63 success 0.78 frames 38.9
+iteration=500/763 global_step=131072000 SPS=6334 rollout 34.3 s update 6.9 s mem 6.4/15.7 GB episodes 1630 return 55.58 success 0.77 frames 39.2
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00500.pt
+iteration=501/763 global_step=131334144 SPS=6334 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1649 return 54.73 success 0.75 frames 39.4
+iteration=502/763 global_step=131596288 SPS=6334 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 55.33 success 0.76 frames 38.9
+iteration=503/763 global_step=131858432 SPS=6334 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1596 return 57.10 success 0.78 frames 40.2
+iteration=504/763 global_step=132120576 SPS=6334 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1642 return 57.32 success 0.78 frames 39.8
+iteration=505/763 global_step=132382720 SPS=6334 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1634 return 57.35 success 0.78 frames 39.7
+iteration=506/763 global_step=132644864 SPS=6334 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1643 return 56.72 success 0.77 frames 39.1
+iteration=507/763 global_step=132907008 SPS=6334 rollout 34.0 s update 7.0 s mem 6.4/15.7 GB episodes 1627 return 57.08 success 0.78 frames 39.6
+iteration=508/763 global_step=133169152 SPS=6334 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1658 return 56.47 success 0.77 frames 38.7
+iteration=509/763 global_step=133431296 SPS=6335 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1602 return 56.90 success 0.78 frames 39.3
+iteration=510/763 global_step=133693440 SPS=6335 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1627 return 55.92 success 0.77 frames 38.5
+iteration=511/763 global_step=133955584 SPS=6335 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1649 return 55.82 success 0.77 frames 38.7
+iteration=512/763 global_step=134217728 SPS=6335 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1618 return 55.88 success 0.77 frames 38.4
+iteration=513/763 global_step=134479872 SPS=6335 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1620 return 57.61 success 0.78 frames 39.3
+iteration=514/763 global_step=134742016 SPS=6336 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1626 return 57.25 success 0.78 frames 39.4
+iteration=515/763 global_step=135004160 SPS=6335 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1654 return 56.86 success 0.78 frames 38.4
+iteration=516/763 global_step=135266304 SPS=6336 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1645 return 55.07 success 0.76 frames 39.0
+iteration=517/763 global_step=135528448 SPS=6336 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 57.45 success 0.78 frames 39.2
+iteration=518/763 global_step=135790592 SPS=6336 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1612 return 56.64 success 0.78 frames 38.9
+iteration=519/763 global_step=136052736 SPS=6336 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1618 return 57.73 success 0.78 frames 39.9
+iteration=520/763 global_step=136314880 SPS=6336 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1625 return 57.26 success 0.78 frames 40.1
+iteration=521/763 global_step=136577024 SPS=6337 rollout 33.7 s update 6.9 s mem 6.4/15.7 GB episodes 1644 return 55.25 success 0.76 frames 39.3
+iteration=522/763 global_step=136839168 SPS=6337 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1629 return 57.22 success 0.78 frames 39.0
+iteration=523/763 global_step=137101312 SPS=6337 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1608 return 57.00 success 0.78 frames 39.1
+iteration=524/763 global_step=137363456 SPS=6337 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1610 return 57.98 success 0.79 frames 39.3
+iteration=525/763 global_step=137625600 SPS=6338 rollout 33.7 s update 6.7 s mem 6.4/15.7 GB episodes 1613 return 57.93 success 0.79 frames 40.3
+iteration=526/763 global_step=137887744 SPS=6338 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1616 return 58.01 success 0.79 frames 39.3
+iteration=527/763 global_step=138149888 SPS=6338 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1625 return 57.66 success 0.79 frames 40.0
+iteration=528/763 global_step=138412032 SPS=6338 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1644 return 56.01 success 0.77 frames 39.9
+iteration=529/763 global_step=138674176 SPS=6338 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1624 return 58.79 success 0.80 frames 40.8
+iteration=530/763 global_step=138936320 SPS=6338 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1614 return 55.07 success 0.76 frames 39.4
+iteration=531/763 global_step=139198464 SPS=6339 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1622 return 56.80 success 0.78 frames 39.5
+iteration=532/763 global_step=139460608 SPS=6339 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1642 return 57.35 success 0.78 frames 39.3
+iteration=533/763 global_step=139722752 SPS=6339 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1602 return 57.33 success 0.78 frames 39.2
+iteration=534/763 global_step=139984896 SPS=6339 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1637 return 56.98 success 0.78 frames 39.2
+iteration=535/763 global_step=140247040 SPS=6339 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1614 return 58.93 success 0.80 frames 38.9
+iteration=536/763 global_step=140509184 SPS=6339 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1673 return 54.59 success 0.75 frames 38.3
+iteration=537/763 global_step=140771328 SPS=6340 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1605 return 56.92 success 0.78 frames 39.1
+iteration=538/763 global_step=141033472 SPS=6340 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 57.26 success 0.78 frames 39.8
+iteration=539/763 global_step=141295616 SPS=6340 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1584 return 57.80 success 0.79 frames 39.8
+iteration=540/763 global_step=141557760 SPS=6340 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1673 return 58.00 success 0.79 frames 39.6
+iteration=541/763 global_step=141819904 SPS=6340 rollout 33.7 s update 6.7 s mem 6.4/15.7 GB episodes 1639 return 56.02 success 0.77 frames 39.7
+iteration=542/763 global_step=142082048 SPS=6340 rollout 35.8 s update 6.6 s mem 6.4/15.7 GB episodes 1624 return 56.51 success 0.77 frames 39.4
+iteration=543/763 global_step=142344192 SPS=6340 rollout 35.6 s update 6.6 s mem 6.4/15.7 GB episodes 1584 return 59.62 success 0.80 frames 40.0
+iteration=544/763 global_step=142606336 SPS=6340 rollout 33.9 s update 6.6 s mem 6.4/15.7 GB episodes 1616 return 57.63 success 0.78 frames 39.3
+iteration=545/763 global_step=142868480 SPS=6340 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1615 return 56.96 success 0.78 frames 38.8
+iteration=546/763 global_step=143130624 SPS=6340 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1628 return 56.93 success 0.78 frames 38.7
+iteration=547/763 global_step=143392768 SPS=6340 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1608 return 58.41 success 0.79 frames 39.3
+iteration=548/763 global_step=143654912 SPS=6341 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1619 return 56.79 success 0.78 frames 39.0
+iteration=549/763 global_step=143917056 SPS=6341 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1611 return 57.37 success 0.78 frames 39.6
+iteration=550/763 global_step=144179200 SPS=6341 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1638 return 55.21 success 0.76 frames 39.2
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00550.pt
+iteration=551/763 global_step=144441344 SPS=6341 rollout 35.0 s update 6.6 s mem 6.4/15.7 GB episodes 1651 return 56.82 success 0.77 frames 39.0
+iteration=552/763 global_step=144703488 SPS=6340 rollout 37.5 s update 7.0 s mem 6.4/15.7 GB episodes 1623 return 57.95 success 0.78 frames 40.2
+iteration=553/763 global_step=144965632 SPS=6339 rollout 37.5 s update 7.1 s mem 6.4/15.7 GB episodes 1616 return 59.58 success 0.80 frames 41.1
+iteration=554/763 global_step=145227776 SPS=6338 rollout 36.6 s update 7.0 s mem 6.4/15.7 GB episodes 1595 return 57.56 success 0.78 frames 40.9
+iteration=555/763 global_step=145489920 SPS=6338 rollout 36.3 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 56.91 success 0.78 frames 40.3
+iteration=556/763 global_step=145752064 SPS=6338 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1632 return 56.25 success 0.77 frames 39.6
+iteration=557/763 global_step=146014208 SPS=6338 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1666 return 56.22 success 0.77 frames 39.9
+iteration=558/763 global_step=146276352 SPS=6338 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1642 return 54.71 success 0.76 frames 39.2
+iteration=559/763 global_step=146538496 SPS=6338 rollout 34.2 s update 7.0 s mem 6.4/15.7 GB episodes 1623 return 56.18 success 0.77 frames 39.3
+iteration=560/763 global_step=146800640 SPS=6338 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1653 return 55.55 success 0.76 frames 38.5
+iteration=561/763 global_step=147062784 SPS=6338 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1639 return 53.52 success 0.74 frames 38.8
+iteration=562/763 global_step=147324928 SPS=6338 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1633 return 55.50 success 0.76 frames 38.7
+iteration=563/763 global_step=147587072 SPS=6339 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 56.77 success 0.77 frames 39.4
+iteration=564/763 global_step=147849216 SPS=6339 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1621 return 57.97 success 0.78 frames 39.2
+iteration=565/763 global_step=148111360 SPS=6339 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1576 return 57.71 success 0.79 frames 39.5
+iteration=566/763 global_step=148373504 SPS=6339 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1672 return 56.20 success 0.77 frames 38.8
+iteration=567/763 global_step=148635648 SPS=6339 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1621 return 55.74 success 0.77 frames 39.1
+iteration=568/763 global_step=148897792 SPS=6339 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1640 return 55.81 success 0.77 frames 38.7
+iteration=569/763 global_step=149159936 SPS=6339 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1620 return 58.22 success 0.79 frames 38.8
+iteration=570/763 global_step=149422080 SPS=6340 rollout 33.6 s update 7.0 s mem 6.4/15.7 GB episodes 1686 return 54.98 success 0.76 frames 38.2
+iteration=571/763 global_step=149684224 SPS=6340 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1632 return 56.65 success 0.77 frames 39.0
+iteration=572/763 global_step=149946368 SPS=6340 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1647 return 55.63 success 0.76 frames 38.6
+iteration=573/763 global_step=150208512 SPS=6340 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1598 return 57.92 success 0.79 frames 38.9
+iteration=574/763 global_step=150470656 SPS=6340 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1647 return 56.34 success 0.77 frames 39.1
+iteration=575/763 global_step=150732800 SPS=6340 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1613 return 57.34 success 0.78 frames 40.2
+iteration=576/763 global_step=150994944 SPS=6341 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 56.05 success 0.77 frames 39.4
+iteration=577/763 global_step=151257088 SPS=6341 rollout 33.6 s update 6.9 s mem 6.4/15.7 GB episodes 1664 return 57.32 success 0.78 frames 39.7
+iteration=578/763 global_step=151519232 SPS=6340 rollout 35.5 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 56.09 success 0.77 frames 39.0
+iteration=579/763 global_step=151781376 SPS=6340 rollout 35.0 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 55.30 success 0.76 frames 37.8
+iteration=580/763 global_step=152043520 SPS=6340 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1627 return 58.11 success 0.79 frames 38.7
+iteration=581/763 global_step=152305664 SPS=6341 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 55.40 success 0.76 frames 37.9
+iteration=582/763 global_step=152567808 SPS=6341 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1689 return 55.55 success 0.76 frames 38.6
+iteration=583/763 global_step=152829952 SPS=6341 rollout 33.7 s update 7.0 s mem 6.4/15.7 GB episodes 1615 return 57.66 success 0.78 frames 39.4
+iteration=584/763 global_step=153092096 SPS=6341 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 56.37 success 0.77 frames 39.9
+iteration=585/763 global_step=153354240 SPS=6341 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 57.47 success 0.78 frames 39.3
+iteration=586/763 global_step=153616384 SPS=6341 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 56.65 success 0.77 frames 38.7
+iteration=587/763 global_step=153878528 SPS=6342 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1618 return 57.81 success 0.79 frames 39.6
+iteration=588/763 global_step=154140672 SPS=6342 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 56.03 success 0.77 frames 39.7
+iteration=589/763 global_step=154402816 SPS=6342 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 57.25 success 0.78 frames 39.4
+iteration=590/763 global_step=154664960 SPS=6342 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1650 return 57.36 success 0.78 frames 39.7
+iteration=591/763 global_step=154927104 SPS=6342 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1602 return 57.70 success 0.79 frames 39.2
+iteration=592/763 global_step=155189248 SPS=6342 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1608 return 57.34 success 0.78 frames 38.4
+iteration=593/763 global_step=155451392 SPS=6342 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1624 return 56.81 success 0.77 frames 38.4
+iteration=594/763 global_step=155713536 SPS=6343 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 57.90 success 0.79 frames 37.8
+iteration=595/763 global_step=155975680 SPS=6343 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1617 return 58.31 success 0.79 frames 38.8
+iteration=596/763 global_step=156237824 SPS=6343 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1632 return 57.40 success 0.78 frames 38.6
+iteration=597/763 global_step=156499968 SPS=6343 rollout 33.9 s update 7.0 s mem 6.4/15.7 GB episodes 1642 return 57.20 success 0.78 frames 38.5
+iteration=598/763 global_step=156762112 SPS=6343 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 56.52 success 0.77 frames 38.9
+iteration=599/763 global_step=157024256 SPS=6343 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1590 return 59.08 success 0.80 frames 39.5
+iteration=600/763 global_step=157286400 SPS=6343 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1609 return 57.00 success 0.78 frames 39.0
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00600.pt
+iteration=601/763 global_step=157548544 SPS=6343 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1634 return 57.20 success 0.78 frames 38.2
+iteration=602/763 global_step=157810688 SPS=6344 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1661 return 55.92 success 0.77 frames 38.3
+iteration=603/763 global_step=158072832 SPS=6344 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 56.06 success 0.77 frames 37.5
+iteration=604/763 global_step=158334976 SPS=6344 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 57.47 success 0.78 frames 38.5
+iteration=605/763 global_step=158597120 SPS=6344 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1629 return 55.88 success 0.77 frames 38.8
+iteration=606/763 global_step=158859264 SPS=6344 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1634 return 57.05 success 0.78 frames 39.5
+iteration=607/763 global_step=159121408 SPS=6344 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1648 return 57.43 success 0.78 frames 38.9
+iteration=608/763 global_step=159383552 SPS=6344 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1619 return 57.24 success 0.78 frames 39.0
+iteration=609/763 global_step=159645696 SPS=6344 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1589 return 59.59 success 0.80 frames 39.3
+iteration=610/763 global_step=159907840 SPS=6345 rollout 33.6 s update 6.7 s mem 6.4/15.7 GB episodes 1654 return 56.22 success 0.77 frames 38.5
+iteration=611/763 global_step=160169984 SPS=6345 rollout 33.7 s update 6.7 s mem 6.4/15.7 GB episodes 1617 return 56.40 success 0.77 frames 38.1
+iteration=612/763 global_step=160432128 SPS=6345 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1634 return 56.60 success 0.77 frames 38.5
+iteration=613/763 global_step=160694272 SPS=6345 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1627 return 56.66 success 0.77 frames 38.7
+iteration=614/763 global_step=160956416 SPS=6345 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1655 return 56.13 success 0.77 frames 38.0
+iteration=615/763 global_step=161218560 SPS=6345 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 57.11 success 0.78 frames 38.6
+iteration=616/763 global_step=161480704 SPS=6345 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 57.75 success 0.79 frames 39.0
+iteration=617/763 global_step=161742848 SPS=6346 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1615 return 58.74 success 0.79 frames 38.6
+iteration=618/763 global_step=162004992 SPS=6346 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 55.95 success 0.77 frames 37.9
+iteration=619/763 global_step=162267136 SPS=6346 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1594 return 57.86 success 0.79 frames 39.2
+iteration=620/763 global_step=162529280 SPS=6346 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1658 return 56.03 success 0.77 frames 39.1
+iteration=621/763 global_step=162791424 SPS=6346 rollout 33.8 s update 7.0 s mem 6.4/15.7 GB episodes 1616 return 57.42 success 0.78 frames 38.9
+iteration=622/763 global_step=163053568 SPS=6346 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1651 return 55.49 success 0.76 frames 38.0
+iteration=623/763 global_step=163315712 SPS=6346 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1615 return 57.99 success 0.79 frames 38.6
+iteration=624/763 global_step=163577856 SPS=6346 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 56.28 success 0.77 frames 38.6
+iteration=625/763 global_step=163840000 SPS=6347 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1626 return 58.44 success 0.79 frames 38.6
+iteration=626/763 global_step=164102144 SPS=6347 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1606 return 58.87 success 0.80 frames 39.8
+iteration=627/763 global_step=164364288 SPS=6347 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1653 return 55.43 success 0.76 frames 38.3
+iteration=628/763 global_step=164626432 SPS=6347 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 54.23 success 0.75 frames 37.8
+iteration=629/763 global_step=164888576 SPS=6347 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1632 return 56.59 success 0.78 frames 38.4
+iteration=630/763 global_step=165150720 SPS=6347 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1656 return 55.84 success 0.77 frames 38.3
+iteration=631/763 global_step=165412864 SPS=6347 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1641 return 56.31 success 0.77 frames 38.6
+iteration=632/763 global_step=165675008 SPS=6347 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1659 return 57.56 success 0.78 frames 38.8
+iteration=633/763 global_step=165937152 SPS=6348 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1595 return 56.72 success 0.77 frames 38.9
+iteration=634/763 global_step=166199296 SPS=6348 rollout 33.5 s update 6.8 s mem 6.4/15.7 GB episodes 1640 return 56.75 success 0.78 frames 38.6
+iteration=635/763 global_step=166461440 SPS=6348 rollout 33.8 s update 7.0 s mem 6.4/15.7 GB episodes 1643 return 55.87 success 0.77 frames 38.2
+iteration=636/763 global_step=166723584 SPS=6348 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 57.17 success 0.78 frames 39.0
+iteration=637/763 global_step=166985728 SPS=6348 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1628 return 55.18 success 0.76 frames 39.0
+iteration=638/763 global_step=167247872 SPS=6348 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1661 return 55.70 success 0.77 frames 39.0
+iteration=639/763 global_step=167510016 SPS=6348 rollout 35.4 s update 6.8 s mem 6.4/15.7 GB episodes 1635 return 55.72 success 0.77 frames 38.3
+iteration=640/763 global_step=167772160 SPS=6348 rollout 34.8 s update 6.8 s mem 6.4/15.7 GB episodes 1602 return 57.56 success 0.78 frames 39.0
+iteration=641/763 global_step=168034304 SPS=6348 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1579 return 56.66 success 0.78 frames 39.4
+iteration=642/763 global_step=168296448 SPS=6348 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1665 return 56.66 success 0.77 frames 38.6
+iteration=643/763 global_step=168558592 SPS=6348 rollout 34.9 s update 6.8 s mem 6.4/15.7 GB episodes 1622 return 54.81 success 0.76 frames 38.7
+iteration=644/763 global_step=168820736 SPS=6348 rollout 33.6 s update 6.8 s mem 6.4/15.7 GB episodes 1646 return 56.15 success 0.77 frames 38.6
+iteration=645/763 global_step=169082880 SPS=6348 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1631 return 57.83 success 0.79 frames 39.1
+iteration=646/763 global_step=169345024 SPS=6348 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1640 return 56.03 success 0.77 frames 39.4
+iteration=647/763 global_step=169607168 SPS=6349 rollout 33.6 s update 6.8 s mem 6.4/15.7 GB episodes 1671 return 56.27 success 0.77 frames 39.5
+iteration=648/763 global_step=169869312 SPS=6349 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1641 return 55.39 success 0.76 frames 39.9
+iteration=649/763 global_step=170131456 SPS=6349 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1599 return 56.38 success 0.77 frames 39.6
+iteration=650/763 global_step=170393600 SPS=6349 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1658 return 56.66 success 0.77 frames 38.5
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00650.pt
+iteration=651/763 global_step=170655744 SPS=6349 rollout 33.7 s update 6.7 s mem 6.4/15.7 GB episodes 1621 return 57.95 success 0.79 frames 38.9
+iteration=652/763 global_step=170917888 SPS=6349 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1613 return 56.75 success 0.78 frames 38.8
+iteration=653/763 global_step=171180032 SPS=6349 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1642 return 56.77 success 0.78 frames 38.5
+iteration=654/763 global_step=171442176 SPS=6349 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1576 return 58.22 success 0.79 frames 38.7
+iteration=655/763 global_step=171704320 SPS=6349 rollout 33.5 s update 6.8 s mem 6.4/15.7 GB episodes 1677 return 57.05 success 0.78 frames 38.0
+iteration=656/763 global_step=171966464 SPS=6349 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1651 return 55.54 success 0.76 frames 37.4
+iteration=657/763 global_step=172228608 SPS=6349 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1619 return 56.24 success 0.77 frames 38.5
+iteration=658/763 global_step=172490752 SPS=6349 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1653 return 55.51 success 0.76 frames 38.7
+iteration=659/763 global_step=172752896 SPS=6350 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1631 return 56.01 success 0.77 frames 39.4
+iteration=660/763 global_step=173015040 SPS=6350 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1615 return 57.91 success 0.79 frames 39.1
+iteration=661/763 global_step=173277184 SPS=6350 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 56.43 success 0.77 frames 38.3
+iteration=662/763 global_step=173539328 SPS=6350 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 57.74 success 0.78 frames 38.4
+iteration=663/763 global_step=173801472 SPS=6350 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1644 return 54.96 success 0.76 frames 38.0
+iteration=664/763 global_step=174063616 SPS=6350 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.43 success 0.76 frames 38.7
+iteration=665/763 global_step=174325760 SPS=6350 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1667 return 55.55 success 0.76 frames 38.3
+iteration=666/763 global_step=174587904 SPS=6350 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1609 return 57.45 success 0.78 frames 39.3
+iteration=667/763 global_step=174850048 SPS=6350 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1627 return 56.81 success 0.78 frames 39.0
+iteration=668/763 global_step=175112192 SPS=6350 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1605 return 58.12 success 0.79 frames 38.2
+iteration=669/763 global_step=175374336 SPS=6350 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1627 return 57.74 success 0.78 frames 38.2
+iteration=670/763 global_step=175636480 SPS=6350 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 54.77 success 0.75 frames 38.1
+iteration=671/763 global_step=175898624 SPS=6350 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 55.62 success 0.76 frames 38.5
+iteration=672/763 global_step=176160768 SPS=6350 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1609 return 57.51 success 0.78 frames 38.5
+iteration=673/763 global_step=176422912 SPS=6350 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1646 return 54.85 success 0.76 frames 38.2
+iteration=674/763 global_step=176685056 SPS=6350 rollout 33.7 s update 7.0 s mem 6.4/15.7 GB episodes 1644 return 54.85 success 0.76 frames 38.1
+iteration=675/763 global_step=176947200 SPS=6350 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1626 return 57.41 success 0.78 frames 38.1
+iteration=676/763 global_step=177209344 SPS=6351 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 55.17 success 0.76 frames 37.3
+iteration=677/763 global_step=177471488 SPS=6351 rollout 33.6 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 55.20 success 0.76 frames 37.3
+iteration=678/763 global_step=177733632 SPS=6351 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1663 return 55.70 success 0.77 frames 37.6
+iteration=679/763 global_step=177995776 SPS=6351 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1639 return 56.00 success 0.77 frames 37.6
+iteration=680/763 global_step=178257920 SPS=6351 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1705 return 54.16 success 0.75 frames 37.5
+iteration=681/763 global_step=178520064 SPS=6351 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1608 return 55.79 success 0.76 frames 38.6
+iteration=682/763 global_step=178782208 SPS=6351 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 55.89 success 0.77 frames 38.3
+iteration=683/763 global_step=179044352 SPS=6351 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1583 return 57.70 success 0.78 frames 38.5
+iteration=684/763 global_step=179306496 SPS=6351 rollout 33.8 s update 7.0 s mem 6.4/15.7 GB episodes 1663 return 57.51 success 0.78 frames 37.9
+iteration=685/763 global_step=179568640 SPS=6351 rollout 33.7 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 58.32 success 0.79 frames 38.1
+iteration=686/763 global_step=179830784 SPS=6351 rollout 34.3 s update 6.8 s mem 6.4/15.7 GB episodes 1656 return 56.27 success 0.77 frames 38.2
+iteration=687/763 global_step=180092928 SPS=6351 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1623 return 55.50 success 0.76 frames 38.6
+iteration=688/763 global_step=180355072 SPS=6351 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 56.76 success 0.78 frames 38.4
+iteration=689/763 global_step=180617216 SPS=6351 rollout 35.6 s update 6.8 s mem 6.4/15.7 GB episodes 1608 return 58.15 success 0.79 frames 39.0
+iteration=690/763 global_step=180879360 SPS=6351 rollout 35.5 s update 6.7 s mem 6.4/15.7 GB episodes 1631 return 58.02 success 0.79 frames 39.2
+iteration=691/763 global_step=181141504 SPS=6351 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1598 return 58.06 success 0.79 frames 39.8
+iteration=692/763 global_step=181403648 SPS=6351 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1631 return 57.91 success 0.79 frames 39.4
+iteration=693/763 global_step=181665792 SPS=6351 rollout 33.8 s update 6.8 s mem 6.4/15.7 GB episodes 1625 return 56.20 success 0.77 frames 37.8
+iteration=694/763 global_step=181927936 SPS=6351 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1641 return 55.90 success 0.77 frames 38.3
+iteration=695/763 global_step=182190080 SPS=6351 rollout 34.0 s update 6.9 s mem 6.4/15.7 GB episodes 1647 return 55.83 success 0.77 frames 38.4
+iteration=696/763 global_step=182452224 SPS=6351 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1636 return 56.25 success 0.77 frames 38.7
+iteration=697/763 global_step=182714368 SPS=6351 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1602 return 57.39 success 0.78 frames 39.7
+iteration=698/763 global_step=182976512 SPS=6351 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1652 return 56.76 success 0.78 frames 39.5
+iteration=699/763 global_step=183238656 SPS=6351 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1619 return 55.76 success 0.77 frames 39.0
+iteration=700/763 global_step=183500800 SPS=6352 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1679 return 57.79 success 0.79 frames 39.0
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00700.pt
+iteration=701/763 global_step=183762944 SPS=6352 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1607 return 57.93 success 0.79 frames 39.0
+iteration=702/763 global_step=184025088 SPS=6352 rollout 34.5 s update 6.8 s mem 6.4/15.7 GB episodes 1611 return 56.51 success 0.77 frames 39.2
+iteration=703/763 global_step=184287232 SPS=6352 rollout 34.6 s update 6.8 s mem 6.4/15.7 GB episodes 1649 return 57.90 success 0.79 frames 39.4
+iteration=704/763 global_step=184549376 SPS=6352 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1646 return 55.29 success 0.76 frames 38.4
+iteration=705/763 global_step=184811520 SPS=6352 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1614 return 56.75 success 0.78 frames 39.0
+iteration=706/763 global_step=185073664 SPS=6352 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1593 return 59.06 success 0.80 frames 39.6
+iteration=707/763 global_step=185335808 SPS=6352 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1628 return 56.10 success 0.77 frames 38.5
+iteration=708/763 global_step=185597952 SPS=6352 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1641 return 55.73 success 0.77 frames 38.1
+iteration=709/763 global_step=185860096 SPS=6352 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 56.90 success 0.78 frames 38.7
+iteration=710/763 global_step=186122240 SPS=6352 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1623 return 56.39 success 0.77 frames 38.1
+iteration=711/763 global_step=186384384 SPS=6352 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1638 return 55.17 success 0.76 frames 38.1
+iteration=712/763 global_step=186646528 SPS=6352 rollout 33.9 s update 7.0 s mem 6.4/15.7 GB episodes 1613 return 57.13 success 0.78 frames 37.7
+iteration=713/763 global_step=186908672 SPS=6352 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1654 return 56.80 success 0.78 frames 37.5
+iteration=714/763 global_step=187170816 SPS=6352 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1618 return 57.49 success 0.78 frames 37.8
+iteration=715/763 global_step=187432960 SPS=6352 rollout 33.8 s update 6.9 s mem 6.4/15.7 GB episodes 1670 return 54.70 success 0.76 frames 37.7
+iteration=716/763 global_step=187695104 SPS=6353 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1622 return 55.96 success 0.77 frames 37.5
+iteration=717/763 global_step=187957248 SPS=6353 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1643 return 57.68 success 0.79 frames 38.4
+iteration=718/763 global_step=188219392 SPS=6353 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1657 return 55.44 success 0.76 frames 37.6
+iteration=719/763 global_step=188481536 SPS=6353 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1626 return 56.29 success 0.77 frames 38.0
+iteration=720/763 global_step=188743680 SPS=6353 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1630 return 57.37 success 0.78 frames 37.9
+iteration=721/763 global_step=189005824 SPS=6353 rollout 34.1 s update 6.8 s mem 6.4/15.7 GB episodes 1614 return 59.49 success 0.80 frames 38.7
+iteration=722/763 global_step=189267968 SPS=6353 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 57.27 success 0.78 frames 38.2
+iteration=723/763 global_step=189530112 SPS=6353 rollout 34.2 s update 6.9 s mem 6.4/15.7 GB episodes 1627 return 56.15 success 0.77 frames 37.8
+iteration=724/763 global_step=189792256 SPS=6353 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1647 return 56.37 success 0.77 frames 38.3
+iteration=725/763 global_step=190054400 SPS=6353 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 57.06 success 0.78 frames 38.2
+iteration=726/763 global_step=190316544 SPS=6353 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1605 return 56.80 success 0.77 frames 38.0
+iteration=727/763 global_step=190578688 SPS=6353 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1660 return 55.73 success 0.76 frames 37.5
+iteration=728/763 global_step=190840832 SPS=6353 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1599 return 58.21 success 0.79 frames 38.7
+iteration=729/763 global_step=191102976 SPS=6353 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1632 return 57.67 success 0.78 frames 38.1
+iteration=730/763 global_step=191365120 SPS=6353 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1652 return 55.23 success 0.76 frames 38.0
+iteration=731/763 global_step=191627264 SPS=6353 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1650 return 56.20 success 0.77 frames 38.0
+iteration=732/763 global_step=191889408 SPS=6353 rollout 33.8 s update 6.7 s mem 6.4/15.7 GB episodes 1654 return 54.14 success 0.75 frames 38.0
+iteration=733/763 global_step=192151552 SPS=6353 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1645 return 55.19 success 0.76 frames 37.8
+iteration=734/763 global_step=192413696 SPS=6354 rollout 33.9 s update 6.7 s mem 6.4/15.7 GB episodes 1620 return 56.56 success 0.77 frames 37.5
+iteration=735/763 global_step=192675840 SPS=6354 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1647 return 54.95 success 0.76 frames 36.6
+iteration=736/763 global_step=192937984 SPS=6354 rollout 33.9 s update 6.9 s mem 6.4/15.7 GB episodes 1653 return 57.26 success 0.78 frames 36.7
+iteration=737/763 global_step=193200128 SPS=6354 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1604 return 57.30 success 0.78 frames 38.0
+iteration=738/763 global_step=193462272 SPS=6354 rollout 34.4 s update 6.8 s mem 6.4/15.7 GB episodes 1612 return 57.12 success 0.78 frames 38.2
+iteration=739/763 global_step=193724416 SPS=6354 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1649 return 57.50 success 0.78 frames 38.3
+iteration=740/763 global_step=193986560 SPS=6354 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1631 return 56.85 success 0.78 frames 39.2
+iteration=741/763 global_step=194248704 SPS=6354 rollout 35.0 s update 6.7 s mem 6.4/15.7 GB episodes 1581 return 59.33 success 0.80 frames 39.6
+iteration=742/763 global_step=194510848 SPS=6354 rollout 35.1 s update 6.7 s mem 6.4/15.7 GB episodes 1633 return 56.96 success 0.78 frames 38.7
+iteration=743/763 global_step=194772992 SPS=6354 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1586 return 57.75 success 0.79 frames 39.2
+iteration=744/763 global_step=195035136 SPS=6354 rollout 34.3 s update 6.7 s mem 6.4/15.7 GB episodes 1622 return 59.10 success 0.80 frames 39.3
+iteration=745/763 global_step=195297280 SPS=6354 rollout 33.7 s update 6.7 s mem 6.4/15.7 GB episodes 1623 return 57.54 success 0.78 frames 39.7
+iteration=746/763 global_step=195559424 SPS=6354 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1637 return 56.55 success 0.77 frames 38.9
+iteration=747/763 global_step=195821568 SPS=6354 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1607 return 57.49 success 0.78 frames 39.7
+iteration=748/763 global_step=196083712 SPS=6354 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1638 return 55.86 success 0.76 frames 38.7
+iteration=749/763 global_step=196345856 SPS=6354 rollout 34.2 s update 6.8 s mem 6.4/15.7 GB episodes 1651 return 54.70 success 0.75 frames 37.9
+iteration=750/763 global_step=196608000 SPS=6354 rollout 34.1 s update 7.0 s mem 6.4/15.7 GB episodes 1624 return 57.99 success 0.79 frames 38.7
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00750.pt
+iteration=751/763 global_step=196870144 SPS=6354 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1633 return 55.90 success 0.76 frames 38.2
+iteration=752/763 global_step=197132288 SPS=6354 rollout 34.0 s update 6.8 s mem 6.4/15.7 GB episodes 1599 return 56.36 success 0.77 frames 38.5
+iteration=753/763 global_step=197394432 SPS=6354 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1657 return 57.17 success 0.78 frames 38.1
+iteration=754/763 global_step=197656576 SPS=6354 rollout 34.1 s update 6.7 s mem 6.4/15.7 GB episodes 1623 return 57.07 success 0.78 frames 38.4
+iteration=755/763 global_step=197918720 SPS=6354 rollout 33.9 s update 6.8 s mem 6.4/15.7 GB episodes 1627 return 56.40 success 0.77 frames 38.4
+iteration=756/763 global_step=198180864 SPS=6354 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1636 return 56.24 success 0.77 frames 38.5
+iteration=757/763 global_step=198443008 SPS=6355 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1626 return 56.27 success 0.77 frames 38.3
+iteration=758/763 global_step=198705152 SPS=6355 rollout 34.5 s update 6.7 s mem 6.4/15.7 GB episodes 1596 return 57.38 success 0.78 frames 39.2
+iteration=759/763 global_step=198967296 SPS=6355 rollout 34.4 s update 6.7 s mem 6.4/15.7 GB episodes 1606 return 59.74 success 0.80 frames 39.2
+iteration=760/763 global_step=199229440 SPS=6354 rollout 34.7 s update 6.7 s mem 6.4/15.7 GB episodes 1603 return 57.98 success 0.79 frames 38.5
+iteration=761/763 global_step=199491584 SPS=6355 rollout 34.0 s update 6.7 s mem 6.4/15.7 GB episodes 1657 return 57.95 success 0.79 frames 38.0
+iteration=762/763 global_step=199753728 SPS=6355 rollout 34.2 s update 6.7 s mem 6.4/15.7 GB episodes 1602 return 57.11 success 0.78 frames 38.3
+iteration=763/763 global_step=200015872 SPS=6355 rollout 34.2 s update 7.0 s mem 6.4/15.7 GB episodes 1618 return 55.87 success 0.77 frames 39.1
+  checkpoint -> /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00763.pt
+[TMP-TRAIN] done; NAV05 unchanged: True; final checkpoint /md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/runs/temporal/TMP02_chase-ob1ob2_adaptive-nav05/2026-11-25_20-45-29_ppo_lstm_n1024_s1_fc0.1/checkpoints/model_00763.pt
+[isaacrun] exit code 0

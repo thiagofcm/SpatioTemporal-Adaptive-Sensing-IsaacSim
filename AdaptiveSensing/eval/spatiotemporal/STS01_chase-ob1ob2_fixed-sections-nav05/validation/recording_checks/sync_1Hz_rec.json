@@ -1,0 +1,19 @@
+{
+ "run": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/AdaptiveSensing/eval/spatiotemporal/STS01_chase-ob1ob2_fixed-sections-nav05/validation/sync_1Hz_rec",
+ "section_hz": [
+  1.0,
+  1.0,
+  1.0
+ ],
+ "episodes": 100,
+ "violations": {
+  "acq": [],
+  "period": [],
+  "rays": [],
+  "scans": [],
+  "beams_rows": [],
+  "min_lidar": [],
+  "index": []
+ },
+ "pass": true
+}

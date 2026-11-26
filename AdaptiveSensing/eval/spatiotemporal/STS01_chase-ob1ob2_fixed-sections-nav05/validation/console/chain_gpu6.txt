@@ -1,0 +1,3 @@
+sync_2Hz_rec exit 0
+sync_0.5Hz_rec exit 0
+sync_4Hz_norec exit 0

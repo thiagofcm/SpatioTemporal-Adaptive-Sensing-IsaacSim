@@ -2,8 +2,8 @@
 ranking of the fixed sensing rates by expected episode return, with the TMP02 reward and counting convention.
 
 Per episode of each TMP01 recording (ref_chase_c10, 100 identical episodes per rate):
-    navigation_return    = episodes.csv episode_return (sum of the unchanged NAV05 env reward)
-    charged_acquisitions = accepted_scans - 1: TMP01 counts include the reset scan and never the scan at the episode's
+    navigation_return    = episodes.csv nav_return (sum of the unchanged NAV05 env reward)
+    charged_acquisitions = episode_frame_count - 1: TMP01 counts include the reset scan and never the scan at the episode's
                            end instant, exactly as TMP02's frame count (validated: tmp02_validation --fixed); TMP02
                            charges every accepted scan except the reset scan (frames - 1 = causal ticks), including one
                            accepted on the last control step
@@ -29,6 +29,7 @@ sys.path.insert(0, ROOT)
 TMP01 = "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10"
 RUN = "2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed{}Hz"
 RATES = [0.2, 0.5, 1.0, 2.0, 4.0]
+CONTROL_DT = 0.2
 COSTS = [0.0, 0.025, 0.05, 0.1, 0.2]
 OUT = "AdaptiveSensing/eval/temporal/TMP02_chase-ob1ob2_adaptive-nav05/frame_cost_calibration"
 p = argparse.ArgumentParser()
@@ -44,8 +45,8 @@ def load(hz):
     d = args.variant_2hz if (hz == 2.0 and args.variant_2hz) else os.path.join(ROOT, TMP01, RUN.format(f"{hz:g}"))
     rows = list(csv.DictReader(open(os.path.join(d, "episodes.csv"))))
     f = lambda k: np.array([float(r[k]) for r in rows])  # noqa: E731
-    return {"dir": os.path.relpath(d, ROOT), "R": f("episode_return"), "N": f("accepted_scans") - 1,
-            "steps": f("n_steps"), "dur": f("duration_s"), "outcome": np.array([r["outcome"] for r in rows]),
+    return {"dir": os.path.relpath(d, ROOT), "R": f("nav_return"), "N": f("episode_frame_count") - 1,
+            "steps": f("n_steps"), "dur": f("n_steps") * CONTROL_DT, "outcome": np.array([r["outcome"] for r in rows]),
             "episode": np.array([int(r["episode"]) for r in rows])}
 
 
@@ -60,8 +61,8 @@ def stats(hz, c):
     pen = d["R"] - c * d["N"]
     return {"rate_hz": hz, "frame_cost": c, "penalized_return_mean": pen.mean(), "penalized_return_std": pen.std(ddof=1),
             "navigation_return_mean": d["R"].mean(),
-            "success_rate": float((d["outcome"] == "goal").mean()),
-            "collision_rate": float(np.isin(d["outcome"], ["safety_violation", "physical_collision"]).mean()),
+            "success_rate": float((d["outcome"] == "success").mean()),
+            "collision_rate": float((d["outcome"] == "collision").mean()),
             "timeout_rate": float((d["outcome"] == "timeout").mean()),
             "charged_acquisitions_mean": d["N"].mean(), "effective_rate_hz_mean": (d["N"] / d["dur"]).mean(),
             "episode_duration_s_mean": d["dur"].mean(), "penalized_reward_per_step_mean": (pen / d["steps"]).mean()}
@@ -104,7 +105,7 @@ for i, c in enumerate(grid):
         changes.append({"from_cost": float(c), "ranking_best_first": [f"{h:g} Hz" for h in order]})
         prev = order
 json.dump({"source": {f"{h:g}Hz": D[h]["dir"] for h in RATES}, "episodes": n_ep,
-           "convention": "charged = accepted_scans - 1 (reset scan not charged; scan at the episode-end instant never "
+           "convention": "charged = episode_frame_count - 1 (reset scan not charged; scan at the episode-end instant never "
                          "gated; a scan accepted on the last control step is charged) = TMP02",
            "costs": COSTS, "grid": [float(grid[0]), float(grid[-1]), args.grid_step],
            "crossovers": cross, "ranking_changes_on_grid": changes},
