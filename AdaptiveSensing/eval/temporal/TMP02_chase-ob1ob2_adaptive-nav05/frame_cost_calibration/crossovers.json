@@ -1,0 +1,257 @@
+{
+ "source": {
+  "0.2Hz": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed0.2Hz",
+  "0.5Hz": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed0.5Hz",
+  "1Hz": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed1Hz",
+  "2Hz": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed2Hz",
+  "4Hz": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed4Hz"
+ },
+ "episodes": 100,
+ "convention": "charged = accepted_scans - 1 (reset scan not charged; scan at the episode-end instant never gated; a scan accepted on the last control step is charged) = TMP02",
+ "costs": [
+  0.0,
+  0.025,
+  0.05,
+  0.1,
+  0.2
+ ],
+ "grid": [
+  0.0,
+  4.5,
+  0.005
+ ],
+ "crossovers": [
+  {
+   "pair": "0.2 vs 0.5 Hz",
+   "crossover_cost": 3.9157,
+   "ci95": [
+    2.3796,
+    5.0052
+   ],
+   "better_below_crossover": "0.5 Hz",
+   "mean_nav_return_diff": -14.136,
+   "mean_charged_diff": -3.61,
+   "paired_nav_return_diff_se": 3.929
+  },
+  {
+   "pair": "0.2 vs 1 Hz",
+   "crossover_cost": 2.447,
+   "ci95": [
+    2.2158,
+    2.6508
+   ],
+   "better_below_crossover": "1 Hz",
+   "mean_nav_return_diff": -68.932,
+   "mean_charged_diff": -28.17,
+   "paired_nav_return_diff_se": 5.033
+  },
+  {
+   "pair": "0.2 vs 2 Hz",
+   "crossover_cost": 1.3703,
+   "ci95": [
+    1.2784,
+    1.4533
+   ],
+   "better_below_crossover": "2 Hz",
+   "mean_nav_return_diff": -80.654,
+   "mean_charged_diff": -58.86,
+   "paired_nav_return_diff_se": 4.712
+  },
+  {
+   "pair": "0.2 vs 4 Hz",
+   "crossover_cost": 0.709,
+   "ci95": [
+    0.6687,
+    0.7466
+   ],
+   "better_below_crossover": "4 Hz",
+   "mean_nav_return_diff": -82.507,
+   "mean_charged_diff": -116.37,
+   "paired_nav_return_diff_se": 4.546
+  },
+  {
+   "pair": "0.5 vs 1 Hz",
+   "crossover_cost": 2.2311,
+   "ci95": [
+    1.9327,
+    2.4882
+   ],
+   "better_below_crossover": "1 Hz",
+   "mean_nav_return_diff": -54.796,
+   "mean_charged_diff": -24.56,
+   "paired_nav_return_diff_se": 5.63
+  },
+  {
+   "pair": "0.5 vs 2 Hz",
+   "crossover_cost": 1.2039,
+   "ci95": [
+    1.0756,
+    1.3166
+   ],
+   "better_below_crossover": "2 Hz",
+   "mean_nav_return_diff": -66.518,
+   "mean_charged_diff": -55.25,
+   "paired_nav_return_diff_se": 5.17
+  },
+  {
+   "pair": "0.5 vs 4 Hz",
+   "crossover_cost": 0.6063,
+   "ci95": [
+    0.5433,
+    0.6638
+   ],
+   "better_below_crossover": "4 Hz",
+   "mean_nav_return_diff": -68.372,
+   "mean_charged_diff": -112.76,
+   "paired_nav_return_diff_se": 5.087
+  },
+  {
+   "pair": "1 vs 2 Hz",
+   "crossover_cost": 0.3819,
+   "ci95": [
+    0.0785,
+    0.647
+   ],
+   "better_below_crossover": "2 Hz",
+   "mean_nav_return_diff": -11.722,
+   "mean_charged_diff": -30.69,
+   "paired_nav_return_diff_se": 5.095
+  },
+  {
+   "pair": "1 vs 4 Hz",
+   "crossover_cost": 0.1539,
+   "ci95": [
+    0.0364,
+    0.2599
+   ],
+   "better_below_crossover": "4 Hz",
+   "mean_nav_return_diff": -13.576,
+   "mean_charged_diff": -88.2,
+   "paired_nav_return_diff_se": 5.381
+  },
+  {
+   "pair": "2 vs 4 Hz",
+   "crossover_cost": 0.0322,
+   "ci95": [
+    -0.0659,
+    0.1215
+   ],
+   "better_below_crossover": "4 Hz",
+   "mean_nav_return_diff": -1.854,
+   "mean_charged_diff": -57.51,
+   "paired_nav_return_diff_se": 2.806
+  }
+ ],
+ "ranking_changes_on_grid": [
+  {
+   "from_cost": 0.0,
+   "ranking_best_first": [
+    "4 Hz",
+    "2 Hz",
+    "1 Hz",
+    "0.5 Hz",
+    "0.2 Hz"
+   ]
+  },
+  {
+   "from_cost": 0.035,
+   "ranking_best_first": [
+    "2 Hz",
+    "4 Hz",
+    "1 Hz",
+    "0.5 Hz",
+    "0.2 Hz"
+   ]
+  },
+  {
+   "from_cost": 0.155,
+   "ranking_best_first": [
+    "2 Hz",
+    "1 Hz",
+    "4 Hz",
+    "0.5 Hz",
+    "0.2 Hz"
+   ]
+  },
+  {
+   "from_cost": 0.385,
+   "ranking_best_first": [
+    "1 Hz",
+    "2 Hz",
+    "4 Hz",
+    "0.5 Hz",
+    "0.2 Hz"
+   ]
+  },
+  {
+   "from_cost": 0.61,
+   "ranking_best_first": [
+    "1 Hz",
+    "2 Hz",
+    "0.5 Hz",
+    "4 Hz",
+    "0.2 Hz"
+   ]
+  },
+  {
+   "from_cost": 0.71,
+   "ranking_best_first": [
+    "1 Hz",
+    "2 Hz",
+    "0.5 Hz",
+    "0.2 Hz",
+    "4 Hz"
+   ]
+  },
+  {
+   "from_cost": 1.205,
+   "ranking_best_first": [
+    "1 Hz",
+    "0.5 Hz",
+    "2 Hz",
+    "0.2 Hz",
+    "4 Hz"
+   ]
+  },
+  {
+   "from_cost": 1.375,
+   "ranking_best_first": [
+    "1 Hz",
+    "0.5 Hz",
+    "0.2 Hz",
+    "2 Hz",
+    "4 Hz"
+   ]
+  },
+  {
+   "from_cost": 2.235,
+   "ranking_best_first": [
+    "0.5 Hz",
+    "1 Hz",
+    "0.2 Hz",
+    "2 Hz",
+    "4 Hz"
+   ]
+  },
+  {
+   "from_cost": 2.45,
+   "ranking_best_first": [
+    "0.5 Hz",
+    "0.2 Hz",
+    "1 Hz",
+    "2 Hz",
+    "4 Hz"
+   ]
+  },
+  {
+   "from_cost": 3.92,
+   "ranking_best_first": [
+    "0.2 Hz",
+    "0.5 Hz",
+    "1 Hz",
+    "2 Hz",
+    "4 Hz"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+actor: 484612 parameters
+LidarCNNModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=135, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=2, bias=True)
+  )
+  (cnns): ModuleDict(
+    (lidar): ProjectedCNN(
+      (0): CNN(
+        (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+        (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2))
+        (5): ReLU()
+        (6): Flatten(start_dim=1, end_dim=-1)
+      )
+      (1): Linear(in_features=3072, out_features=128, bias=True)
+      (2): ReLU()
+    )
+  )
+)
+
+critic: 484481 parameters
+LidarCNNModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (mlp): MLP(
+    (0): Linear(in_features=135, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (cnns): ModuleDict(
+    (lidar): ProjectedCNN(
+      (0): CNN(
+        (0): Conv2d(1, 16, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(16, 32, kernel_size=(3, 3), stride=(2, 2))
+        (3): ReLU()
+        (4): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2))
+        (5): ReLU()
+        (6): Flatten(start_dim=1, end_dim=-1)
+      )
+      (1): Linear(in_features=3072, out_features=128, bias=True)
+      (2): ReLU()
+    )
+  )
+)
+

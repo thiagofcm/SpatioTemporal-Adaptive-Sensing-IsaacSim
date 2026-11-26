@@ -1,0 +1,24 @@
+{
+ "mode": "fixed",
+ "checks": {
+  "hz": 2.0,
+  "tmp01_dir": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/reproducibility/fixed2Hz_reruns/rerun1_gpu1",
+  "episodes": 100,
+  "mismatches_vs_tmp01": {
+   "outcome": 0,
+   "n_steps": 0,
+   "episode_return": 0,
+   "accepted_scans": 0,
+   "native_scans": 0,
+   "mean_obs_age_s": 0,
+   "max_obs_age_s": 0
+  },
+  "success": 0.76,
+  "success_tmp01": 0.76,
+  "accepted_total": 6095,
+  "causal_total": 5995,
+  "nav05_state_unchanged": true,
+  "tmp01_dir_at_run_time": "../../../../../../tmp/claude-1255390400/-md127-home-UFAD-tcuevasmestanza-isaac-lab-spatiotemporal-sensing/4035890f-9dca-440a-bb20-572c9107c3bc/scratchpad/tmp01_rerun_2hz"
+ },
+ "pass": true
+}

@@ -75,6 +75,20 @@ class CommandModel:
         self.state = torch.zeros(num_envs, 2, device=device)       # lagged (v, w) actually sent to the wheels
         self.cmd = torch.zeros(num_envs, 2, device=device)         # latest command (held between control ticks)
         self._ar = torch.arange(num_envs, device=device)
+        self._const = None                                     # fast_path "cm_constants": cached per-env constants
+
+    def enable_constant_cache(self):
+        """fast_path "cm_constants": compute the smoothing factors and acceleration limits (functions of the parameters
+        only) once, and again whenever set_params changes the parameters, instead of at every physics step. Same
+        expressions, same values."""
+        self._const = self._constants()
+
+    def _constants(self):
+        a_v = torch.where(self.tau_v > 0, torch.exp(-self.dt / self.tau_v.clamp(min=1e-6)), torch.zeros_like(self.tau_v))
+        a_w = torch.where(self.tau_w > 0, torch.exp(-self.dt / self.tau_w.clamp(min=1e-6)), torch.zeros_like(self.tau_w))
+        lim_v = torch.where(self.accel_v_max > 0, self.accel_v_max * self.dt, torch.full_like(self.accel_v_max, float("inf")))
+        lim_w = torch.where(self.accel_w_max > 0, self.accel_w_max * self.dt, torch.full_like(self.accel_w_max, float("inf")))
+        return a_v, a_w, lim_v, lim_w
 
     def set_params(self, env_ids=None, *, delay_s=None, delay_w_s=None, tau_v_s=None, tau_w_s=None, k_v=None, k_w=None,
                    accel_v_max=None, accel_w_max=None):
@@ -91,6 +105,8 @@ class CommandModel:
                           ("accel_w_max", accel_w_max)):
             if val is not None:
                 getattr(self, name)[ids] = torch.as_tensor(val, device=self.device, dtype=torch.float32)
+        if self._const is not None:
+            self._const = self._constants()
 
     def reset(self, env_ids=None):
         ids = slice(None) if env_ids is None else env_ids
@@ -111,12 +127,17 @@ class CommandModel:
         v_d = self._fifo[self._ar, self.delay_steps, 0]
         w_d = self._fifo[self._ar, self.delay_steps_w, 1]
         v, w = scale_saturation(self.k_v * v_d, self.k_w * w_d, self.geo)
-        a_v = torch.where(self.tau_v > 0, torch.exp(-self.dt / self.tau_v.clamp(min=1e-6)), torch.zeros_like(self.tau_v))
-        a_w = torch.where(self.tau_w > 0, torch.exp(-self.dt / self.tau_w.clamp(min=1e-6)), torch.zeros_like(self.tau_w))
-        nv = a_v * self.state[:, 0] + (1.0 - a_v) * v
-        nw = a_w * self.state[:, 1] + (1.0 - a_w) * w
-        lim_v = torch.where(self.accel_v_max > 0, self.accel_v_max * self.dt, torch.full_like(nv, float("inf")))
-        lim_w = torch.where(self.accel_w_max > 0, self.accel_w_max * self.dt, torch.full_like(nw, float("inf")))
+        if self._const is not None:
+            a_v, a_w, lim_v, lim_w = self._const
+            nv = a_v * self.state[:, 0] + (1.0 - a_v) * v
+            nw = a_w * self.state[:, 1] + (1.0 - a_w) * w
+        else:
+            a_v = torch.where(self.tau_v > 0, torch.exp(-self.dt / self.tau_v.clamp(min=1e-6)), torch.zeros_like(self.tau_v))
+            a_w = torch.where(self.tau_w > 0, torch.exp(-self.dt / self.tau_w.clamp(min=1e-6)), torch.zeros_like(self.tau_w))
+            nv = a_v * self.state[:, 0] + (1.0 - a_v) * v
+            nw = a_w * self.state[:, 1] + (1.0 - a_w) * w
+            lim_v = torch.where(self.accel_v_max > 0, self.accel_v_max * self.dt, torch.full_like(nv, float("inf")))
+            lim_w = torch.where(self.accel_w_max > 0, self.accel_w_max * self.dt, torch.full_like(nw, float("inf")))
         self.state[:, 0] = self.state[:, 0] + torch.clamp(nv - self.state[:, 0], -lim_v, lim_v)
         self.state[:, 1] = self.state[:, 1] + torch.clamp(nw - self.state[:, 1], -lim_w, lim_w)
         vl, vr = unicycle_to_wheels(self.state[:, 0], self.state[:, 1], self.geo)

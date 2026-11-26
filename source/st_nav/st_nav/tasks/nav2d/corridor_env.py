@@ -44,7 +44,8 @@ class CorridorNavEnv(DirectRLEnv):
                                 start_poses=cfg.start_poses, scene_name=cfg.scene_name,
                                 active_obstacles=tuple(cfg.active_obstacles), obstacle_presence_dr=cfg.obstacle_presence_dr,
                                 obstacle_speed_dr=cfg.obstacle_speed_dr, obstacle_y_dr=cfg.obstacle_y_dr,
-                                obstacle_radius_dr=cfg.obstacle_radius_dr, max_episode_s=cfg.episode_length_s)
+                                obstacle_radius_dr=cfg.obstacle_radius_dr, max_episode_s=cfg.episode_length_s,
+                                fast_path=tuple(cfg.fast_path))
         if cfg.goals is not None:
             scfg.goals = tuple(tuple(g) for g in cfg.goals)
         scfg.wall_height, scfg.baffle_height, scfg.obstacle_height = cfg.wall_height, cfg.baffle_height, cfg.obstacle_height
@@ -58,11 +59,26 @@ class CorridorNavEnv(DirectRLEnv):
         else:
             raise ValueError(f"unknown sensor {cfg.sensor!r} (lidar2d | lidar3d)")
         cfg.observation_space = scfg.lidar.num_rays + 7            # [scan | goal (3) | previous action (2) | v, w]
+        if cfg.obs_layout == "image":                               # {"policy": 7 nav features, "lidar": range image}
+            lc = scfg.lidar
+            if lc.grid_shape is None or lc.grid_row is None or lc.grid_col is None:
+                raise ValueError("obs_layout='image' needs a grid ray set (lidar3d grid or a ray table with grid_row/col)")
+            if cfg.privileged_critic:
+                raise NotImplementedError("privileged_critic is implemented for obs_layout='flat' only")
+            self.img_shape = (1, int(lc.grid_shape[0]), int(lc.grid_shape[1]))
+            self._img_idx = [int(r) * self.img_shape[2] + int(c) for r, c in zip(lc.grid_row, lc.grid_col)]
+            if len(set(self._img_idx)) != lc.num_rays:
+                raise ValueError("obs_layout='image': two rays map to the same range-image cell")
+            cfg.observation_space = 7                               # the "policy" group; the image is the "lidar" group
+        elif cfg.obs_layout != "flat":
+            raise ValueError(f"unknown obs_layout {cfg.obs_layout!r} (flat | image)")
         self.corr = CorridorScene.deferred(scfg, cfg.sim.device)
         self.corr.build_scene_cfg(cfg.scene)
         super().__init__(cfg, render_mode, **kwargs)
         self.corr.attach(self.scene, self.sim)
         n, dev = self.num_envs, self.device
+        if cfg.obs_layout == "image":
+            self._img_idx = torch.tensor(self._img_idx, dtype=torch.long, device=dev)
         self.actions = torch.zeros(n, 2, device=dev)          # last applied (clipped) action, = previous action obs
         self.prev_goal_dist = torch.zeros(n, device=dev)
         self.ep_time = torch.zeros(n, device=dev)
@@ -90,7 +106,7 @@ class CorridorNavEnv(DirectRLEnv):
     def _apply_action(self):
         self.corr.advance_obstacles(self.physics_dt)              # moving obstacles (no-op in static scenes)
         wl, wr, _, _ = self.corr.cm.step()
-        self.corr.robot.set_joint_velocity_target(torch.stack([wl, wr], -1), joint_ids=self.corr.wheel_ids)
+        self.corr.robot.set_joint_velocity_target(torch.stack([wl, wr], -1), joint_ids=self.corr.wheel_joint_ids)
 
     # ------------------------------------------------------------------------------------------------ dones
     def _get_dones(self):
@@ -166,6 +182,12 @@ class CorridorNavEnv(DirectRLEnv):
         p, yaw = self.corr.robot_pose2d()
         return p, yaw
 
+    def lidar_block(self, obs: dict) -> torch.Tensor:
+        """(N, num_rays) normalized LiDAR ranges of an observation dict, in ray order, for either obs_layout."""
+        if self.cfg.obs_layout == "image":
+            return obs["lidar"].reshape(obs["lidar"].shape[0], -1)[:, self._img_idx]
+        return obs["policy"][:, :self.corr.lidar.num_rays]
+
     def _get_observations(self) -> dict:
         # tolerance half a physics step: ep_time accumulates step_dt in float32 (error ~1e-5 s after tens of seconds), so
         # a 1e-6 tolerance misses due times of periods that are not multiples of step_dt (3D LiDAR 0.25 s; M7)
@@ -184,6 +206,18 @@ class CorridorNavEnv(DirectRLEnv):
         dist = torch.linalg.norm(g, dim=1)
         ang = torch.atan2(g[:, 1], g[:, 0]) - yaw
         rd = self.corr.robot.data
+        if self.cfg.obs_layout == "image":
+            nav = torch.cat([
+                torch.clamp(dist / self.cfg.goal_distance_norm, 0.0, 1.0)[:, None],
+                torch.sin(ang)[:, None], torch.cos(ang)[:, None],
+                self.actions,
+                (rd.root_link_lin_vel_b[:, 0] / self.cfg.v_max)[:, None],
+                (rd.root_link_ang_vel_b[:, 2] / self.cfg.w_max)[:, None],
+            ], dim=1)
+            n = self.scan.shape[0]
+            img = torch.ones(n, self.img_shape[1] * self.img_shape[2], device=self.scan.device)   # cells without a ray: 1
+            img[:, self._img_idx] = self.scan                       # latest complete scan (held between acquisitions)
+            return {"policy": nav, "lidar": img.view(n, *self.img_shape)}
         obs = torch.cat([
             self.scan,
             torch.clamp(dist / self.cfg.goal_distance_norm, 0.0, 1.0)[:, None],

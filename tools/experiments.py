@@ -65,11 +65,32 @@ def exp_id_from_run_path(path) -> str | None:
     return None
 
 
+def paths_3d(exp_id: str) -> dict:
+    """3D-LiDAR (CNN) navigation experiments (M8): separate roots so they never mix with the 2D ones:
+    <line>/configs_3d/<ID>.yaml, <line>/runs_3d/<ID>/, <line>/eval_3d/<ID>/."""
+    line, mode = LINES[check_exp_id(exp_id)[:3]]
+    if mode:
+        raise SystemExit(f"{exp_id}: 3D paths are defined for the Navigation line only")
+    root = REPO_ROOT / line
+    ev = root / "eval_3d" / exp_id
+    return {"config": root / "configs_3d" / f"{exp_id}.yaml", "runs": root / "runs_3d" / exp_id, "eval": ev,
+            "card": ev / "README.md"}
+
+
+def exp_id_from_run_path_3d(path) -> str | None:
+    """Experiment ID of a checkpoint / run folder inside Navigation/runs_3d/<ID>/<run>/."""
+    parts = Path(path).resolve().parts
+    for i, p in enumerate(parts[:-1]):
+        if p == "runs_3d" and i + 1 < len(parts) and EXP_ID_RE.match(parts[i + 1]):
+            return parts[i + 1]
+    return None
+
+
 # ------------------------------------------------------------------------------------------------ YAML configs
 def load_config(path) -> dict:
     path = Path(path)
     cfg = yaml.safe_load(path.read_text()) or {}
-    unknown = set(cfg) - {"exp_id", "task", "run_name", "sweep", "description", *SECTIONS}
+    unknown = set(cfg) - {"exp_id", "task", "run_name", "sweep", "description", "init_from", *SECTIONS}  # init_from: train_3d.py only
     if unknown:
         raise SystemExit(f"{path}: unknown top-level keys {sorted(unknown)}")
     check_exp_id(cfg.get("exp_id"))

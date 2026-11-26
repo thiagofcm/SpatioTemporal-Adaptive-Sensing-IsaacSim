@@ -41,6 +41,30 @@ from st_nav.scenes._obstacle_motion import OBSTACLE_RADIUS, RandomPingPongObstac
 from st_nav.scenes.spawners import StaticPrimitiveGroupCfg
 from st_nav.sensors.lidar import FLOOR_PRIM, RayLidar, RayLidarCfg
 
+# Performance fast path (opt-in, CorridorSceneCfg.fast_path; "all" = every item). Each item removes redundant work,
+# allocations or host transfers without changing any computed value (validated bitwise: tests/sim/fast_path_equivalence.py):
+#   lazy_contact           contact sensor history_length 0: refreshed only when read (the env never reads it) instead of
+#                          at every physics step
+#   cm_constants           command-model smoothing factors / acceleration limits computed once (diff_drive.py)
+#   rng_key_cache          hashed constant integer keys of the counter-based RNG computed once (crng.py)
+#   joint_ids              wheel joint indices as a device tensor (no host-to-device copy per joint-target write)
+#   reset_constants        constant tensors of the reset samplers built once (start points, goals, path-y ranges)
+#   obstacle_pose_buffers  obstacle pose tensors preallocated; per physics step only x, y are written (z and orientation
+#                          change only at resets); still written with Isaac Lab's write_root_pose_to_sim
+FAST_PATH_ITEMS = ("lazy_contact", "cm_constants", "rng_key_cache", "joint_ids", "reset_constants",
+                   "obstacle_pose_buffers")
+
+
+def resolve_fast_path(items) -> frozenset:
+    items = tuple(i for i in (items or ()) if i != "none")       # "none" = () (command-line convenience)
+    if "all" in items:
+        return frozenset(FAST_PATH_ITEMS)
+    bad = set(items) - set(FAST_PATH_ITEMS)
+    if bad:
+        raise ValueError(f"unknown fast_path items {sorted(bad)}; known: {FAST_PATH_ITEMS} or 'all'")
+    return frozenset(items)
+
+
 FOOTPRINT_RADIUS = 0.177       # m, TB4 bumper (front); rear base is 0.164 m -> conservative by 13 mm at the rear
 SAFETY_MARGIN = 0.05           # m, reference margin (THRESHOLD_COLLISION 0.22 = 0.17 + 0.05)
 
@@ -76,6 +100,7 @@ class CorridorSceneCfg:
     bank_assignment: str = "random"         # "sequential": env i uses bank entry i (seed bank_seed + i)
     offsets_from_bank: bool = False         # True: Z offsets = the bank entry's own (reference seed) offsets, no resampling
     start_poses: tuple | None = None        # per-env (x, y, yaw) used at every reset instead of sampling
+    fast_path: tuple = ()                   # performance items (FAST_PATH_ITEMS or "all"); () = original code path
 
 
 class CorridorScene:
@@ -104,6 +129,8 @@ class CorridorScene:
 
     def _init_bank(self, cfg, device):
         self.cfg, self.device, self.n = cfg, device, cfg.num_envs
+        self.fast = resolve_fast_path(cfg.fast_path)
+        self._consts = {} if "reset_constants" in self.fast else None
         self.dt = 1.0 / cfg.physics_hz
         self.gen = torch.Generator(device=device)
         self.gen.manual_seed(cfg.seed)
@@ -177,7 +204,8 @@ class CorridorScene:
         self.lidar_cfg = cfg.lidar
         self.lidar_cfg.targets = targets
         sc.lidar = self.lidar_cfg.raycaster_cfg()
-        sc.contact = ContactSensorCfg(prim_path="{ENV_REGEX_NS}/Robot/base_link", history_length=1)
+        sc.contact = ContactSensorCfg(prim_path="{ENV_REGEX_NS}/Robot/base_link",
+                                      history_length=0 if "lazy_contact" in self.fast else 1)
         return sc
 
     def prepare_stage(self):
@@ -198,15 +226,25 @@ class CorridorScene:
         specs = self.scene_mod.MOVING_OBSTACLES
         self.obstacles = [self.scene[f"ob{j + 1}"] for j in range(len(specs))]
         cfg, sm = self.cfg, self.scene_mod
+        y_sampler = getattr(sm, "sample_obstacle_path_y", None)
+        if y_sampler is not None and self._consts is not None:
+            consts = self._consts
+            y_sampler = lambda u, _f=y_sampler: _f(u, cache=consts)  # noqa: E731
         self.obs_model = RandomPingPongObstacles(
             specs, n, device, active=cfg.active_obstacles, presence_dr=cfg.obstacle_presence_dr,
             presence_prob=getattr(sm, "OBSTACLE_PRESENCE_PROB", None), speed_dr=cfg.obstacle_speed_dr,
             speed_ranges=getattr(sm, "OBSTACLE_SPEED_RANGES", None), y_dr=cfg.obstacle_y_dr,
-            y_sampler=getattr(sm, "sample_obstacle_path_y", None), max_episode_s=cfg.max_episode_s) if specs else None
+            y_sampler=y_sampler, max_episode_s=cfg.max_episode_s) if specs else None
         self.wheel_ids, _ = self.robot.find_joints(["left_wheel_joint", "right_wheel_joint"], preserve_order=True)
+        # joint indices passed to the joint writes: the list (original) or the same indices as a device tensor
+        self.wheel_joint_ids = (torch.tensor(self.wheel_ids, dtype=torch.long, device=device)
+                                if "joint_ids" in self.fast else self.wheel_ids)
         self.lidar = RayLidar(self.lidar_cfg, self.scene["lidar"], device)
         self.contact = self.scene["contact"]
         self.cm = CommandModel(n, self.dt, TB4_GEOMETRY, TB4_COMMAND_MODEL, device=device)
+        if "cm_constants" in self.fast:
+            self.cm.enable_constant_cache()
+        crng.set_key_cache("rng_key_cache" in self.fast)
         self.origins = self.scene.env_origins
         self.fixed_walls = walls_from_specs(self.scene_mod.WALLS, device=device)     # (10, 5) [cx, cy, hx, hy, yaw]
         self.walls = torch.zeros(n, len(self.scene_mod.WALLS) + (4 if self.has_baffles else 0), 5, device=device)
@@ -222,6 +260,16 @@ class CorridorScene:
         self.start = torch.zeros(n, 3, device=device)
         self.sim_time = torch.zeros(n, device=device)
         self.offset_fallbacks = 0
+        self._start_poses_t = None
+        if self.cfg.start_poses is not None and self._consts is not None:
+            self._start_poses_t = torch.tensor(self.cfg.start_poses, dtype=torch.float32, device=device)
+        # obstacle pose buffers (fast_path "obstacle_pose_buffers"): per obstacle (n, 7) [x, y, z, qw, qx, qy, qz];
+        # z (active: h / 2, parked: -2 h) and the identity orientation are set at resets, x, y at every physics step
+        self._ob_pose = None
+        if "obstacle_pose_buffers" in self.fast and self.obstacles:
+            self._ob_pose = torch.zeros(len(self.obstacles), n, 7, device=device)
+            self._ob_pose[:, :, 3] = 1.0
+            self._org_xy = self.origins[:, :2]
 
     # ------------------------------------------------------------------ construction helpers
     def _scale_baffles(self):
@@ -250,10 +298,12 @@ class CorridorScene:
             self._reset_baffles(env_ids)
         org = self.origins[env_ids]
         if self.cfg.start_poses is not None:
-            self.start[env_ids] = torch.tensor(self.cfg.start_poses, dtype=torch.float32, device=self.device)[env_ids]
+            sp = (self._start_poses_t if self._start_poses_t is not None
+                  else torch.tensor(self.cfg.start_poses, dtype=torch.float32, device=self.device))
+            self.start[env_ids] = sp[env_ids]
         else:
-            self.start[env_ids] = S.sample_start(k, self.cfg.start_pose_dr, self.device, self.gen)
-        self.goal[env_ids] = S.sample_goal(k, self.cfg.goals, self.device, self.gen)
+            self.start[env_ids] = S.sample_start(k, self.cfg.start_pose_dr, self.device, self.gen, cache=self._consts)
+        self.goal[env_ids] = S.sample_goal(k, self.cfg.goals, self.device, self.gen, cache=self._consts)
         if self.obs_model is not None:                             # after the start / goal draws (reference order)
             self.obs_model.reset(env_ids, self.obstacle_seed[env_ids])
             self._write_obstacle_poses(env_ids)
@@ -263,8 +313,8 @@ class CorridorScene:
         self.robot.write_root_pose_to_sim(torch.cat([rpos, rq], 1), env_ids=env_ids)
         self.robot.write_root_velocity_to_sim(torch.zeros(k, 6, device=self.device), env_ids=env_ids)
         self.robot.write_joint_state_to_sim(torch.zeros(k, 2, device=self.device), torch.zeros(k, 2, device=self.device),
-                                            joint_ids=self.wheel_ids, env_ids=env_ids)
-        self.robot.set_joint_velocity_target(torch.zeros(k, 2, device=self.device), joint_ids=self.wheel_ids,
+                                            joint_ids=self.wheel_joint_ids, env_ids=env_ids)
+        self.robot.set_joint_velocity_target(torch.zeros(k, 2, device=self.device), joint_ids=self.wheel_joint_ids,
                                              env_ids=env_ids)
         self.cm.reset(env_ids)
         self.sim_time[env_ids] = 0.0
@@ -293,6 +343,13 @@ class CorridorScene:
     # ------------------------------------------------------------------ moving obstacles
     def _write_obstacle_poses(self, env_ids=None):
         """Kinematic obstacle bodies to the model positions; inactive obstacles parked below the floor."""
+        if env_ids is None and self._ob_pose is not None:          # physics step: only x, y change
+            pos = self.obs_model.positions()
+            for j, ob in enumerate(self.obstacles):
+                buf = self._ob_pose[j]
+                buf[:, :2] = self._org_xy + pos[:, j]
+                ob.write_root_pose_to_sim(buf, env_ids=None)
+            return
         ids = slice(None) if env_ids is None else env_ids
         org = self.origins[ids]
         pos = self.obs_model.positions()[ids]
@@ -303,6 +360,8 @@ class CorridorScene:
         for j, ob in enumerate(self.obstacles):
             z = torch.where(act[:, j], torch.full_like(pos[:, j, 0], h / 2), torch.full_like(pos[:, j, 0], -2.0 * h))
             pose = torch.cat([org[:, :2] + pos[:, j], z[:, None], quat], 1)
+            if self._ob_pose is not None:                          # keep the buffers' episode-constant part current
+                self._ob_pose[j, ids] = pose
             ob.write_root_pose_to_sim(pose, env_ids=env_ids)
 
     def advance_obstacles(self, dt: float):
@@ -321,7 +380,7 @@ class CorridorScene:
         self.cm.set_command(v, w)
         for _ in range(self.cfg.decimation):
             wl, wr, _, _ = self.cm.step()
-            self.robot.set_joint_velocity_target(torch.stack([wl, wr], -1), joint_ids=self.wheel_ids)
+            self.robot.set_joint_velocity_target(torch.stack([wl, wr], -1), joint_ids=self.wheel_joint_ids)
             self.advance_obstacles(self.dt)
             self.scene.write_data_to_sim()
             self.sim.step(render=False)

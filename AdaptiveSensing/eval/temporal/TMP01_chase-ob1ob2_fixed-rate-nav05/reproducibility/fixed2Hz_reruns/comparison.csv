@@ -1,0 +1,7 @@
+run,gpu,success,episodes_differing_from_stored_recording,episodes_differing_from_rerun1,identical_to_stored_recording
+rerun1_gpu1,1,76,49,0,False
+rerun2_gpu2,2,75,0,49,True
+rerun3_gpu0,0,76,49,0,False
+rerun4_gpu3,3,76,49,0,False
+rerun5_gpu4,4,76,49,0,False
+rerun6_gpu5,5,76,49,0,False

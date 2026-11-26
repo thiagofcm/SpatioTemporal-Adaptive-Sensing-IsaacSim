@@ -31,17 +31,26 @@ GOAL_LIST_ST01 = ((-1.80, -2.50), (-1.50, -2.50), (-2.10, -2.50), (-1.80, -2.20)
                   (-1.50, -2.20), (-2.10, -2.20), (-1.80, -2.00))
 
 
-def sample_start(n: int, start_pose_dr: bool, device, generator=None) -> torch.Tensor:
+def _const(cache, name, make):
+    """fast_path "reset_constants": a constant tensor built once per scene (cache: dict) instead of at every reset."""
+    if cache is None:
+        return make()
+    if name not in cache:
+        cache[name] = make()
+    return cache[name]
+
+
+def sample_start(n: int, start_pose_dr: bool, device, generator=None, cache=None) -> torch.Tensor:
     """(n, 3) start poses x, y, yaw (reference semantics)."""
     if not start_pose_dr:
-        return torch.tensor([[*STARTING_POS, STARTING_YAW]], device=device).repeat(n, 1)
-    pts = torch.tensor(START_POSE_LIST, device=device)
+        return _const(cache, "start_fixed", lambda: torch.tensor([[*STARTING_POS, STARTING_YAW]], device=device)).repeat(n, 1)
+    pts = _const(cache, "start_points", lambda: torch.tensor(START_POSE_LIST, device=device))
     idx = torch.randint(len(START_POSE_LIST), (n,), device=device, generator=generator)
     dyaw = (torch.rand(n, device=device, generator=generator) * 2 - 1) * START_YAW_NOISE
     yaw = torch.remainder(START_YAW_CENTER + dyaw + math.pi, 2 * math.pi) - math.pi
     return torch.cat([pts[idx], yaw[:, None]], 1)
 
 
-def sample_goal(n: int, goals, device, generator=None) -> torch.Tensor:
-    g = torch.tensor(goals, device=device, dtype=torch.float32)
+def sample_goal(n: int, goals, device, generator=None, cache=None) -> torch.Tensor:
+    g = _const(cache, ("goals", tuple(map(tuple, goals))), lambda: torch.tensor(goals, device=device, dtype=torch.float32))
     return g[torch.randint(len(goals), (n,), device=device, generator=generator)]

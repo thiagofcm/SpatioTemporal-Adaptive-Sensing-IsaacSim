@@ -1,0 +1,51 @@
+  cost   Hz   pen.ret      sd  nav.ret  succ  coll  tout  charged  eff.Hz  dur s  pen/step
+ 0.000  0.2    -21.61   11.12   -21.61  0.01  0.99  0.00      1.2   0.139    8.4   -0.6374
+ 0.000  0.5     -7.47   36.32    -7.47  0.14  0.86  0.00      4.8   0.432   10.7   -0.4896
+ 0.000    1     47.33   50.16    47.33  0.66  0.33  0.01     29.4   0.974   30.0    0.1792
+ 0.000    2     60.28   45.31    60.28  0.76  0.24  0.00     60.0   1.970   30.3    0.2877
+ 0.000    4     60.90   44.96    60.90  0.76  0.24  0.00    117.6   3.948   29.7    0.2966
+ 0.025  0.2    -21.64   11.10   -21.61  0.01  0.99  0.00      1.2   0.139    8.4   -0.6381
+ 0.025  0.5     -7.59   36.22    -7.47  0.14  0.86  0.00      4.8   0.432   10.7   -0.4918
+ 0.025    1     46.59   49.91    47.33  0.66  0.33  0.01     29.4   0.974   30.0    0.1744
+ 0.025    2     58.78   44.82    60.28  0.76  0.24  0.00     60.0   1.970   30.3    0.2779
+ 0.025    4     57.96   43.98    60.90  0.76  0.24  0.00    117.6   3.948   29.7    0.2769
+ 0.050  0.2    -21.67   11.09   -21.61  0.01  0.99  0.00      1.2   0.139    8.4   -0.6388
+ 0.050  0.5     -7.71   36.11    -7.47  0.14  0.86  0.00      4.8   0.432   10.7   -0.4940
+ 0.050    1     45.86   49.65    47.33  0.66  0.33  0.01     29.4   0.974   30.0    0.1695
+ 0.050    2     57.29   44.33    60.28  0.76  0.24  0.00     60.0   1.970   30.3    0.2680
+ 0.050    4     55.02   43.01    60.90  0.76  0.24  0.00    117.6   3.948   29.7    0.2572
+ 0.100  0.2    -21.73   11.06   -21.61  0.01  0.99  0.00      1.2   0.139    8.4   -0.6402
+ 0.100  0.5     -7.95   35.89    -7.47  0.14  0.86  0.00      4.8   0.432   10.7   -0.4983
+ 0.100    1     44.39   49.13    47.33  0.66  0.33  0.01     29.4   0.974   30.0    0.1598
+ 0.100    2     54.29   43.36    60.28  0.76  0.24  0.00     60.0   1.970   30.3    0.2483
+ 0.100    4     49.14   41.08    60.90  0.76  0.24  0.00    117.6   3.948   29.7    0.2177
+ 0.200  0.2    -21.85   10.99   -21.61  0.01  0.99  0.00      1.2   0.139    8.4   -0.6430
+ 0.200  0.5     -8.44   35.47    -7.47  0.14  0.86  0.00      4.8   0.432   10.7   -0.5069
+ 0.200    1     41.45   48.11    47.33  0.66  0.33  0.01     29.4   0.974   30.0    0.1403
+ 0.200    2     48.29   41.43    60.28  0.76  0.24  0.00     60.0   1.970   30.3    0.2089
+ 0.200    4     37.38   37.32    60.90  0.76  0.24  0.00    117.6   3.948   29.7    0.1387
+
+crossovers:
+   {'pair': '0.2 vs 0.5 Hz', 'crossover_cost': 3.9157, 'ci95': [2.3796, 5.0052], 'better_below_crossover': '0.5 Hz', 'mean_nav_return_diff': -14.136, 'mean_charged_diff': -3.61, 'paired_nav_return_diff_se': 3.929}
+   {'pair': '0.2 vs 1 Hz', 'crossover_cost': 2.447, 'ci95': [2.2158, 2.6508], 'better_below_crossover': '1 Hz', 'mean_nav_return_diff': -68.932, 'mean_charged_diff': -28.17, 'paired_nav_return_diff_se': 5.033}
+   {'pair': '0.2 vs 2 Hz', 'crossover_cost': 1.3946, 'ci95': [1.3134, 1.4706], 'better_below_crossover': '2 Hz', 'mean_nav_return_diff': -81.888, 'mean_charged_diff': -58.72, 'paired_nav_return_diff_se': 4.619}
+   {'pair': '0.2 vs 4 Hz', 'crossover_cost': 0.709, 'ci95': [0.6687, 0.7466], 'better_below_crossover': '4 Hz', 'mean_nav_return_diff': -82.507, 'mean_charged_diff': -116.37, 'paired_nav_return_diff_se': 4.546}
+   {'pair': '0.5 vs 1 Hz', 'crossover_cost': 2.2311, 'ci95': [1.9327, 2.4882], 'better_below_crossover': '1 Hz', 'mean_nav_return_diff': -54.796, 'mean_charged_diff': -24.56, 'paired_nav_return_diff_se': 5.63}
+   {'pair': '0.5 vs 2 Hz', 'crossover_cost': 1.2294, 'ci95': [1.1081, 1.3343], 'better_below_crossover': '2 Hz', 'mean_nav_return_diff': -67.753, 'mean_charged_diff': -55.11, 'paired_nav_return_diff_se': 5.112}
+   {'pair': '0.5 vs 4 Hz', 'crossover_cost': 0.6063, 'ci95': [0.5433, 0.6638], 'better_below_crossover': '4 Hz', 'mean_nav_return_diff': -68.372, 'mean_charged_diff': -112.76, 'paired_nav_return_diff_se': 5.087}
+   {'pair': '1 vs 2 Hz', 'crossover_cost': 0.4241, 'ci95': [0.112, 0.6809], 'better_below_crossover': '2 Hz', 'mean_nav_return_diff': -12.957, 'mean_charged_diff': -30.55, 'paired_nav_return_diff_se': 5.149}
+   {'pair': '1 vs 4 Hz', 'crossover_cost': 0.1539, 'ci95': [0.0364, 0.2599], 'better_below_crossover': '4 Hz', 'mean_nav_return_diff': -13.576, 'mean_charged_diff': -88.2, 'paired_nav_return_diff_se': 5.381}
+   {'pair': '2 vs 4 Hz', 'crossover_cost': 0.0107, 'ci95': [-0.1014, 0.1049], 'better_below_crossover': '4 Hz', 'mean_nav_return_diff': -0.619, 'mean_charged_diff': -57.65, 'paired_nav_return_diff_se': 2.985}
+
+ranking changes on the grid:
+   {'from_cost': 0.0, 'ranking_best_first': ['4 Hz', '2 Hz', '1 Hz', '0.5 Hz', '0.2 Hz']}
+   {'from_cost': 0.015, 'ranking_best_first': ['2 Hz', '4 Hz', '1 Hz', '0.5 Hz', '0.2 Hz']}
+   {'from_cost': 0.155, 'ranking_best_first': ['2 Hz', '1 Hz', '4 Hz', '0.5 Hz', '0.2 Hz']}
+   {'from_cost': 0.425, 'ranking_best_first': ['1 Hz', '2 Hz', '4 Hz', '0.5 Hz', '0.2 Hz']}
+   {'from_cost': 0.61, 'ranking_best_first': ['1 Hz', '2 Hz', '0.5 Hz', '4 Hz', '0.2 Hz']}
+   {'from_cost': 0.71, 'ranking_best_first': ['1 Hz', '2 Hz', '0.5 Hz', '0.2 Hz', '4 Hz']}
+   {'from_cost': 1.23, 'ranking_best_first': ['1 Hz', '0.5 Hz', '2 Hz', '0.2 Hz', '4 Hz']}
+   {'from_cost': 1.395, 'ranking_best_first': ['1 Hz', '0.5 Hz', '0.2 Hz', '2 Hz', '4 Hz']}
+   {'from_cost': 2.235, 'ranking_best_first': ['0.5 Hz', '1 Hz', '0.2 Hz', '2 Hz', '4 Hz']}
+   {'from_cost': 2.45, 'ranking_best_first': ['0.5 Hz', '0.2 Hz', '1 Hz', '2 Hz', '4 Hz']}
+   {'from_cost': 3.92, 'ranking_best_first': ['0.2 Hz', '0.5 Hz', '1 Hz', '2 Hz', '4 Hz']}

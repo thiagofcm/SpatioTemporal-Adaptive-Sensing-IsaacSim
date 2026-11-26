@@ -1,0 +1,3 @@
+episodes.csv rows differing (except timing): 2 of 100
+data files differing: 12 e.g. ['episode_0035/trajectory.csv', 'episode_0035/steps.csv', 'episode_0035/lidar.npz:base_quat_wxyz', 'episode_0035/lidar.npz:origin_xyz', 'episode_0035/lidar.npz:ranges']
+metadata.json fields differing: ['.episode_return', '.final_goal_distance_m', '.min_clearance_m', '.policy']

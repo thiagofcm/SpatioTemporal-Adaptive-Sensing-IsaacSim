@@ -77,7 +77,7 @@ class EpisodeRecorder:
         if idx.numel() == 0:
             return
         u = self.u
-        observed = _np(obs["policy"][idx, :self.NR] * self.R)
+        observed = _np(self.u.lidar_block(obs)[idx] * self.R)
         clean = _np(u.scan_clean[idx] * self.R)                    # noise-free ranges of the same acquisition
         org, q, t = _np(st["origin3"][idx]), _np(st["quat"][idx]), _np(u.scan_t[idx])
         for j, e in enumerate(idx.cpu().tolist()):
@@ -117,22 +117,27 @@ class EpisodeRecorder:
             self.rows.append(self._row(st, None, torch.ones_like(st["x"], dtype=torch.bool), torch.zeros_like(st["x"]),
                                        st["origin"]))
             return
-        observed = obs["policy"][:, :self.NR] * self.R
+        observed = self.u.lidar_block(obs) * self.R
         self._origin_prev = st["origin"].clone()
         self.rows.append(self._row(st, observed, torch.ones_like(st["x"], dtype=torch.bool), torch.zeros_like(st["x"]),
                                    st["origin"]))
 
-    def record_step(self, actions, rew, dones, ext, obs):
+    def record_step(self, actions, rew, dones, ext, obs, fresh=None, t_scan=None):
+        """fresh / t_scan (optional, (N,)): the scan in `obs` was updated at this step / its acquisition time. Default:
+        the env's own sensor schedule. A sampling gate between the env and the policy (AdaptiveSensing) passes its
+        forwarded mask and the time of the held scan; `obs` is then the gated observation."""
         u, st = self.u, self._end
         d = dones.bool()
-        fresh = (~d) & ((u.scan_t - u.ep_time).abs() < 1e-6)       # a scan was acquired at this step
-        t_scan = torch.where(d, torch.full_like(st["x"], float("nan")), u.scan_t)
+        if fresh is None:
+            fresh = (u.scan_t - u.ep_time).abs() < 1e-6            # a scan was acquired at this step
+        fresh = (~d) & fresh
+        t_scan = torch.where(d, torch.full_like(st["x"], float("nan")), u.scan_t if t_scan is None else t_scan)
         if self.per_scan:
             self._capture(len(self.rows), fresh & self.alive, obs, st)
             self.alive &= ~d
             observed = None
         else:
-            observed = torch.where(d[:, None], torch.full_like(st["clean"], float("nan")), obs["policy"][:, :self.NR] * self.R)
+            observed = torch.where(d[:, None], torch.full_like(st["clean"], float("nan")), self.u.lidar_block(obs) * self.R)
         origin = torch.where((fresh | d)[:, None], st["origin"], self._origin_prev)   # pose at acquisition of `ranges`
         self._origin_prev = torch.where(d[:, None], self._origin_prev, origin)   # reset envs restart from row 0 only
         self.rows.append(self._row(st, observed, fresh, t_scan, origin))

@@ -1,0 +1,23 @@
+{
+ "mode": "fixed",
+ "checks": {
+  "hz": 4.0,
+  "tmp01_dir": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed4Hz",
+  "episodes": 100,
+  "mismatches_vs_tmp01": {
+   "outcome": 0,
+   "n_steps": 0,
+   "episode_return": 0,
+   "accepted_scans": 0,
+   "native_scans": 0,
+   "mean_obs_age_s": 0,
+   "max_obs_age_s": 0
+  },
+  "success": 0.76,
+  "success_tmp01": 0.76,
+  "accepted_total": 11860,
+  "causal_total": 11760,
+  "nav05_state_unchanged": true
+ },
+ "pass": true
+}

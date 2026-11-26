@@ -42,18 +42,26 @@ SUPPORTED_DR = frozenset({"obstacle_presence_dr", "obstacle_speed_dr", "obstacle
 GOAL_LIST_ST04 = ((-1.80, -1.70), (-2.00, -1.80), (-2.00, -2.00), (-2.20, -1.70), (-1.80, -2.10), (-2.20, -2.10))
 
 
-def sample_obstacle_path_y(u: torch.Tensor) -> torch.Tensor:
+def sample_obstacle_path_y(u: torch.Tensor, cache=None) -> torch.Tensor:
     """(n, 2) path y of OB1, OB2 from candidate uniforms u (n, n_cand, 2) in [0, 1): (y1, y2) ~ U(OBSTACLE_Y_RANGES[0]) x
     U(OBSTACLE_Y_RANGES[1]) conditioned on y1 - y2 in OBSTACLE_Y_GAP_RANGE (uniform over the feasible region, as the
     reference rejection sampler: the first accepted candidate; ~19 % acceptance, so 64 candidates fail with probability
     ~1e-6 and then fall back to the configured (1.70, 1.10))."""
     n, device = u.shape[0], u.device
-    lo = torch.tensor([r[0] for r in OBSTACLE_Y_RANGES], device=device)
-    hi = torch.tensor([r[1] for r in OBSTACLE_Y_RANGES], device=device)
+    if cache is not None and "path_y" not in cache:            # fast_path "reset_constants"
+        cache["path_y"] = (torch.tensor([r[0] for r in OBSTACLE_Y_RANGES], device=device),
+                           torch.tensor([r[1] for r in OBSTACLE_Y_RANGES], device=device),
+                           torch.tensor([MOVING_OBSTACLES[0]["start"][1], MOVING_OBSTACLES[1]["start"][1]], device=device))
+    if cache is not None:
+        lo, hi, fallback = cache["path_y"]
+    else:
+        lo = torch.tensor([r[0] for r in OBSTACLE_Y_RANGES], device=device)
+        hi = torch.tensor([r[1] for r in OBSTACLE_Y_RANGES], device=device)
     cand = lo + u * (hi - lo)
     gap = cand[..., 0] - cand[..., 1]
     ok = (gap >= OBSTACLE_Y_GAP_RANGE[0]) & (gap <= OBSTACLE_Y_GAP_RANGE[1])
     first = torch.argmax(ok.int(), 1)
     pick = cand[torch.arange(n, device=device), first]
-    fallback = torch.tensor([MOVING_OBSTACLES[0]["start"][1], MOVING_OBSTACLES[1]["start"][1]], device=device)
+    if cache is None:
+        fallback = torch.tensor([MOVING_OBSTACLES[0]["start"][1], MOVING_OBSTACLES[1]["start"][1]], device=device)
     return torch.where(ok.any(1)[:, None], pick, fallback)

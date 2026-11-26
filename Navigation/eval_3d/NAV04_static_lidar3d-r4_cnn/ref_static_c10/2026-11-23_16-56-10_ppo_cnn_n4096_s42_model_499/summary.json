@@ -1,0 +1,92 @@
+{
+ "checkpoint": "Navigation/runs_3d/NAV04_static_lidar3d-r4_cnn/2026-11-23_16-56-10_ppo_cnn_n4096_s42/model_499.pt",
+ "episodes": 100,
+ "goal": [
+  -2.0,
+  -2.0
+ ],
+ "timeout_s": 70.0,
+ "obstacle_seeds": [
+  3000,
+  3099
+ ],
+ "start_seeds": [
+  4000,
+  4099
+ ],
+ "success_rate": 0.97,
+ "outcomes": {
+  "goal": 97,
+  "physical_collision": 0,
+  "safety_violation": 3,
+  "timeout": 0,
+  "running": 0
+ },
+ "return_mean_std": [
+  83.76014,
+  15.943207936936655
+ ],
+ "success_duration_s_mean_std": [
+  31.88453608247422,
+  1.2122519052110192
+ ],
+ "success_path_m_mean_std": [
+  6.897505154639175,
+  0.24125262131843733
+ ],
+ "success_mean_speed_mps": 0.21635746332002384,
+ "min_clearance_m_mean_min": [
+  0.10514899999999999,
+  0.0414
+ ],
+ "success_by_start_index": {
+  "0": [
+   23,
+   23
+  ],
+  "1": [
+   18,
+   18
+  ],
+  "2": [
+   20,
+   20
+  ],
+  "3": [
+   15,
+   16
+  ],
+  "4": [
+   21,
+   23
+  ]
+ },
+ "success_by_pair_modes": {
+  "hard/hard": [
+   31,
+   31
+  ],
+  "hard/normal": [
+   18,
+   21
+  ],
+  "normal/hard": [
+   21,
+   21
+  ],
+  "normal/normal": [
+   27,
+   27
+  ]
+ },
+ "checks": {
+  "max_start_placement_err_m": 1.5078915112098912e-06,
+  "max_offset_vs_reference_err": 0.0,
+  "max_goal_err": 0.0
+ },
+ "timing_s": {
+  "launch_and_setup": 13.7,
+  "episodes": 20.9,
+  "total": 54.2
+ }
+}

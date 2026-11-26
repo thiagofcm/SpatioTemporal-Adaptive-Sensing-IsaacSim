@@ -1,0 +1,59 @@
+source: Navigation/configs_3d/NAV04_static_lidar3d-r4_cnn.yaml
+exp_id: NAV04_static_lidar3d-r4_cnn
+task: STNav-TB4-Corridor-Lidar3D-v0
+run_name: null
+env:
+  scene.num_envs: 4096
+  episode_length_s: 70.0
+  scene_name: corridor_static_random
+  wall_height: 0.6
+  baffle_height: 0.6
+  goals: null
+  start_pose_dr: true
+  bank_size: 1024
+  lidar_noise: true
+  sensor: lidar3d
+  obs_layout: image
+  lidar3d.mount_pos:
+  - 0.0
+  - 0.0
+  - 0.4
+  lidar3d.mount_rpy_deg:
+  - 0.0
+  - 6.75
+  - 0.0
+  lidar3d.h_fov_deg:
+  - -14.0
+  - 14.0
+  lidar3d.v_fov_deg:
+  - -7.0
+  - 7.0
+  lidar3d.cols: 139
+  lidar3d.rows: 34
+  lidar3d.placement: cell_center
+  lidar3d.ray_order: row_major_top_left
+  lidar3d.range_max: 12.0
+  lidar3d.noise_type: gaussian
+  lidar3d.noise_sigma: 0.01
+  lidar3d.period_s: 0.25
+  lidar3d.include_floor: true
+  goal_distance_norm: 7.0
+  goal_tolerance: 0.2
+  safety_margin: 0.05
+  rewards.progress_scale: 10.0
+  rewards.proximity_scale: 1.0
+  rewards.proximity_clearance: 0.15
+  rewards.time_penalty_per_s: 0.1
+  rewards.goal_reward: 30.0
+  rewards.collision_penalty: 30.0
+  rewards.timeout_penalty: 0.0
+agent:
+  seed: 42
+  max_iterations: 500
+  num_steps_per_env: 32
+  algorithm.learning_rate: 0.0003
+  algorithm.gamma: 0.99
+  algorithm.lam: 0.95
+  algorithm.entropy_coef: 0.005
+sweep: {}
+set: {}

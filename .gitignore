@@ -21,6 +21,7 @@ references/robot_description/.venv_xacro/
 **/events.out.tfevents.*
 # checkpoints: only explicitly listed (evaluated / promoted) checkpoints are versioned
 Navigation/runs/**/model_*.pt
+Navigation/runs_3d/**/model_*.pt
 AdaptiveSensing/runs/**/model_*.pt
 !Navigation/runs/NAV01_static_initial/2026-11-22_00-44-09_m5_initial_4096/model_200.pt
 !Navigation/runs/NAV01_static_initial/2026-11-22_12-43-08_ppo_n4096_s42_reorg_validation/model_200.pt
@@ -36,8 +37,10 @@ AdaptiveSensing/sweeps/
 # metadata.json, world_geometry.json, trajectory.csv, steps.csv; per evaluation: episodes.csv, summary.json,
 # run_config.json, world_geometry.json, plots (*.png); per protocol: summary.csv.
 Navigation/eval/**/episode_*/*.npz
+Navigation/eval_3d/**/episode_*/*.npz
 AdaptiveSensing/eval/**/episode_*/*.npz
 Navigation/eval/**/*.mp4
+Navigation/eval_3d/**/*.mp4
 AdaptiveSensing/eval/**/*.mp4
 
 # --- regression-check outputs (regenerated on every run) ---
@@ -54,3 +57,6 @@ infrastructure/M5_initial_navigation/results/runs/*_smoke/
 infrastructure/robot_viz/results/*.glb
 # milestone videos rendered from recordings (regenerable with tools/make_video.py)
 infrastructure/M6_dynamic_scene/results/*.mp4
+
+# fast-path equivalence traces (regenerable with tests/sim/fast_path_equivalence.py; comparison reports are versioned)
+AdaptiveSensing/eval/**/traces/*.pt

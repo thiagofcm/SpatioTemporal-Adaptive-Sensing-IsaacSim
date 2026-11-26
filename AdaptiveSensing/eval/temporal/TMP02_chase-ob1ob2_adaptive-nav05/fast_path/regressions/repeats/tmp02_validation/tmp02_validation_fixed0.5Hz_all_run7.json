@@ -1,0 +1,41 @@
+{
+ "mode": "fixed",
+ "checks": {
+  "hz": 0.5,
+  "tmp01_dir": "AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/ref_chase_c10/2026-11-23_20-21-14_ppo_cnn_n4096_s42_model_1499_fixed0.5Hz",
+  "episodes": 100,
+  "mismatches_vs_tmp01": {
+   "outcome": 0,
+   "n_steps": 0,
+   "episode_return": 0,
+   "accepted_scans": 0,
+   "native_scans": 0,
+   "mean_obs_age_s": 0,
+   "max_obs_age_s": 0
+  },
+  "success": 0.14,
+  "success_tmp01": 0.14,
+  "accepted_total": 584,
+  "causal_total": 484,
+  "nav05_state_unchanged": true
+ },
+ "pass": true,
+ "command": [
+  "tests/sim/tmp02_validation.py",
+  "--headless",
+  "--fixed",
+  "0.5",
+  "--fast_path",
+  "all",
+  "--out_dir",
+  "AdaptiveSensing/eval/temporal/TMP02_chase-ob1ob2_adaptive-nav05/fast_path/regressions/repeats/tmp02_validation",
+  "--tag",
+  "all_run7"
+ ],
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "0b4e5adf4d2418497dc03d024a63f768bfb0aa9e",
+  "branch": "main",
+  "dirty": true
+ }
+}

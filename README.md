@@ -29,8 +29,8 @@ AdaptiveSensing/        research line (created with its first experiment): same 
                         spatiotemporal
 models/navigation/      frozen navigation policies for AdaptiveSensing (<ID>_<checkpoint>.pt + .json)
 tools/                  experiments.py (IDs, paths, YAML configs), monitor_run.py, episode_data.py (evaluation recording
-                        format), make_video.py, plot_episode.py, plot_eval.py (standalone: numpy + matplotlib),
-                        benchmark_env.py
+                        format), make_video.py, make_pov_video.py / make_cloud_video.py (3D LiDAR point of view /
+                        point cloud), plot_episode.py, plot_eval.py (standalone: numpy + matplotlib), benchmark_env.py
 tests/                  unit/ (no simulator, pytest) · sim/ (simulator regression scripts) · golden/ (refactoring checks)
 infrastructure/         M1–M7 development history (reports, scripts, results) + server diagnostics
 docs/                   registry, architecture, plan, server setup, references, templates, history/
@@ -58,6 +58,8 @@ python tools/plot_eval.py <eval dir>                                       # who
 python tools/plot_episode.py <eval dir>/episode_0025                       # one episode: map + time series
 python tools/make_video.py <eval dir>/episode_0025                         # one episode MP4
 python tools/make_video.py --eval <eval dir> --episodes 0 1 2              # several episodes side by side
+python tools/make_pov_video.py <eval dir>/episode_0025                     # 3D LiDAR: point-of-view MP4
+python tools/make_cloud_video.py <eval dir>/episode_0025                   # 3D LiDAR: point-cloud MP4
 ```
 
 ## Tests

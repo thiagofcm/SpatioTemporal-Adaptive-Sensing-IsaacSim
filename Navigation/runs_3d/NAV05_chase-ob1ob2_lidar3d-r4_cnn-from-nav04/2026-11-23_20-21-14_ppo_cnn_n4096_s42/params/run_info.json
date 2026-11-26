@@ -1,0 +1,35 @@
+{
+ "exp_id": "NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04",
+ "task": "STNav-TB4-Corridor-Lidar3D-v0",
+ "run_name": "ppo_cnn_n4096_s42",
+ "command": [
+  "Navigation/scripts/train_3d.py",
+  "--headless",
+  "--config",
+  "Navigation/configs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04.yaml"
+ ],
+ "host": "ece-focus-xg01",
+ "cuda_visible_devices": "5",
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "0b4e5adf4d2418497dc03d024a63f768bfb0aa9e",
+  "branch": "main",
+  "dirty": true
+ },
+ "init_from": {
+  "checkpoint": "Navigation/runs_3d/NAV04_static_lidar3d-r4_cnn/2026-11-23_16-56-10_ppo_cnn_n4096_s42/model_499.pt",
+  "mode": "weights",
+  "checkpoint_abs": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing/Navigation/runs_3d/NAV04_static_lidar3d-r4_cnn/2026-11-23_16-56-10_ppo_cnn_n4096_s42/model_499.pt",
+  "sha256": "d34a25ee4074f84ad548de4949c0982cee9f8aaf8d6c3c37ddb7604bbde46c6d",
+  "source_iteration": 499,
+  "tensors_loaded": 37,
+  "tensors_identical": true,
+  "start_iteration": 0,
+  "learning_rate_start": 0.0003
+ },
+ "versions": {
+  "rsl-rl-lib": "5.0.1",
+  "torch": "2.7.0+cu128",
+  "isaaclab": "0.54.4"
+ }
+}

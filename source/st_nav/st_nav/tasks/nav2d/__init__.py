@@ -14,3 +14,15 @@ for _task_id in ("STNav-TB4-Corridor-Static-v0", "STNav-TB4-Corridor-v0"):
             "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:CorridorNavPPORunnerCfg",
         },
     )
+
+# 3D LiDAR (fixed Mirrorcle raster approximation, R4 mount) with range-image observations and the CNN PPO agent (M8).
+# Same env class; only the config defaults (sensor, observation layout) and the agent differ.
+gym.register(
+    id="STNav-TB4-Corridor-Lidar3D-v0",
+    entry_point=f"{__name__}.corridor_env:CorridorNavEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": f"{__name__}.corridor_env_lidar3d_cfg:CorridorNavLidar3DEnvCfg",
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cnn_cfg:CorridorNavCNNPPORunnerCfg",
+    },
+)

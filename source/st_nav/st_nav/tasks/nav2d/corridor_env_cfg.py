@@ -67,9 +67,15 @@ class CorridorNavEnvCfg(DirectRLEnvCfg):
     start_pose_dr: bool = True                           # reference ST04-07: 5 start points, yaw pi +- 10 deg, per reset (M5)
     bank_size: int = 1024
     privileged_critic: bool = False                      # optional critic observation group (clean scan + GT)
+    # observation layout: "flat" = {"policy": [scan | 7 navigation features]} (2D policies, MLP);
+    # "image" = {"policy": 7 navigation features, "lidar": (1, rows, cols) range image / range_max} (3D grid LiDAR, CNN)
+    obs_layout: str = "flat"
     # ---- evaluation overrides (None/defaults = training behaviour; see CorridorSceneCfg) ----
     bank_seed: int = 0
     bank_assignment: str = "random"
     offsets_from_bank: bool = False
     start_poses: tuple | None = None
     goals: tuple | None = None                           # None: reference ST01 9-goal list
+    # ---- performance (st_nav.envs.corridor_scene.FAST_PATH_ITEMS or ("all",)); () = original code path. Every item
+    # removes redundant work without changing computed values (bitwise-validated) ----
+    fast_path: tuple = ()

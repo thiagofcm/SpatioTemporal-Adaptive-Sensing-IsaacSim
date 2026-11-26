@@ -1,0 +1,15 @@
+A: {'fast_path': [], 'num_envs': 512, 'ticks': 800, 'seed': 1, 'loop_s': 121.35, 'ms_per_tick_incl_recording': 151.69, 'episodes_ended': 8430, 'gpu': 'NVIDIA RTX A6000'}
+B: {'fast_path': ['all'], 'num_envs': 512, 'ticks': 800, 'seed': 1, 'loop_s': 106.68, 'ms_per_tick_incl_recording': 133.35, 'episodes_ended': 8430, 'gpu': 'NVIDIA RTX A6000'}
+  robot_pose: identical ((800, 512, 7))
+  robot_vel: identical ((800, 512, 6))
+  wheel_vel: identical ((800, 512, 2))
+  ob_body_pose: identical ((800, 512, 2, 3))
+  ob_model_pos: identical ((800, 512, 2, 2))
+  lidar_digest: identical ((800, 512))
+  nav_features: identical ((800, 512, 7))
+  reward: identical ((800, 512))
+  done: identical ((800, 512))
+  outcome: identical ((800, 512))
+  mask: identical ((800, 512))
+  scan_t: identical ((800, 512))
+EQUIVALENT (bitwise)

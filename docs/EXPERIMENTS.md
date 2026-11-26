@@ -12,6 +12,21 @@ scripts import.
 | [NAV01_static_initial](../Navigation/eval/NAV01_static_initial/README.md) | Navigation | done | Can PPO learn collision-free navigation in the randomized static corridor (2D LiDAR, start-pose DR) at 4,096 envs? | [config](../Navigation/configs/NAV01_static_initial.yaml) |
 | [NAV02_chase-ob1_dr](../Navigation/eval/NAV02_chase-ob1_dr/README.md) | Navigation | evaluating | Can PPO navigate the dynamic corridor with one moving obstacle (OB1; speed / path-y DR)? | [config](../Navigation/configs/NAV02_chase-ob1_dr.yaml) |
 | [NAV03_chase-ob1ob2_dr](../Navigation/eval/NAV03_chase-ob1ob2_dr/README.md) | Navigation | evaluating | Can PPO navigate the dynamic corridor with two moving obstacles (OB1 + OB2; speed / path-y DR)? | [config](../Navigation/configs/NAV03_chase-ob1ob2_dr.yaml) |
+| [NAV04_static_lidar3d-r4_cnn](../Navigation/eval_3d/NAV04_static_lidar3d-r4_cnn/README.md) | Navigation (3D) | prepared | Can PPO with a CNN on the fixed 3D LiDAR range image (R4 mount, 4 Hz) learn the NAV01 task? | [config](../Navigation/configs_3d/NAV04_static_lidar3d-r4_cnn.yaml) |
+| [NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04](../Navigation/eval_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/README.md) | Navigation (3D) | prepared | Warm-started from NAV04 model_499, can the 3D-LiDAR CNN policy learn the NAV03 task (OB1 + OB2 moving)? | [config](../Navigation/configs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04.yaml) |
+| [TMP01_chase-ob1ob2_fixed-rate-nav05](../AdaptiveSensing/eval/temporal/TMP01_chase-ob1ob2_fixed-rate-nav05/README.md) | AdaptiveSensing (temporal) | done | How does the frozen NAV05 policy degrade when the 4 Hz LiDAR is gated to 4 / 2 / 1 / 0.5 / 0.2 Hz (real-robot scan gate)? | none (`evaluate_fixed_rate.py --fixed <hz>`) |
+| [TMP02_chase-ob1ob2_adaptive-nav05](../AdaptiveSensing/eval/temporal/TMP02_chase-ob1ob2_adaptive-nav05/README.md) | AdaptiveSensing (temporal) | implemented, not trained | Can a recurrent sensing policy choose the LiDAR rate (0.2-4 Hz) of the frozen NAV05 policy to save frames while keeping navigation performance? | `AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml` |
+
+**3D-LiDAR experiments (M8)** use their own scripts and roots, separate from the 2D pipeline: `Navigation/scripts/train_3d.py`,
+`evaluate_3d.py`, configs in `Navigation/configs_3d/`, runs in `Navigation/runs_3d/<ID>/`, evaluations in
+`Navigation/eval_3d/<ID>/` (`tools/experiments.py: paths_3d`). Task `STNav-TB4-Corridor-Lidar3D-v0` (same env class,
+`obs_layout: image`), agent `CorridorNavCNNPPORunnerCfg` (`st_nav/rl/lidar_cnn.py`).
+`train_3d.py` can start from a checkpoint: config key `init_from: {checkpoint: <path>, mode: weights | resume}` or
+`--init_from <checkpoint> [--resume]`. `weights` (warm start) loads the actor and critic (with normalizer statistics
+and action std) and starts a new run at iteration 0 with a fresh optimizer; `resume` also restores the optimizer, the
+iteration and the adaptive learning rate (`agent.max_iterations` = additional iterations). The network must match.
+
+Training curves: [TENSORBOARD.md](TENSORBOARD.md) explains every TensorBoard scalar.
 
 ## Experiment ID
 
@@ -82,6 +97,35 @@ python tools/plot_eval.py <eval_dir> [--episodes 0 1 25]           # whole evalu
 
 3D LiDAR episodes (`lidar.npz` per-scan layout, schema 1.1) are drawn as the scan's 3D returns projected top-down
 (coloured by height, floor returns grey); single-episode videos and figures add the range image.
+`tools/make_pov_video.py` (3D only) renders the LiDAR's point of view: first-person views from the optical centre with
+the returns coloured by ray class (mount-study colours: floor, wall, static obstacle, moving obstacle, escaping ray) and
+by range, plus a top-down map, the range image the policy received and the ray-class image.
+
+```bash
+python tools/make_pov_video.py <eval_dir>/episode_0005                  # -> episode_0005/episode_0005_pov.mp4
+python tools/make_pov_video.py --eval <eval_dir> --episodes 5 7 42      # one video per episode
+```
+
+`tools/make_cloud_video.py` (3D only) draws the point cloud actually captured (observed ranges rebuilt as
+origin + range x direction), coloured by range, in the robot frame (camera behind the sensor, no scene geometry), with a
+miniature map. `--depth` adds the depth image the policy received; `--scene` shows instead a world-frame 3D view with
+the walls, robot and trail (`--camera follow|fixed`); `--accumulate N` also draws the N previous scans (faded).
+
+```bash
+python tools/make_cloud_video.py <eval_dir>/episode_0005                # -> episode_0005/episode_0005_cloud.mp4
+python tools/make_cloud_video.py <eval_dir>/episode_0005 --depth --accumulate 8
+python tools/make_cloud_video.py <eval_dir>/episode_0005 --scene        # -> episode_0005/episode_0005_cloud_scene.mp4
+```
+
+`Navigation/scripts/replay_episode_isaac.py` (needs Isaac Sim; tested on 3D episodes, 2D ones have the same pose files) renders a recorded episode with RTX
+cameras (chase + overhead): the scene is rebuilt from the episode folder and the TurtleBot4 USD (physics removed) and the
+moving obstacles are placed at their recorded poses; no policy, no physics. About 25 s for a 40 s episode.
+
+```bash
+bin/isaacrun -g <gpu> -- python Navigation/scripts/replay_episode_isaac.py --headless --enable_cameras <eval_dir>/episode_0000 --compare
+# -> episode_0000_isaac.mp4; --compare adds episode_0000_recreation_2x.mp4 (make_video.py, same speed) and
+#    episode_0000_isaac_vs_recreation.mp4 (side by side, frames in sync)
+```
 
 ## Configs
 

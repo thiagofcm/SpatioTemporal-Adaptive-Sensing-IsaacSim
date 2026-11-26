@@ -1,0 +1,24 @@
+{
+ "exp_id": "NAV04_static_lidar3d-r4_cnn",
+ "task": "STNav-TB4-Corridor-Lidar3D-v0",
+ "run_name": "ppo_cnn_n4096_s42",
+ "command": [
+  "Navigation/scripts/train_3d.py",
+  "--headless",
+  "--config",
+  "Navigation/configs_3d/NAV04_static_lidar3d-r4_cnn.yaml"
+ ],
+ "host": "ece-focus-xg01",
+ "cuda_visible_devices": "5",
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "0b4e5adf4d2418497dc03d024a63f768bfb0aa9e",
+  "branch": "main",
+  "dirty": true
+ },
+ "versions": {
+  "rsl-rl-lib": "5.0.1",
+  "torch": "2.7.0+cu128",
+  "isaaclab": "0.54.4"
+ }
+}

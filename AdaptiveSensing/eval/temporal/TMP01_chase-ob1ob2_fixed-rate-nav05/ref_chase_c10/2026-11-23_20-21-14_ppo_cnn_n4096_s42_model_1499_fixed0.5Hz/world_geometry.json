@@ -1,0 +1,87 @@
+{
+ "scene": "corridor_dynamic_chase_random",
+ "arena_interior_half_m": 2.835,
+ "walls": [
+  {
+   "name": "outer_W",
+   "cx": -2.91,
+   "cy": 0.0,
+   "length": 6.0,
+   "thickness": 0.15,
+   "yaw": 1.5707963267948966
+  },
+  {
+   "name": "outer_N",
+   "cx": 0.0,
+   "cy": 2.91,
+   "length": 6.0,
+   "thickness": 0.15,
+   "yaw": 0.0
+  },
+  {
+   "name": "outer_E",
+   "cx": 2.91,
+   "cy": 0.0,
+   "length": 6.0,
+   "thickness": 0.15,
+   "yaw": -1.5707963267948966
+  },
+  {
+   "name": "outer_S",
+   "cx": 0.0,
+   "cy": -2.91,
+   "length": 6.0,
+   "thickness": 0.15,
+   "yaw": 3.141592653589793
+  },
+  {
+   "name": "C1",
+   "cx": 0.975,
+   "cy": 2.08,
+   "length": 1.66,
+   "thickness": 0.15,
+   "yaw": 1.5707963267948966
+  },
+  {
+   "name": "C2",
+   "cx": -0.175,
+   "cy": 1.325,
+   "length": 2.45,
+   "thickness": 0.15,
+   "yaw": 0.0
+  },
+  {
+   "name": "C3",
+   "cx": -1.325,
+   "cy": 0.225,
+   "length": 2.35,
+   "thickness": 0.15,
+   "yaw": 1.5707963267948966
+  },
+  {
+   "name": "C4",
+   "cx": -2.08,
+   "cy": -0.875,
+   "length": 1.66,
+   "thickness": 0.15,
+   "yaw": 0.0
+  },
+  {
+   "name": "C5",
+   "cx": 1.58,
+   "cy": -0.325,
+   "length": 2.66,
+   "thickness": 0.15,
+   "yaw": 0.0
+  },
+  {
+   "name": "C6",
+   "cx": 0.325,
+   "cy": -1.58,
+   "length": 2.66,
+   "thickness": 0.15,
+   "yaw": 1.5707963267948966
+  }
+ ],
+ "note": "fixed walls only; every episode_NNNN/world_geometry.json is the complete geometry of that episode"
+}

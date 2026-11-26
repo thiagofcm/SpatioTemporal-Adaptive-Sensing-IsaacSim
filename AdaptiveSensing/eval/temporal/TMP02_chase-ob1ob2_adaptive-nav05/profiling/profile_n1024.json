@@ -1,0 +1,112 @@
+{
+ "num_envs": 1024,
+ "ticks": 256,
+ "device": "cuda:0",
+ "gpu": "NVIDIA RTX A6000",
+ "cpu_count": 256,
+ "setup_s": 27.2,
+ "A_plain": {
+  "rollout_s": 44.38,
+  "ms_per_tick": 173.36,
+  "transitions_per_s": 5906.8,
+  "process_cpu_over_wall": 1.714,
+  "accepted_tick_fraction": 0.1243,
+  "episodes_ended": 5363
+ },
+ "B_instrumented": {
+  "rollout_s": 45.85,
+  "ms_per_tick": 179.1,
+  "components_ms_per_tick (inclusive)": {
+   "sense.step (total)": 176.265,
+   "env.step (total)": 173.101,
+   "env: sim.step x20 (PhysX)": 53.76,
+   "env: apply_action x20 (obstacles + diff-drive + joint targets)": 53.448,
+   "env:   advance_obstacles x20": 35.161,
+   "env: get_observations (LiDAR read + features)": 19.238,
+   "env: scene.update x20 (articulation / sensor buffers)": 17.841,
+   "env: reset_idx (episode resets)": 14.768,
+   "env: scene.write_data_to_sim x20": 9.829,
+   "env:   ray casting (MultiMeshRayCaster)": 7.665,
+   "sensing agent (total)": 2.277,
+   "env: get_dones (clearance, goal)": 1.488,
+   "NAV05 inference": 1.406,
+   "sensing agent: CNN encoder": 1.247,
+   "buffer writes": 0.351,
+   "gate: step": 0.294,
+   "env: get_rewards": 0.293,
+   "gate: reset": 0.23,
+   "sensing obs build": 0.17,
+   "env: pre_physics (action -> diff-drive command)": 0.109,
+   "gate: set_rate": 0.07
+  },
+  "calls_per_tick": {
+   "buffer writes": 3.0,
+   "sensing agent: CNN encoder": 1.0,
+   "sensing agent (total)": 1.0,
+   "gate: step": 1.0,
+   "gate: set_rate": 1.0,
+   "NAV05 inference": 1.0,
+   "env: pre_physics (action -> diff-drive command)": 1.0,
+   "env:   advance_obstacles x20": 20.0,
+   "env: apply_action x20 (obstacles + diff-drive + joint targets)": 20.0,
+   "env: scene.write_data_to_sim x20": 20.0,
+   "env: sim.step x20 (PhysX)": 20.0,
+   "env: scene.update x20 (articulation / sensor buffers)": 20.0,
+   "env: get_dones (clearance, goal)": 1.0,
+   "env: get_rewards": 1.0,
+   "env: reset_idx (episode resets)": 1.0,
+   "env:   ray casting (MultiMeshRayCaster)": 1.0,
+   "env: get_observations (LiDAR read + features)": 1.0,
+   "env.step (total)": 1.0,
+   "gate: reset": 1.0,
+   "sensing obs build": 1.0,
+   "sense.step (total)": 1.0
+  }
+ },
+ "C_host_syncs_per_tick": {
+  "isaaclab/isaaclab/sensors/sensor_base.py": 55.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py": 27.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py": 23.0,
+  "source/st_nav/st_nav/crng.py": 13.0,
+  "isaaclab/isaaclab/sensors/contact_sensor/contact_sensor.py": 4.0,
+  "source/st_nav/st_nav/scenes/corridor_dynamic_chase_random.py": 3.0,
+  "source/st_nav/st_nav/control/diff_drive.py": 3.0,
+  "isaaclab/isaaclab/envs/direct_rl_env.py": 2.0,
+  "isaaclab/isaaclab/sensors/ray_caster/ray_caster.py": 2.0,
+  "source/st_nav/st_nav/scenes/_common.py": 2.0,
+  "source/st_nav/st_nav/scenes/_obstacle_motion.py": 2.0,
+  "source/st_nav/st_nav/envs/corridor_scene.py": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation_data.py": 1.0
+ },
+ "D_cnn_reuse": {
+  "changed_fraction (held image changed or reset)": 0.143,
+  "encoder_all_images_ms_per_tick": 1.201,
+  "encoder_changed_only_ms_per_tick (incl. index ops)": 0.357,
+  "features_bitwise_equal": false,
+  "features_max_abs_diff": 0.00023783743381500244,
+  "logits_max_abs_diff": 1.3783574104309082e-06,
+  "logprob_max_abs_diff": 1.3113021850585938e-06,
+  "argmax_action_mismatches": 46,
+  "note": "rollout policy only (no_grad); the update recomputes features from the stored raw images either way"
+ },
+ "E_update": {
+  "update_s": 11.521,
+  "minibatch_s_mean": 0.719,
+  "minibatches": 16,
+  "envs_per_minibatch": 256,
+  "chunk_envs": 64,
+  "peak_mem_gb": 22.69
+ },
+ "command": [
+  "AdaptiveSensing/scripts/profile_temporal_rollout.py",
+  "--headless",
+  "--num_envs",
+  "1024"
+ ],
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "0b4e5adf4d2418497dc03d024a63f768bfb0aa9e",
+  "branch": "main",
+  "dirty": true
+ }
+}

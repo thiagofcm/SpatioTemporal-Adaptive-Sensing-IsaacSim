@@ -1,0 +1,108 @@
+{
+ "checkpoint": "Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt",
+ "episodes": 100,
+ "goal": [
+  -2.0,
+  -2.0
+ ],
+ "timeout_s": 70.0,
+ "obstacle_seeds": null,
+ "start_seeds": [
+  4000,
+  4099
+ ],
+ "sensing": {
+  "requested_hz": 0.2,
+  "native_lidar_hz": 4.0,
+  "control_hz": 5.0,
+  "measured_hz_pooled": 0.14674302075876877,
+  "measured_hz_mean_std": [
+   0.139487,
+   0.05071542300917937
+  ],
+  "native_hz_pooled": 3.846337389644476,
+  "accepted_scans_total": 223,
+  "native_scans_total": 3324,
+  "interval_s_min_max": [
+   5.0,
+   5.0
+  ],
+  "obs_age_s_mean": 2.149510307802435,
+  "obs_age_s_max": 4.8
+ },
+ "success_rate": 0.01,
+ "outcomes": {
+  "goal": 1,
+  "physical_collision": 0,
+  "safety_violation": 99,
+  "timeout": 0,
+  "running": 0
+ },
+ "return_mean_std": [
+  -21.60585,
+  11.063627066541063
+ ],
+ "success_duration_s_mean_std": [
+  37.0,
+  0.0
+ ],
+ "success_path_m_mean_std": [
+  7.278,
+  0.0
+ ],
+ "success_mean_speed_mps": 0.19670270270270268,
+ "min_clearance_m_mean_min": [
+  0.041409,
+  0.014
+ ],
+ "success_by_start_index": {
+  "0": [
+   0,
+   23
+  ],
+  "1": [
+   0,
+   18
+  ],
+  "2": [
+   0,
+   20
+  ],
+  "3": [
+   0,
+   16
+  ],
+  "4": [
+   1,
+   23
+  ]
+ },
+ "success_by_active_obstacles": {
+  "11": [
+   1,
+   100
+  ]
+ },
+ "checks": {
+  "max_start_placement_err_m": 1.5078915112098912e-06,
+  "max_offset_vs_reference_err": null,
+  "max_goal_err": 0.0,
+  "sensing": {
+   "native_interval_violations": 0,
+   "native_intervals_ticks": [
+    20,
+    40
+   ],
+   "forward_ne_new_4hz": 0,
+   "gated_ne_native_4hz": 0,
+   "held_changed_without_forward": 0,
+   "nav_features_not_current": 0,
+   "forward_without_new_scan": 0
+  }
+ },
+ "timing_s": {
+  "launch_and_setup": 14.9,
+  "episodes": 24.1,
+  "total": 40.6
+ }
+}

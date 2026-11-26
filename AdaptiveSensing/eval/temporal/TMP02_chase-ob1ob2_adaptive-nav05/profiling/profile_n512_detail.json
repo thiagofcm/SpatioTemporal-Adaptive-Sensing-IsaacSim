@@ -1,0 +1,296 @@
+{
+ "num_envs": 512,
+ "ticks": 256,
+ "device": "cuda:0",
+ "gpu": "NVIDIA RTX A6000",
+ "cpu_count": 256,
+ "setup_s": 15.4,
+ "A_plain": {
+  "rollout_s": 39.658,
+  "ms_per_tick": 154.91,
+  "transitions_per_s": 3305.1,
+  "process_cpu_over_wall": 2.077,
+  "accepted_tick_fraction": 0.1236,
+  "episodes_ended": 2693
+ },
+ "B_instrumented": {
+  "rollout_s": 43.12,
+  "ms_per_tick": 168.44,
+  "components_ms_per_tick (inclusive)": {
+   "sense.step (total)": 166.289,
+   "env.step (total)": 163.854,
+   "env: apply_action x20 (obstacles + diff-drive + joint targets)": 54.644,
+   "env: sim.step x20 (PhysX)": 45.827,
+   "env:   advance_obstacles x20": 35.924,
+   "obstacles: pose writes (both bodies) x20 (+resets)": 24.617,
+   "env: scene.update x20 (articulation / sensor buffers)": 21.518,
+   "drive: command model step x20": 15.237,
+   "env: reset_idx (episode resets)": 15.047,
+   "reset: corr.reset": 12.583,
+   "update: contact sensor x20": 12.202,
+   "env: get_observations (LiDAR read + features)": 12.187,
+   "obstacles: model advance x20": 11.649,
+   "env: scene.write_data_to_sim x20": 11.12,
+   "crng.key (all callers)": 10.962,
+   "obs: lidar.read (ray cast + noise)": 10.49,
+   "write_data: robot articulation x20": 8.836,
+   "obstacles:   OB1 write_root_pose_to_sim x20 (+resets)": 7.327,
+   "obstacles:   OB2 write_root_pose_to_sim x20 (+resets)": 7.011,
+   "reset:   obstacle model reset": 6.542,
+   "update:   contact sensor buffer fetch": 5.454,
+   "obs:   range noise (crng Box-Muller)": 5.273,
+   "env:   ray casting (MultiMeshRayCaster)": 4.49,
+   "update: robot articulation x20": 3.527,
+   "reset:   scene.reset": 2.7,
+   "update: LiDAR ray caster x20 (lazy)": 2.633,
+   "drive: set_joint_velocity_target x20 (+resets)": 1.798,
+   "sensing agent (total)": 1.667,
+   "env: get_dones (clearance, goal)": 1.459,
+   "NAV05 inference": 0.836,
+   "dones: footprint_clearance": 0.795,
+   "write_data: OB1 rigid object x20": 0.726,
+   "sensing agent: CNN encoder": 0.696,
+   "dones: goal_distance": 0.59,
+   "reset:   robot joint state write": 0.535,
+   "write_data: OB2 rigid object x20": 0.525,
+   "update: OB1 rigid object x20": 0.374,
+   "update: OB2 rigid object x20": 0.336,
+   "buffer writes": 0.308,
+   "env: get_rewards": 0.276,
+   "gate: step": 0.244,
+   "reset:   robot root velocity write": 0.225,
+   "gate: reset": 0.212,
+   "reset:   robot root pose write": 0.19,
+   "sensing obs build": 0.156,
+   "env: pre_physics (action -> diff-drive command)": 0.103,
+   "gate: set_rate": 0.065
+  },
+  "calls_per_tick": {
+   "buffer writes": 3.0,
+   "sensing agent: CNN encoder": 1.0,
+   "sensing agent (total)": 1.0,
+   "gate: step": 1.0,
+   "gate: set_rate": 1.0,
+   "NAV05 inference": 1.0,
+   "env: pre_physics (action -> diff-drive command)": 1.0,
+   "obstacles: model advance x20": 20.0,
+   "obstacles:   OB1 write_root_pose_to_sim x20 (+resets)": 21.0,
+   "obstacles:   OB2 write_root_pose_to_sim x20 (+resets)": 21.0,
+   "obstacles: pose writes (both bodies) x20 (+resets)": 21.0,
+   "env:   advance_obstacles x20": 20.0,
+   "drive: command model step x20": 20.0,
+   "drive: set_joint_velocity_target x20 (+resets)": 21.0,
+   "env: apply_action x20 (obstacles + diff-drive + joint targets)": 20.0,
+   "write_data: robot articulation x20": 20.0,
+   "write_data: OB1 rigid object x20": 20.0,
+   "write_data: OB2 rigid object x20": 20.0,
+   "env: scene.write_data_to_sim x20": 20.0,
+   "env: sim.step x20 (PhysX)": 20.0,
+   "update: robot articulation x20": 20.0,
+   "update: OB1 rigid object x20": 20.0,
+   "update: OB2 rigid object x20": 20.0,
+   "update: LiDAR ray caster x20 (lazy)": 20.0,
+   "update:   contact sensor buffer fetch": 20.0,
+   "update: contact sensor x20": 20.0,
+   "env: scene.update x20 (articulation / sensor buffers)": 20.0,
+   "dones: goal_distance": 2.0,
+   "dones: footprint_clearance": 1.0,
+   "env: get_dones (clearance, goal)": 1.0,
+   "env: get_rewards": 1.0,
+   "reset:   scene.reset": 2.0,
+   "crng.key (all callers)": 12.0,
+   "reset:   obstacle model reset": 1.0,
+   "reset:   robot root pose write": 1.0,
+   "reset:   robot root velocity write": 1.0,
+   "reset:   robot joint state write": 1.0,
+   "reset: corr.reset": 1.0,
+   "env: reset_idx (episode resets)": 1.0,
+   "env:   ray casting (MultiMeshRayCaster)": 1.0,
+   "obs:   range noise (crng Box-Muller)": 1.0,
+   "obs: lidar.read (ray cast + noise)": 1.0,
+   "env: get_observations (LiDAR read + features)": 1.0,
+   "env.step (total)": 1.0,
+   "gate: reset": 1.0,
+   "sensing obs build": 1.0,
+   "sense.step (total)": 1.0
+  }
+ },
+ "C_host_syncs_per_tick": {
+  "isaaclab/isaaclab/sensors/sensor_base.py": 55.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py": 27.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py": 23.0,
+  "source/st_nav/st_nav/crng.py": 13.0,
+  "isaaclab/isaaclab/sensors/contact_sensor/contact_sensor.py": 4.0,
+  "source/st_nav/st_nav/scenes/corridor_dynamic_chase_random.py": 3.0,
+  "source/st_nav/st_nav/control/diff_drive.py": 3.0,
+  "isaaclab/isaaclab/envs/direct_rl_env.py": 2.0,
+  "isaaclab/isaaclab/sensors/ray_caster/ray_caster.py": 2.0,
+  "source/st_nav/st_nav/scenes/_common.py": 2.0,
+  "source/st_nav/st_nav/scenes/_obstacle_motion.py": 2.0,
+  "source/st_nav/st_nav/envs/corridor_scene.py": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation_data.py": 1.0
+ },
+ "C_host_syncs_per_tick_by_line": {
+  "isaaclab/isaaclab/sensors/sensor_base.py:356  outdated_env_ids = self._is_outdated.nonzero().squeeze(-1)": 22.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py:1125  self._data.joint_vel_target[env_ids, joint_ids] = target": 21.0,
+  "isaaclab/isaaclab/sensors/sensor_base.py:363  self._is_outdated[outdated_env_ids] = False": 21.0,
+  "source/st_nav/st_nav/crng.py:45  p = torch.tensor(_s(int(p)), dtype=torch.int64, device=dev)": 13.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:175  self.ep_sums[k][env_ids] = 0.0": 6.0,
+  "isaaclab/isaaclab/sensors/sensor_base.py:179  self._timestamp[env_ids] = 0.0": 4.0,
+  "isaaclab/isaaclab/sensors/sensor_base.py:180  self._timestamp_last_update[env_ids] = 0.0": 4.0,
+  "isaaclab/isaaclab/sensors/sensor_base.py:182  self._is_outdated[env_ids] = True": 4.0,
+  "isaaclab/isaaclab/sensors/ray_caster/ray_caster.py:134  ranges = torch.tensor(range_list, device=self.device)": 2.0,
+  "isaaclab/isaaclab/sensors/contact_sensor/contact_sensor.py:151  self._data.net_forces_w[env_ids] = 0.0": 2.0,
+  "isaaclab/isaaclab/sensors/contact_sensor/contact_sensor.py:152  self._data.net_forces_w_history[env_ids] = 0.0": 2.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py:644  self._data.joint_acc[env_ids, joint_ids] = 0.0": 2.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:198  self.scan[due] = out.normalized[due]": 2.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:199  self.scan_clean[due] = (out.ranges_clean / out.range_max)[due]": 2.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:200  self.scan_t[due] = self.ep_time[due]": 2.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:201  self.next_scan_t[due] = self.next_scan_t[due] + self.scan_period * torch.ceil(": 2.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:202  (self.ep_time[due] + tol - self.next_scan_t[due]) / self.scan_period).clamp(min=1)": 2.0,
+  "isaaclab/isaaclab/envs/direct_rl_env.py:396  reset_env_ids = self.reset_buf.nonzero(as_tuple=False).squeeze(-1)": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:155  ended = env_ids[self.episode_length_buf[env_ids] > 0]": 1.0,
+  "isaaclab/isaaclab/envs/direct_rl_env.py:628  self.episode_length_buf[env_ids] = 0": 1.0,
+  "source/st_nav/st_nav/scenes/_common.py:38  pts = torch.tensor(START_POSE_LIST, device=device)": 1.0,
+  "source/st_nav/st_nav/scenes/_common.py:46  g = torch.tensor(goals, device=device, dtype=torch.float32)": 1.0,
+  "source/st_nav/st_nav/scenes/corridor_dynamic_chase_random.py:51  lo = torch.tensor([r[0] for r in OBSTACLE_Y_RANGES], device=device)": 1.0,
+  "source/st_nav/st_nav/scenes/corridor_dynamic_chase_random.py:52  hi = torch.tensor([r[1] for r in OBSTACLE_Y_RANGES], device=device)": 1.0,
+  "source/st_nav/st_nav/scenes/corridor_dynamic_chase_random.py:58  fallback = torch.tensor([MOVING_OBSTACLES[0][\"start\"][1], MOVING_OBSTACLES[1][\"start\"][1]]": 1.0,
+  "source/st_nav/st_nav/scenes/_obstacle_motion.py:115  self.pause[env_ids] = 0.0                                  # every episode starts with the": 1.0,
+  "source/st_nav/st_nav/scenes/_obstacle_motion.py:119  self.reversals[env_ids] = 0": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py:522  self._data.body_acc_w[env_ids] = 0.0": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py:604  self._data.joint_pos[env_ids, joint_ids] = position": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py:642  self._data.joint_vel[env_ids, joint_ids] = velocity": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation.py:643  self._data._previous_joint_vel[env_ids, joint_ids] = velocity": 1.0,
+  "source/st_nav/st_nav/control/diff_drive.py:97  self._fifo[ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/control/diff_drive.py:98  self.state[ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/control/diff_drive.py:99  self.cmd[ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/envs/corridor_scene.py:270  self.sim_time[env_ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:170  self.actions[env_ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:171  self.ep_time[env_ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:172  self.corr.sim_time[env_ids] = 0.0": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:173  self.next_scan_t[env_ids] = 0.0                                   # force a fresh scan in ": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:176  self.ep_min_clearance[env_ids] = float(\"inf\")": 1.0,
+  "source/st_nav/st_nav/tasks/nav2d/corridor_env.py:195  if bool(due.any()):": 1.0,
+  "isaaclab/isaaclab/assets/articulation/articulation_data.py:722  pose = self._root_physx_view.get_coms().to(self.device)": 1.0
+ },
+ "F_kernels_per_tick": {
+  "wall_ms_per_tick (profiler on)": 389.36,
+  "gpu_kernel_busy_ms_per_tick": 42.71,
+  "kernels_per_tick": 9217.1,
+  "memcpy_per_tick": 1955.9,
+  "runtime_calls_per_tick": {
+   "cudaLaunchKernel": 5509.0,
+   "cuLaunchKernel": 3706.2,
+   "cudaMemcpyAsync": 645.0,
+   "cudaStreamSynchronize": 580.0,
+   "cudaMemcpy": 20.0,
+   "cudaDeviceSynchronize": 0.2
+  },
+  "top_kernels_by_time_ms_per_tick": {
+   "artiSolveInternalConstraintsTGS1T": [
+    360.0,
+    7.697
+   ],
+   "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<a": [
+    814.0,
+    2.354
+   ],
+   "stepArticulation1TTGS": [
+    320.0,
+    1.977
+   ],
+   "void at::native::vectorized_elementwise_kernel<2, at::native::AUnaryFunctor<long": [
+    349.0,
+    1.7
+   ],
+   "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<a": [
+    246.0,
+    1.674
+   ],
+   "radixSortMultiCalculateRanksLaunchWithCount": [
+    160.0,
+    1.391
+   ],
+   "raycast_dynamic_meshes_kernel_847eae7a_cuda_kernel_forward": [
+    1.0,
+    1.328
+   ],
+   "void at::native::vectorized_elementwise_kernel<2, at::native::BinaryFunctor<long": [
+    212.0,
+    1.305
+   ],
+   "convexCoreConvexNphase_Kernel": [
+    26.6,
+    1.205
+   ],
+   "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespa": [
+    407.0,
+    1.13
+   ],
+   "void at::native::vectorized_elementwise_kernel<2, at::native::BUnaryFunctor<long": [
+    213.0,
+    1.071
+   ],
+   "radixSortMultiBlockLaunchWithCount": [
+    160.0,
+    1.033
+   ],
+   "artiSolveInternalTendonAndMimicJointConstraints1T": [
+    360.0,
+    0.866
+   ],
+   "artiPropagateRigidImpulsesAndSolveSelfConstraintsTGS1T": [
+    360.0,
+    0.811
+   ],
+   "propagateAverageSolverBodyVelocityTGS": [
+    320.0,
+    0.76
+   ]
+  },
+  "top_kernels_by_count_per_tick": {
+   "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<a": 814.0,
+   "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<fl": 464.0,
+   "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespa": 407.0,
+   "void at::native::vectorized_elementwise_kernel<4, at::native::BinaryFunctor<floa": 360.0,
+   "artiPropagateRigidImpulsesAndSolveSelfConstraintsTGS1T": 360.0,
+   "artiSolveInternalTendonAndMimicJointConstraints1T": 360.0,
+   "artiSolveInternalConstraintsTGS1T": 360.0,
+   "void at::native::vectorized_elementwise_kernel<2, at::native::AUnaryFunctor<long": 349.0,
+   "propagateAverageSolverBodyVelocityTGS": 320.0,
+   "stepArticulation1TTGS": 320.0,
+   "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<a": 246.0,
+   "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>": 225.0,
+   "void at::native::vectorized_elementwise_kernel<2, at::native::BUnaryFunctor<long": 213.0,
+   "void at::native::vectorized_elementwise_kernel<2, at::native::BinaryFunctor<long": 212.0,
+   "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda": 182.0
+  }
+ },
+ "D_cnn_reuse": {
+  "changed_fraction (held image changed or reset)": 0.1425,
+  "encoder_all_images_ms_per_tick": 0.639,
+  "encoder_changed_only_ms_per_tick (incl. index ops)": 0.405,
+  "features_bitwise_equal": false,
+  "features_max_abs_diff": 0.00023405998945236206,
+  "logits_max_abs_diff": 1.8660211935639381e-06,
+  "logprob_max_abs_diff": 1.7881393432617188e-06,
+  "argmax_action_mismatches": 22,
+  "note": "rollout policy only (no_grad); the update recomputes features from the stored raw images either way"
+ },
+ "command": [
+  "AdaptiveSensing/scripts/profile_temporal_rollout.py",
+  "--headless",
+  "--num_envs",
+  "512",
+  "--detail",
+  "--tag",
+  "detail"
+ ],
+ "repo": {
+  "path": "/md127/home/UFAD/tcuevasmestanza/isaac_lab/spatiotemporal_sensing",
+  "commit": "0b4e5adf4d2418497dc03d024a63f768bfb0aa9e",
+  "branch": "main",
+  "dirty": true
+ }
+}

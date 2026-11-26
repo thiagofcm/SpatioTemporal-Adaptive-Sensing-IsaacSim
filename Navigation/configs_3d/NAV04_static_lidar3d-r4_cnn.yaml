@@ -1,0 +1,67 @@
+# NAV04_static_lidar3d-r4_cnn: first PPO navigation policy with the fixed 3D LiDAR (milestone M8). Same task as NAV01
+# (randomized static corridor, same rewards, dynamics, action limits, terminations, domain randomization and PPO
+# hyper-parameters); the observation is the LiDAR range image (CNN encoder) + the 7 navigation features.
+#
+# Sensor: Mirrorcle raster approximation, R4 mount (infrastructure/M7_lidar3d/mount_study): optical centre
+# (0, 0, 0.40) m in base_link, pitch 6.75 deg down; FoV 28 x 14 deg, 139 x 34 rays, 12 m, Gaussian noise 1 cm, 4 Hz
+# (scans at the 5 Hz control instants; the latest complete scan is held between acquisitions).
+# Network (CorridorNavCNNPPORunnerCfg): Conv 16/32/64 3x3 stride 2 ReLU -> Linear 128 ReLU, concat navigation features,
+# MLP 256-128 (ELU), separate actor / critic encoders.
+#
+# Values equal to the defaults are listed on purpose: they pin the experiment.
+# Train:  isaacrun -g <gpu> -- python Navigation/scripts/train_3d.py --headless --config Navigation/configs_3d/NAV04_static_lidar3d-r4_cnn.yaml
+exp_id: NAV04_static_lidar3d-r4_cnn
+task: STNav-TB4-Corridor-Lidar3D-v0
+run_name: null                      # default: ppo_cnn_n<num_envs>_s<seed>
+
+env:
+  scene.num_envs: 4096
+  episode_length_s: 70.0            # 350 control steps (5 Hz)
+  # ---- scene (pinned: same task as NAV01, which relies on these class defaults) ----
+  scene_name: corridor_static_random  # corridor + Z1-Z4 baffles (st_nav/scenes/corridor_static_random.py)
+  wall_height: 0.6
+  baffle_height: 0.6
+  goals: null                       # null = reference ST01 9-goal list (as NAV01)
+  # ---- domain randomization (as NAV01) ----
+  start_pose_dr: true
+  bank_size: 1024
+  lidar_noise: true                 # 3D: Gaussian range noise (lidar3d.noise_type / noise_sigma)
+  # ---- sensor: 3D LiDAR, R4 mount ----
+  sensor: lidar3d
+  obs_layout: image
+  lidar3d.mount_pos: [0.0, 0.0, 0.40]
+  lidar3d.mount_rpy_deg: [0.0, 6.75, 0.0]
+  lidar3d.h_fov_deg: [-14.0, 14.0]
+  lidar3d.v_fov_deg: [-7.0, 7.0]
+  lidar3d.cols: 139
+  lidar3d.rows: 34
+  lidar3d.placement: cell_center
+  lidar3d.ray_order: row_major_top_left
+  lidar3d.range_max: 12.0
+  lidar3d.noise_type: gaussian
+  lidar3d.noise_sigma: 0.01
+  lidar3d.period_s: 0.25
+  lidar3d.include_floor: true
+  # ---- observation / terminations (as NAV01) ----
+  goal_distance_norm: 7.0
+  goal_tolerance: 0.20
+  safety_margin: 0.05
+  # ---- reward (as NAV01) ----
+  rewards.progress_scale: 10.0
+  rewards.proximity_scale: 1.0
+  rewards.proximity_clearance: 0.15
+  rewards.time_penalty_per_s: 0.1
+  rewards.goal_reward: 30.0
+  rewards.collision_penalty: 30.0
+  rewards.timeout_penalty: 0.0
+
+agent:
+  seed: 42
+  max_iterations: 500
+  num_steps_per_env: 32
+  algorithm.learning_rate: 3.0e-4
+  algorithm.gamma: 0.99
+  algorithm.lam: 0.95
+  algorithm.entropy_coef: 0.005
+
+sweep: {}

@@ -1,0 +1,2 @@
+policy,checkpoint,episodes,success_rate,n_goal,n_physical_collision,n_safety_violation,n_timeout,return_mean,success_duration_s_mean,min_clearance_m_mean,min_clearance_m_min
+model_1499,Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt,100,0.76,76,0,24,0,60.90164,35.252631578947366,0.094096,0.0128

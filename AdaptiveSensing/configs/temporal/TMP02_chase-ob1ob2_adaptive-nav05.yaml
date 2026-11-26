@@ -1,0 +1,103 @@
+# TMP02_chase-ob1ob2_adaptive-nav05: temporal adaptive sensing. Recurrent PPO (LSTM, causal-tick masking) of a
+# sensing-rate policy over the frozen NAV05 3D-LiDAR navigation policy, in the NAV05 training scene (OB1 + OB2 moving).
+#
+# Method: reference temporal trainer adaptive_sensor_policy@dc5b53f AdaptiveFPS/scripts/train_adaptive_fps_ppo.py and
+# envs/turtlebot_var_scan_rate.py (native-LiDAR mode), real robot Sim2Real real_eval_adaptive.py. Native LiDAR 4 Hz
+# (unchanged env), control 5 Hz; the sensing action selected at a control instant gates the native scan of that
+# instant (real-robot deadline gate + set_target_fps re-anchoring); actions without an accepted scan are discarded
+# and masked out of the policy loss. Sensing reward = NAV05 env reward - frame_cost per accepted scan - one-time
+# budget_penalty when the episode's frame count first exceeds budget (500: unreachable, at most 281 frames per 70 s).
+# Scale: 1024 envs x 256 steps (262,144 transitions per iteration), 200 M steps (762 iterations); 8 minibatches of
+# 128 envs. Env fast path on (bitwise-equivalent performance items, validated: see the TMP02 card).
+# Sensing policy: NAV05 CNN architecture (random init, trained) + 3 ratios -> Linear 64 Tanh -> LSTM 64 -> actor/critic.
+#
+# The env section is NAV05's (scene, DR, sensor, reward) except num_envs; the trainer refuses to run if the settings
+# that define NAV05's input (sensor, image layout, normalizations, timing) differ from NAV05's training run.
+#
+# Train one sweep member:  bin/isaacrun -g <gpu> -- python AdaptiveSensing/scripts/train_temporal_ppo.py --headless \
+#     --config AdaptiveSensing/configs/temporal/TMP02_chase-ob1ob2_adaptive-nav05.yaml --sweep_index <i>
+exp_id: TMP02_chase-ob1ob2_adaptive-nav05
+task: STNav-TB4-Corridor-Lidar3D-v0
+run_name: null                      # default: ppo_lstm_n<num_envs>_s<seed>_fc<frame_cost>
+
+env:
+  scene.num_envs: 1024                 # TMP02 (NAV05 trained with 4096)
+  fast_path: [all]                     # env performance items, bitwise-equivalent (st_nav.envs.corridor_scene)
+  episode_length_s: 70.0            # 350 control steps (5 Hz)
+  # ---- scene: corridor without Z1-Z4, moving obstacles OB1 / OB2 (random_ping_pong), as NAV03 ----
+  scene_name: corridor_dynamic_chase_random
+  active_obstacles: [1, 2]
+  wall_height: 0.6
+  baffle_height: 0.6
+  obstacle_height: 0.5
+  # ---- domain randomization (as NAV03) ----
+  obstacle_presence_dr: false       # fixed set above in every episode
+  obstacle_speed_dr: true           # speed ~ U(0.04, 0.08) m/s per obstacle and episode
+  obstacle_y_dr: true               # path y: OB1 ~ U[1.20, 1.70], OB2 ~ U[0.60, 1.10], gap y1 - y2 in [0.55, 0.65] m
+  obstacle_radius_dr: false         # radius 0.17 m
+  start_pose_dr: true               # 5 reference start points, yaw pi +- 10 deg
+  goals: [[-1.80, -1.70], [-2.00, -1.80], [-2.00, -2.00], [-2.20, -1.70], [-1.80, -2.10], [-2.20, -2.10]]   # reference ST04/ST05 list
+  lidar_noise: true                 # 3D: Gaussian range noise (lidar3d.noise_type / noise_sigma)
+  # ---- sensor: 3D LiDAR, R4 mount (as NAV04) ----
+  sensor: lidar3d
+  obs_layout: image
+  lidar3d.mount_pos: [0.0, 0.0, 0.40]
+  lidar3d.mount_rpy_deg: [0.0, 6.75, 0.0]
+  lidar3d.h_fov_deg: [-14.0, 14.0]
+  lidar3d.v_fov_deg: [-7.0, 7.0]
+  lidar3d.cols: 139
+  lidar3d.rows: 34
+  lidar3d.placement: cell_center
+  lidar3d.ray_order: row_major_top_left
+  lidar3d.range_max: 12.0
+  lidar3d.noise_type: gaussian
+  lidar3d.noise_sigma: 0.01
+  lidar3d.period_s: 0.25
+  lidar3d.include_floor: true
+  # ---- observation / terminations (as NAV01 / NAV03 / NAV04) ----
+  goal_distance_norm: 7.0
+  goal_tolerance: 0.20
+  safety_margin: 0.05
+  # ---- reward (as NAV01 / NAV03 / NAV04) ----
+  rewards.progress_scale: 10.0
+  rewards.proximity_scale: 1.0
+  rewards.proximity_clearance: 0.15
+  rewards.time_penalty_per_s: 0.1
+  rewards.goal_reward: 30.0
+  rewards.collision_penalty: 30.0
+  rewards.timeout_penalty: 0.0
+
+agent:                              # sensing policy + recurrent PPO (names as the reference trainer's Args)
+  nav_checkpoint: Navigation/runs_3d/NAV05_chase-ob1ob2_lidar3d-r4_cnn-from-nav04/2026-11-23_20-21-14_ppo_cnn_n4096_s42/model_1499.pt
+  fps_choices: [0.2, 0.5, 1.0, 2.0, 4.0]   # Hz; reset rate = max (4 Hz, the native rate)
+  frame_cost: 0.0                   # per accepted scan (swept below)
+  budget: 500                       # frames per episode (frame_ratio normalizer, budget-penalty threshold)
+  budget_penalty: 15.0              # reference value; inactive with budget 500
+  seed: 1                           # reference
+  torch_deterministic: true
+  total_timesteps: 200000000        # 1024 x 256 = 262,144 per iteration -> 762 iterations
+  num_iterations: 0                 # 0: total_timesteps // (num_envs * num_steps)
+  num_steps: 256                    # rollout length per env (reference 1024 with 32 envs)
+  learning_rate: 3.0e-4
+  anneal_lr: false
+  gamma: 0.99
+  gae_lambda: 0.98
+  num_minibatches: 8                # minibatches of whole envs (128 envs x 256 steps)
+  update_epochs: 4
+  norm_adv: true
+  clip_coef: 0.2
+  clip_vloss: true
+  ent_coef: 0.05
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  target_kl: null
+  lstm_hidden_size: 64
+  cnn_channels: [16, 32, 64]        # NAV05 encoder architecture (3x3, stride 2, no padding) -> Linear 128 ReLU
+  cnn_kernel: 3
+  cnn_stride: 2
+  cnn_projection_dim: 128
+  update_chunk_envs: 64             # gradient accumulation over env chunks (memory only; same update)
+  checkpoint_interval: 25           # iterations (~6.6 M steps)
+
+sweep:
+  agent.frame_cost: [0.0]           # values to be decided

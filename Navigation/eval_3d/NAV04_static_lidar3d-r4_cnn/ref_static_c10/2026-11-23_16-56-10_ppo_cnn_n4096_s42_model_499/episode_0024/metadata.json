@@ -1,0 +1,221 @@
+{
+ "schema_version": "1.1",
+ "episode_index": 24,
+ "exp_id": "NAV04_static_lidar3d-r4_cnn",
+ "protocol": "ref_static_c10",
+ "policy": "2026-11-23_16-56-10_ppo_cnn_n4096_s42_model_499",
+ "checkpoint": "Navigation/runs_3d/NAV04_static_lidar3d-r4_cnn/2026-11-23_16-56-10_ppo_cnn_n4096_s42/model_499.pt",
+ "seeds": {
+  "start_pose_seed": 4024,
+  "static_obstacles_seed": 3024,
+  "env_seed": 42
+ },
+ "start": {
+  "x": 2.5,
+  "y": 2.5,
+  "yaw": 3.08665,
+  "index": 0
+ },
+ "goal": {
+  "x": -2.0,
+  "y": -2.0
+ },
+ "deterministic_policy": true,
+ "outcome": "goal",
+ "success": true,
+ "n_steps": 164,
+ "duration_s": 32.8,
+ "episode_return": 88.617,
+ "final_goal_distance_m": 0.1743,
+ "distance_traveled_m": 7.097,
+ "min_clearance_m": 0.158,
+ "static_obstacles": {
+  "pair_modes": [
+   "hard",
+   "hard"
+  ],
+  "lengths": [
+   0.5481077375525939,
+   0.17166012660035257,
+   0.2929074873413356,
+   0.4107588803977725
+  ],
+  "thicknesses": [
+   0.16475178208319335,
+   0.2037388518904484,
+   0.5873279111665869,
+   0.47047781771754693
+  ],
+  "offsets": [
+   -0.2450921127428939,
+   -0.1837727858159327,
+   -0.04687441421328464,
+   -0.029387127268735824
+  ]
+ },
+ "task": "navigation",
+ "scene": "corridor_static_random",
+ "control": {
+  "control_dt_s": 0.2,
+  "physics_dt_s": 0.01,
+  "decimation": 20,
+  "episode_length_s": 70.0,
+  "max_steps": 350
+ },
+ "robot": {
+  "model": "TurtleBot4 Standard (articulated, PhysX)",
+  "footprint_radius_m": 0.177,
+  "wheel_radius_m": 0.03575,
+  "track_width_m": 0.233,
+  "wheel_speed_max_mps": 0.305,
+  "v_max_mps": 0.22,
+  "w_max_radps": 2.0,
+  "action": "a in [-1, 1]^2 -> command (a0 * v_max, a1 * w_max)"
+ },
+ "actuator": {
+  "model": "calibrated command model (delay, first-order lag, gains, wheel saturation)",
+  "delay_s": 0.14,
+  "delay_w_s": 0.12,
+  "tau_v_s": 0.01,
+  "tau_w_s": 0.05,
+  "k_v": 1.0,
+  "k_w": 0.9,
+  "accel_v_max": 1.0,
+  "accel_w_max": 0.0
+ },
+ "lidar": {
+  "type": "lidar3d",
+  "layout": "per_scan",
+  "num_rays": 4726,
+  "grid_shape": [
+   34,
+   139
+  ],
+  "ray_order": "row_major_top_left",
+  "range_max_m": 12.0,
+  "range_min_m": 0.0,
+  "mount_offset_xyz_m": [
+   0.0,
+   0.0,
+   0.4
+  ],
+  "mount_rpy_deg": [
+   0.0,
+   6.75,
+   0.0
+  ],
+  "rotation_convention": "REP-103: R = Rz(yaw) Ry(pitch) Rx(roll) (sensor -> base_link); pitch > 0 tilts the sensor's forward axis down",
+  "ray_alignment": "base",
+  "include_floor": true,
+  "azimuth_range_deg": [
+   -13.899280575539569,
+   13.899280575539567
+  ],
+  "elevation_range_deg": [
+   -6.794117647058823,
+   6.7941176470588225
+  ],
+  "config": {
+   "h_fov_deg": [
+    -14.0,
+    14.0
+   ],
+   "v_fov_deg": [
+    -7.0,
+    7.0
+   ],
+   "cols": 139,
+   "rows": 34,
+   "placement": "cell_center",
+   "ray_order": "row_major_top_left",
+   "ray_table": null,
+   "azimuths_deg": null,
+   "elevations_deg": null,
+   "grid_row": null,
+   "grid_col": null,
+   "mount_pos": [
+    0.0,
+    0.0,
+    0.4
+   ],
+   "mount_rpy_deg": [
+    0.0,
+    6.75,
+    0.0
+   ],
+   "range_max": 12.0,
+   "range_min": 0.0,
+   "noise_type": "gaussian",
+   "noise_sigma": 0.01,
+   "period_s": 0.25,
+   "include_floor": true
+  },
+  "noise": {
+   "enabled": true,
+   "model": "additive Gaussian N(0, sigma^2) on rays with a return, clamped to [0, range_max]; no-return rays unchanged",
+   "sigma_m": 0.01,
+   "seeding": "per episode, acquisition physics tick and ray (see random_seeds)"
+  },
+  "geometry_note": "azimuth_deg / elevation_deg / ray_dirs_s in the sensor frame (x forward, y left, z up), ray_dirs_b in base_link (mount rotation applied); see lidar_scans_note"
+ },
+ "sensing": {
+  "mode": "fixed_rate",
+  "period_s": 0.25,
+  "beams_per_scan": 4726,
+  "timing": "control-quantized: a scan is acquired at the first control instant at or after each due time (due times every period_s); all rays of a scan acquired simultaneously",
+  "note": "lidar.npz per-scan layout: fresh[k] = a scan was acquired at step k"
+ },
+ "geometry_heights_m": {
+  "wall": 0.6,
+  "baffle": 0.6,
+  "moving_obstacle": 0.5,
+  "floor_z": 0.0
+ },
+ "terminations": {
+  "goal_tolerance_m": 0.2,
+  "safety_margin_m": 0.05,
+  "clearance": "footprint clearance = distance to the nearest wall / active obstacle - footprint radius"
+ },
+ "rewards": {
+  "progress_scale": 10.0,
+  "proximity_scale": 1.0,
+  "proximity_clearance": 0.15,
+  "time_penalty_per_s": 0.1,
+  "goal_reward": 30.0,
+  "collision_penalty": 30.0,
+  "timeout_penalty": 0.0
+ },
+ "dr": {
+  "start_pose_dr": true,
+  "obstacle_presence_dr": false,
+  "obstacle_speed_dr": false,
+  "obstacle_y_dr": false,
+  "obstacle_radius_dr": false,
+  "lidar_noise": true,
+  "static_obstacle_dr": true
+ },
+ "random_seeds": {
+  "episode_seed": -5291137654833330093,
+  "obstacle_seed": -5895090883735168397,
+  "lidar_noise_seed": 6627992505887829518,
+  "episode_number": 1,
+  "note": "counter-based (st_nav/crng.py): episode_seed = key(env seed, env index, episode number); obstacle draws = uniform(obstacle_seed, stream, obstacle, counter); LiDAR noise of beam b acquired at physics tick t = uniform(lidar_noise_seed, t, b)"
+ },
+ "timebase": "t_sim = simulated seconds since reset; trajectory / lidar / obstacles row k = after step k (row 0 = reset); steps row k = step k",
+ "lidar_scans_note": "per-scan layout: ranges / ranges_clean (S, R) = acquired scans (observed with noise / noise-free), scan_step / scan_t_sim = control-step row and time of acquisition, origin_xyz / base_quat_wxyz = sensor origin (env-local) and base orientation at acquisition; row_scan_index[k] = scan in the observation after step k (terminal row: the last acquired scan, not observed); ray r points along R(base_quat_wxyz) @ ray_dirs_b[r] from origin_xyz; range image cell (grid_row[r], grid_col[r])",
+ "lidar_rows_note": "ranges = the observation the policy received after step k (row 0: reset observation; last row NaN: the terminal state is not observed); ranges_clean = noise-free ranges at the end of step k for every row; origin_* = sensor pose when `ranges` was acquired (terminal row: the pose of ranges_clean)",
+ "files": {
+  "metadata.json": "episode, outcome, seeds, robot, actuator, LiDAR, sensing, moving obstacles, DR flags",
+  "world_geometry.json": "all walls of this episode (cx, cy, length, thickness, yaw) and moving-obstacle paths",
+  "trajectory.csv": "row k = robot state after step k (row 0 = reset): pose, base_link velocity, goal distance, clearance",
+  "steps.csv": "row k = step k: policy action in [-1, 1], command (m/s, rad/s), actuator output, reward terms, sensing, done",
+  "lidar.npz": "2D: row k = scan of the observation after step k: ranges (observed, noisy; NaN where not observed), ranges_clean, per-beam acquisition time/flag, sensor origin pose at acquisition. 3D (layout per_scan): acquired scans only + row_scan_index (see lidar_scans_note)",
+  "obstacles.npz": "moving obstacles: ids, radius, active, x/y per row (row k = after step k)"
+ },
+ "rows": {
+  "trajectory": 165,
+  "steps": 164,
+  "lidar_scans": 131,
+  "obstacles": 165
+ }
+}
